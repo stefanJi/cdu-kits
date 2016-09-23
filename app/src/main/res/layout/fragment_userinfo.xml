@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--个人信息-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+                <!--学号-->
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="纪阳"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="24sp" />
+
+                <Space
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="201410421111"
+                    android:textColor="#666"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <!--学院-->
+                <TextView
+                    android:id="@+id/tv_belongClass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="计算机学院"
+                    android:textColor="#666"
+                    android:textSize="14sp" />
+
+                <Space
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content" />
+                <!--专业-->
+                <TextView
+                    android:id="@+id/tv_learn_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="数字媒体技术"
+                    android:textColor="#666"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="借阅信息"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+        <!--图书借阅信息TabLayout-->
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tablayout_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            app:tabIndicatorColor="#000"
+            app:tabIndicatorHeight="2dp"
+            app:tabSelectedTextColor="#000"
+            app:tabTextColor="#666" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager_book"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fff" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/sign_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>
