@@ -40,7 +40,7 @@ public class UserInfo {
      */
     public String idCardNumber;
     /**
-     * 工作单位
+     * 工作单位(学院)
      */
     public String belongClass;
     /**
@@ -87,34 +87,12 @@ public class UserInfo {
     public UserInfo() {
     }
 
-    public UserInfo(String name,
-                    String account,
-                    String number,
-                    String newData,
-                    String outData,
-                    String okData,
-                    String maxBooks,
-                    String maxPlanBooks,
-                    String maxWeituoBooks,
-                    String type,
-                    String index,
-                    String bookCount,
-                    String wrongCount,
-                    String wrongMoney,
-                    String belong,
-                    String email,
-                    String idCardNumber,
-                    String belongClass,
-                    String learnType,
-                    String studentClass,
-                    String sex,
-                    String address,
-                    String callNumber,
-                    String phoneNumber,
-                    String bodyDate,
-                    String learnIndex,
-                    String totalMoney,
-                    String useMoney) {
+    public UserInfo(String name, String account, String number, String newData, String outData,
+                    String okData, String maxBooks, String maxPlanBooks, String maxWeituoBooks, String type,
+                    String index, String bookCount, String wrongCount, String wrongMoney, String belong,
+                    String email, String idCardNumber, String belongClass, String learnType, String studentClass,
+                    String sex, String address, String callNumber, String phoneNumber, String bodyDate,
+                    String learnIndex, String totalMoney, String useMoney) {
         this.name = name;
         this.account = account;
         this.number = number;

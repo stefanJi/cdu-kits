@@ -36,14 +36,16 @@
             android:id="@+id/tv_book_getData"
             style="@style/book_list_text" />
 
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:src="@mipmap/arrow_right" />
 
         <TextView
             android:id="@+id/tv_book_endData"
             style="@style/book_list_text"
-            android:textColor="@color/red"
+            android:textColor="@color/primary_text"
             android:textStyle="bold" />
     </LinearLayout>
 

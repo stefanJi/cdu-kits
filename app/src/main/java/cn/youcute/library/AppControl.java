@@ -1,8 +1,13 @@
 package cn.youcute.library;
 
 import android.app.Application;
-import android.util.Log;
+import android.content.Context;
 import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+
+import net.youmi.android.AdManager;
 
 import cn.youcute.library.util.NetRequest;
 import cn.youcute.library.util.SpUtil;
@@ -16,11 +21,13 @@ public class AppControl extends Application {
     private static NetRequest netRequest;
     private static SpUtil spUtil;
     private Toast toast;
+    private RequestQueue requestQueue;
 
     @Override
     public void onCreate() {
         super.onCreate();
         appControl = this;
+//        AdManager.getInstance(this).init("2cc49376cb40eedd", "ff1e699d9b499f89", true, true);
     }
 
     /**
@@ -38,10 +45,11 @@ public class AppControl extends Application {
      * @return NetRequest工具类
      */
     public NetRequest getNetRequest() {
-        if (netRequest == null) {
-            netRequest = new NetRequest();
-        }
         return netRequest;
+    }
+
+    public void initNetRequest(Context context) {
+        netRequest = new NetRequest(context);
     }
 
     /**
@@ -67,5 +75,15 @@ public class AppControl extends Application {
         }
         toast.setText(info);
         toast.show();
+    }
+
+    /**
+     * @return Volley Request 队列，如果不存在将创建队列
+     */
+    public RequestQueue getRequestQueue() {
+        if (requestQueue == null) {
+            requestQueue = Volley.newRequestQueue(getApplicationContext());
+        }
+        return requestQueue;
     }
 }

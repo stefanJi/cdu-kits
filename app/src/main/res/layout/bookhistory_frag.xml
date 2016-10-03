@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.youcute.library.diyView.LoadMoreListView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_book_history"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:dividerHeight="0dp"
+    android:divider="#eee"
+    android:dividerHeight="2dp"
     android:padding="5dp" />

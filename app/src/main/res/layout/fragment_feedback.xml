@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <EditText
+        android:id="@+id/et_content_feed"
+        style="@style/sign_edit_text"
+        android:gravity="start|top"
+        android:hint="@string/feedback_info"
+        android:inputType="textMultiLine"
+        android:lines="6" />
+
+    <EditText
+        android:id="@+id/et_contact_feed"
+        style="@style/sign_edit_text"
+        android:layout_marginTop="20dp"
+        android:hint="@string/contact"
+        android:imeOptions="actionDone"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/btn_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="20dp"
+        android:text="发送反馈"
+        android:textSize="14sp" />
+</LinearLayout>

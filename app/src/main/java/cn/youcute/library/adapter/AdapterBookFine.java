@@ -26,10 +26,6 @@ public class AdapterBookFine extends BaseAdapter {
         this.bookFines = bookFines;
     }
 
-    public void setBookFines(List<BookFine> bookFines) {
-        this.bookFines = bookFines;
-    }
-
     @Override
     public int getCount() {
         return bookFines.size();

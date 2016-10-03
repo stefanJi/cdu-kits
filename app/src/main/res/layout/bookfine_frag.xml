@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_book_fine"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="5dp" />
+    android:layout_height="wrap_content">
+
+    <cn.youcute.library.diyView.LoadMoreListView
+        android:id="@+id/list_book_fine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#eee"
+        android:dividerHeight="2dp"
+        android:padding="5dp" />
+</android.support.v4.widget.SwipeRefreshLayout>

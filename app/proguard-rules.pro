@@ -29,7 +29,7 @@
 -keep public class org.jsoup.** {
 public *;
 }
-
+-keep class cn.youcute.library.diyView.**{*;}
 #-------------------------------------------------------------------------
 
 #---------------------------------3.与js互相调用的类------------------------
@@ -109,3 +109,6 @@ public *;
 #-----------------------------------------------
 #如果引用了v4或者v7包
 -dontwarn android.support.**
+-keep public class android.support.**{
+    *;
+}

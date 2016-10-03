@@ -1,6 +1,33 @@
 <resources>
-    <string name="app_name">成大图书助手</string>
+    <string name="app_name">成大移动图书馆</string>
     <string name="name">姓名:</string>
     <string name="books">当前借阅:</string>
     <string name="welcome">欢迎使用成大图书助手</string>
+    <string name="about">关于</string>
+    <string name="setting">设置</string>
+    <string name="load_more">正在加载更多</string>
+    <string name="sign">登录</string>
+    <string name="search">输入搜索图书、新闻和公告</string>
+    <string name="feedback">反馈</string>
+    <string name="account">学号</string>
+    <string name="library_password">图书馆密码</string>
+    <string name="support">点击广告，支持开发者</string>
+    <string name="help">帮助</string>
+    <string name="sina">微博:</string>
+    <string name="sina_link">http://weibo.com/00wifi</string>
+    <string name="about_app">专为成都学院内部人员使用的一款APP\n查询图书借阅信息，图书续借\n快速浏览学校最新通知公告\n快速查询个人教务系统</string>
+    <string name="jiyang">\@JiYang</string>
+    <string name="library_info">图书借阅信息</string>
+    <string name="education_info">网络教务信息</string>
+    <string name="net_education_info">网络教学平台</string>
+    <string name="announce_info">学校通知公告</string>
+    <string name="library_sign_info">查询图书借阅等信息，请先使用学号登录</string>
+    <string name="home">首页</string>
+    <string name="my">我的</string>
+    <string name="scan">扫一扫</string>
+    <string name="read_rank">借阅排行</string>
+    <string name="new_book_rank">新书推荐</string>
+    <string name="more"><![CDATA[更多>>]]></string>
+    <string name="feedback_info">留下你想说的哟!想加的功能，希望改善的功能都可以</string>
+    <string name="contact">你的联系方式:电话/邮箱/QQ(选填)</string>
 </resources>

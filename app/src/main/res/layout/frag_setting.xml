@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择你希望APP启动之后首先展示的内容" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/menu_announce"
+            style="@style/menu_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:drawableTop="@mipmap/ic_announce"
+            android:text="@string/announce_info" />
+
+        <RadioButton
+            android:id="@+id/menu_library"
+            style="@style/menu_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_book"
+            android:text="@string/library_info" />
+
+
+        <RadioButton
+            android:id="@+id/menu_education"
+            style="@style/menu_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_education"
+            android:text="@string/education_info" />
+
+
+        <RadioButton
+            android:id="@+id/menu_net_education"
+            style="@style/menu_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_net_education"
+            android:text="@string/net_education_info" />
+
+
+    </RadioGroup>
+
+</LinearLayout>

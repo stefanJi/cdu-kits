@@ -3,6 +3,7 @@ package cn.youcute.library.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import cn.youcute.library.activities.MainActivity;
 import cn.youcute.library.bean.User;
 import cn.youcute.library.bean.UserInfo;
 
@@ -52,5 +53,14 @@ public class SpUtil {
 
     public void setIsSign(boolean isSign) {
         preferences.edit().putBoolean("is_sign", isSign).apply();
+    }
+
+    public void setFragAction(int action) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("start_fragment_action", action).apply();
+    }
+
+    public int getStartFragment() {
+        return preferences.getInt("start_fragment_action", MainActivity.ANNOUNCE_ACTION);
     }
 }
