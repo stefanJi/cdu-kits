@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import cn.youcute.library.AppControl;
 import cn.youcute.library.R;
@@ -25,6 +26,7 @@ public class SignActivity extends BaseActivity implements NetRequest.SignCallBac
     private EditText etAccount;
     private XEditText etPassword;
     private Button btnSign;
+    private ImageButton buttonRight;
     private SpUtil spUtil;
     private String account, password;
     private boolean isShowPassword = false;
@@ -34,7 +36,7 @@ public class SignActivity extends BaseActivity implements NetRequest.SignCallBac
         super.onCreate(savedInstanceState);
         int action = getIntent().getIntExtra("sign_action", 0);
         if (action == 0) {
-            setContentView(R.layout.activity_sign_library);
+            setContentView(R.layout.activity_sign);
             initView1();
         } else if (action == 1) {
             setContentView(R.layout.activity_sign_education);
@@ -76,6 +78,13 @@ public class SignActivity extends BaseActivity implements NetRequest.SignCallBac
                 AppControl.getInstance().getNetRequest().sign(account, password, SignActivity.this);
             }
         });
+        buttonRight = (ImageButton) findViewById(R.id.imgBtn_right);
+        buttonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         //将本地保存的账户设置到输入框
         User user = spUtil.getUser();
         if (!user.account.equals("0")) {
@@ -93,7 +102,7 @@ public class SignActivity extends BaseActivity implements NetRequest.SignCallBac
     public void signSuccess(String session) {
         Intent intent = new Intent(SignActivity.this, MainActivity.class);
         intent.putExtra("session", session);
-        setResult(1, intent);
+        setResult(107, intent);
         finish();
     }
 

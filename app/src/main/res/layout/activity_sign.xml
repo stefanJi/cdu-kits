@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/icons"
+    android:orientation="vertical">
+    <!--顶部-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/primary"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/imgBtn_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            android:padding="5dp"
+            android:src="@mipmap/ic_add_select"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/blind_account"
+            android:textColor="@color/icons"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:ignore="RelativeOverlap" />
+    </RelativeLayout>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="20dp" />
+
+    <EditText
+        android:id="@+id/et_account"
+        style="@style/sign_edit_text"
+        android:layout_margin="10dp"
+        android:hint="@string/input_account"
+        android:inputType="text" />
+
+    <cn.youcute.library.diyView.XEditText
+        android:id="@+id/et_password"
+        style="@style/sign_edit_text"
+        android:layout_margin="10dp"
+        android:drawableEnd="@mipmap/icon_eye"
+        android:drawableRight="@mipmap/icon_eye"
+        android:hint="@string/input_password"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/btn_sign"
+        style="@style/dialog_blue_button"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/blind"
+        android:textColor="@color/icons" />
+</LinearLayout>

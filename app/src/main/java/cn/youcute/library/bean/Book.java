@@ -6,6 +6,7 @@ package cn.youcute.library.bean;
  */
 public class Book {
     public String code;//条码号
+    public String author;
     public String name;//书名
     public String getData;//借阅日期
     public String endData;//应还日期

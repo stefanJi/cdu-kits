@@ -21,7 +21,7 @@
     <string name="education_info">网络教务信息</string>
     <string name="net_education_info">网络教学平台</string>
     <string name="announce_info">学校通知公告</string>
-    <string name="library_sign_info">查询图书借阅等信息，请先使用学号登录</string>
+    <string name="library_sign_info">查询图书借阅等信息，请先绑定学号</string>
     <string name="home">首页</string>
     <string name="my">我的</string>
     <string name="scan">扫一扫</string>
@@ -30,4 +30,8 @@
     <string name="more"><![CDATA[更多>>]]></string>
     <string name="feedback_info">留下你想说的哟!想加的功能，希望改善的功能都可以</string>
     <string name="contact">你的联系方式:电话/邮箱/QQ(选填)</string>
+    <string name="blind_account">账户绑定</string>
+    <string name="blind">绑定</string>
+    <string name="input_password">请输入图书馆密码</string>
+    <string name="input_account">请输入学号</string>
 </resources>

@@ -247,10 +247,15 @@ public class NetRequest {
                         for (int j = 0; j < elements1.size(); j++) {
                             map.put(j, elements1.get(j).text());
                         }
+                        //条码号
                         book.code = map.get(0);
+                        //书名
                         book.name = map.get(1);
-                        book.getData = map.get(2);
-                        book.endData = map.get(3);
+                        //借阅日期
+                        book.getData = "借阅日期:" + map.get(2);
+                        //归还日期
+                        book.endData = "归还日期:" + map.get(3);
+                        //续借量
                         book.getCount = map.get(4);
                         books.add(book);
                     }
