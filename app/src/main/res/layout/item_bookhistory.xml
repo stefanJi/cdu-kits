@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/s_main_menu_text"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -16,12 +17,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12"
-            android:textColor="@color/colorPrimary"
+            android:textColor="#000"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <Space
-            android:layout_width="20dp"
+            android:layout_width="10dp"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -30,7 +31,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="C#企业案例开发入门"
-            android:textColor="#000"
+            android:textColor="@color/menu_text"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -45,18 +46,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2018-09-09"
-            android:textColor="#000" />
+            android:textColor="@color/menu_text" />
 
-        <View
+        <Space
             android:layout_width="10dp"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimary" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_endData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2018-10-10"
-            android:textColor="#000" />
+            android:textColor="@color/menu_text" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:drawableEnd="@mipmap/ic_right"
+        android:drawablePadding="2dp"
+        android:drawableRight="@mipmap/ic_right"
+        android:gravity="center_vertical"
+        android:text="查看图书信息"
+        android:textSize="12sp" />
 </LinearLayout>

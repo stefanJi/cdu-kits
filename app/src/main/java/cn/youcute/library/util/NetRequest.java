@@ -7,15 +7,20 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.util.ArrayMap;
 import android.util.Log;
-import android.widget.ImageView;
+import android.util.SparseArray;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.BitmapCallback;
+import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,19 +28,23 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import cn.youcute.library.AppControl;
+import cn.youcute.library.bean.Album;
 import cn.youcute.library.bean.Announce;
+import cn.youcute.library.bean.BannerBean;
 import cn.youcute.library.bean.Book;
 import cn.youcute.library.bean.BookFine;
 import cn.youcute.library.bean.History;
 import cn.youcute.library.bean.User;
 import cn.youcute.library.bean.UserInfo;
+import okhttp3.Call;
 
 /**
  * Created by jy on 2016/9/22.
@@ -57,14 +66,7 @@ public class NetRequest {
     public static final String ASP_NET_SESSION = "ASP.NET_SessionId";
     private static final String FEED_BACK = "http://youcute.cn/jy/library/feedBack.php";
     private static final String TO_SERVER = "http://youcute.cn/jy/library/user.php";
-    private Context context;
-    private SweetAlertDialog dialog;
-    private int signErrorCount = 0;//登录报错计数
-    private int getErroorCount = 0;//获取报错计数
-
-    public NetRequest(Context context) {
-        this.context = context;
-    }
+    private static final String HOME = "http://news.cdu.edu.cn/index.php?m=album&a=index";
 
     /**
      * 登录
@@ -105,23 +107,12 @@ public class NetRequest {
                 super.onPostExecute(s);
                 switch (s) {
                     case "0":
-                        showFailedDialog("登录失败", "检查学号密码，换个姿势，再来一次");
                         signCallBack.signFailed();
                         break;
                     case "-1":
                         signCallBack.signFailed();
-                        if (signErrorCount > 3) {
-                            showFeedBack();
-                            signErrorCount = 0;
-                            break;
-                        }
-                        showErrorDialog("服务器连接失败，请稍候重试");
-                        signErrorCount++;
                         break;
                     default:
-                        if (!AppControl.getInstance().getSpUtil().getIsSign()) {
-                            showOkDialog("登录成功");
-                        }
                         signCallBack.signSuccess(s);
                         User user = new User(account, password);
                         AppControl.getInstance().getSpUtil().saveUser(user);
@@ -132,12 +123,9 @@ public class NetRequest {
             }
         }
         if (isNetworkConnected()) {
-            if (!AppControl.getInstance().getSpUtil().getIsSign()) {
-                showGetDialog("登录图书馆系统中", "不急，慢慢来");
-            }
             new SignTask().execute();
         } else {
-            showErrorDialog("网络错误,请检查网络连接");
+            signCallBack.signFailed();
         }
     }
 
@@ -153,16 +141,16 @@ public class NetRequest {
     /**
      * 获得图书馆个人信息
      *
-     * @param session         登录之后的session
      * @param getInfoCallBack 回调
      */
-    public void getUserInfo(final String session, final GetInfoCallBack getInfoCallBack) {
+    public void getUserInfo(final GetInfoCallBack getInfoCallBack) {
+
         class GetTask extends AsyncTask<Void, Void, UserInfo> {
 
             @Override
             protected UserInfo doInBackground(Void... params) {
                 Connection connection = Jsoup.connect(INFO_API);
-                connection.cookie(NetRequest.PHP_SESSION_ID, session);
+                connection.cookie(NetRequest.PHP_SESSION_ID, AppControl.getInstance().sessionLibrary);
                 //获取登录之后的Html
                 try {
                     Document document = connection.get();
@@ -192,22 +180,13 @@ public class NetRequest {
                 super.onPostExecute(userInfo);
                 if (null == userInfo) {
                     getInfoCallBack.getFailed();
-                    if (getErroorCount > 3) {
-                        showFeedBack();
-                        getErroorCount = 0;
-                        return;
-                    }
-                    showFailedDialog("获取失败", "换个姿势，再来一次");
-                    getErroorCount++;
                 } else {
-                    showOkDialog("获取完成");
                     getInfoCallBack.getSuccess(userInfo);
                     AppControl.getInstance().getSpUtil().saveUserInfo(userInfo);
                 }
             }
         }
         if (isNetworkConnected()) {
-            showGetDialog("获取信息中...", "轻轻的来，轻轻的去....");
             new GetTask().execute();
         } else {
             AppControl.getInstance().showToast("网络连接失败，请检查网络连接");
@@ -224,16 +203,15 @@ public class NetRequest {
     /**
      * 获取当前借阅
      *
-     * @param session  登录session
      * @param callBack 回调
      */
-    public void getBookList(final String session, final GetBookListCallBack callBack) {
+    public void getBookList(final GetBookListCallBack callBack) {
         class GetBookListTask extends AsyncTask<Void, Void, List<Book>> {
 
             @Override
             protected List<Book> doInBackground(Void... params) {
                 Connection connection = Jsoup.connect(GET_BOOK_LIST_API);
-                connection.cookie(PHP_SESSION_ID, session);
+                connection.cookie(PHP_SESSION_ID, AppControl.getInstance().sessionLibrary);
                 List<Book> books = new ArrayList<>();
                 try {
                     Document document = connection.get();
@@ -242,26 +220,39 @@ public class NetRequest {
                     elements = elements.select("tr");
                     for (int i = 1; i < elements.size(); i++) {
                         Elements elements1 = elements.get(i).select("td");
-                        Map<Integer, String> map = new HashMap<>();
+                        SparseArray<String> data = new SparseArray<>();
                         Book book = new Book();
                         for (int j = 0; j < elements1.size(); j++) {
-                            map.put(j, elements1.get(j).text());
+                            data.put(j, elements1.get(j).text());
                         }
                         //条码号
-                        book.code = map.get(0);
+                        book.code = data.get(0);
                         //书名
-                        book.name = map.get(1);
+                        book.name = data.get(1);
                         //借阅日期
-                        book.getData = "借阅日期:" + map.get(2);
+                        book.getData = data.get(2);
                         //归还日期
-                        book.endData = "归还日期:" + map.get(3);
+                        book.endData = data.get(3);
                         //续借量
-                        book.getCount = map.get(4);
+                        book.getCount = data.get(4);
+                        //抓取续借号
+                        Element element = elements1.last();
+                        String temp = element.select("input").attr("onclick");
+                        temp = temp.replace("getInLib", "");
+                        temp = temp.replace("(", "");
+                        temp = temp.replace(")", "");
+                        temp = temp.replace(",", "");
+                        temp = temp.replace(";", "");
+                        temp = temp.replace("'", "");
+                        temp = temp.replace(book.code, "");
+                        temp = temp.substring(0, temp.length() - 1);
+                        book.check = temp;
                         books.add(book);
                     }
                     return books;
                 } catch (IOException e) {
                     e.printStackTrace();
+                    callBack.getBookListFailed(e.getMessage());
                 }
                 return null;
             }
@@ -272,36 +263,34 @@ public class NetRequest {
                 if (list != null) {
                     callBack.getBookListSuccess(list);
                 } else
-                    callBack.getBookListFailed();
+                    callBack.getBookListFailed("获取失败,请重试");
             }
         }
         if (isNetworkConnected())
             new GetBookListTask().execute();
         else {
-            callBack.getBookListFailed();
-            AppControl.getInstance().showToast("网络连接失败，请检查网络连接");
+            callBack.getBookListFailed("网络连接失败，请检查网络连接");
         }
     }
 
     public interface GetBookListCallBack {
         void getBookListSuccess(List<Book> list);
 
-        void getBookListFailed();
+        void getBookListFailed(String info);
     }
 
     /**
      * 获得历史借阅
      *
-     * @param session  登录session
      * @param callBack 回调
      */
-    public void getBookHistory(final String session, final int page, final GetBookHistoryCallBack callBack) {
+    public void getBookHistory(final int page, final GetBookHistoryCallBack callBack) {
         class GetBookHistoryTask extends AsyncTask<Void, Void, List<History>> {
 
             @Override
             protected List<History> doInBackground(Void... params) {
                 Connection connection = Jsoup.connect(GET_BOOK_HISTORY + String.valueOf(page));
-                connection.cookie(NetRequest.PHP_SESSION_ID, session);
+                connection.cookie(NetRequest.PHP_SESSION_ID, AppControl.getInstance().sessionLibrary);
                 //获取登录之后的Html
                 try {
                     Document document = connection.get();
@@ -310,14 +299,18 @@ public class NetRequest {
                     for (int i = 1; i < elements.size(); i++) {
                         Elements elements1 = elements.get(i).select("td");
                         History history = new History();
-                        Map<Integer, String> map = new HashMap<>();
+                        SparseArray<String> data = new SparseArray<>();
                         for (int j = 0; j < elements1.size(); j++) {
-                            map.put(j, elements1.get(j).text());
+                            data.put(j, elements1.get(j).text());
                         }
-                        history.historyId = map.get(0);
-                        history.name = map.get(2);
-                        history.getData = map.get(4);
-                        history.endData = map.get(5);
+                        history.historyId = data.get(0);
+                        history.name = data.get(2);
+                        history.getData = data.get(4);
+                        history.endData = data.get(5);
+                        String url = elements1.get(2).select("a").first().attr("href");
+                        url = url.replace("..", "");
+                        url = "http://202.115.80.170:8080" + url;
+                        history.url = url;
                         histories.add(history);
                     }
                     return histories;
@@ -354,16 +347,15 @@ public class NetRequest {
     /**
      * 获得账目清单
      *
-     * @param session  登录session
      * @param callBack 回调
      */
-    public void getBookAccount(final String session, final GetBookAccountCallBack callBack) {
+    public void getBookAccount(final GetBookAccountCallBack callBack) {
         class GetBookAccountTask extends AsyncTask<Void, Void, String> {
 
             @Override
             protected String doInBackground(Void... params) {
                 Connection connection = Jsoup.connect(BOOK_ACCOUNT_API);
-                connection.cookie(PHP_SESSION_ID, session);
+                connection.cookie(PHP_SESSION_ID, AppControl.getInstance().sessionLibrary);
                 connection.timeout(5000);
                 try {
                     Document document = connection.get();
@@ -372,6 +364,7 @@ public class NetRequest {
                     return elements.get(2).select("td").text();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    callBack.getBookAccountFailed();
                 }
                 return null;
             }
@@ -400,34 +393,33 @@ public class NetRequest {
     /**
      * 获得欠款
      *
-     * @param session  登录session
      * @param callBack 回调
      */
-    public void getBookFine(final String session, final GetBookFineCallBack callBack) {
+    public void getBookFine(final GetBookFineCallBack callBack) {
         class GetBookFineTask extends AsyncTask<Void, Void, List<BookFine>> {
 
             @Override
             protected List<BookFine> doInBackground(Void... params) {
                 Connection connection = Jsoup.connect(BOOK_FINE_API);
-                connection.cookie(PHP_SESSION_ID, session);
+                connection.cookie(PHP_SESSION_ID, AppControl.getInstance().sessionLibrary);
                 try {
                     Document document = connection.get();
                     Elements elements = document.select("table.table_line").select("tbody").select("tr");
                     List<BookFine> bookFines = new ArrayList<>();
                     for (int i = 1; i < elements.size(); i++) {
                         Elements elements1 = elements.get(i).select("td");
-                        Map<Integer, String> map = new HashMap<>();
+                        SparseArray<String> data = new SparseArray<>();
                         for (int j = 0; j < elements1.size(); j++) {
-                            map.put(j, elements1.get(j).text());
+                            data.put(j, elements1.get(j).text());
                         }
                         BookFine bookFine = new BookFine();
-                        bookFine.code = map.get(0);
-                        bookFine.name = map.get(2);
-                        bookFine.getData = map.get(4);
-                        bookFine.endData = map.get(5);
-                        bookFine.shouldMoney = map.get(7);
-                        bookFine.money = map.get(8);
-                        bookFine.status = map.get(9);
+                        bookFine.code = data.get(0);
+                        bookFine.name = data.get(2);
+                        bookFine.getData = data.get(4);
+                        bookFine.endData = data.get(5);
+                        bookFine.shouldMoney = data.get(7);
+                        bookFine.money = data.get(8);
+                        bookFine.status = data.get(9);
                         bookFines.add(bookFine);
                     }
                     return bookFines;
@@ -461,19 +453,75 @@ public class NetRequest {
     }
 
     /**
+     * 续借
+     *
+     * @param barCode 条码号
+     * @param check   续借号
+     * @param call    回调
+     */
+    private static final String RENEW = "http://202.115.80.170:8080/reader/ajax_renew.php";
+
+    public void renewBook(final String barCode, final String check, final RenewBookCall call) {
+        class Task extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                Connection connection = Jsoup.connect(RENEW);
+                connection.method(Connection.Method.GET);
+                connection.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+                connection.header("Accept-Encoding", "gzip, deflate, sdch");
+                connection.header("Accept-Language", "zh-CN,zh;q=0.8");
+                connection.header("Cache-Control", "max-age=0");
+                connection.header("Connection", "keep-alive");
+                connection.header("Cookie", "PHPSESSID=" + AppControl.getInstance().sessionLibrary);
+                connection.header("Host", "202.115.80.170:8080");
+                connection.header("Upgrade-Insecure-Requests", "1");
+                connection.header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.87 Safari/537.36");
+                connection.data("bar_code", barCode);
+                connection.data("check", check);
+                long time = System.currentTimeMillis();
+                connection.data("time", String.valueOf(time));
+                try {
+                    Document document = connection.get();
+                    return document.getElementsByTag("body").first().select("font").first().text();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return "错误响应:" + e.getMessage();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String string) {
+                super.onPostExecute(string);
+                call.renewCall(string);
+            }
+        }
+        if (isNetworkConnected()) {
+            new Task().execute();
+        } else {
+            AppControl.getInstance().showToast("网络未连接,请重试");
+        }
+    }
+
+    public interface RenewBookCall {
+        void renewCall(String info);
+    }
+
+    /**
      * 搜索
      *
      * @param searchKey 关键字
      * @param page      页码
      * @param callBack  回调
      */
-    public void searchBook(final String searchKey, final int page, final SearchBookCallBack callBack) {
+    public void searchBook(final int action, final String searchKey, final int page, final SearchBookCallBack callBack) throws UnsupportedEncodingException {
+        final String key = URLEncoder.encode(searchKey, "UTF-8");
         class SearchBookTask extends AsyncTask<Void, Void, List<Book>> {
             private String info = "没有匹配书籍";
 
             @Override
             protected List<Book> doInBackground(Void... params) {
-                Connection connection = Jsoup.connect(SEARCH_BOOK_API + searchKey + SEARCH_BOOK_API2 + page);
+                Connection connection = Jsoup.connect(SEARCH_BOOK_API + key + SEARCH_BOOK_API2 + page);
                 try {
                     Document document = connection.get();
                     Elements elements = document.select("li.book_list_info");
@@ -481,9 +529,12 @@ public class NetRequest {
                     for (int i = 0; i < elements.size(); i++) {
                         Element element = elements.get(i);
                         String name = element.select("h3").select("a").text();
+                        String url = element.select("h3").select("a").attr("href");
                         String code = element.select("h3").text().replace(name, "");
                         String count = element.select("p").select("span").text();
-                        books.add(new Book(code, name, count));
+                        Book book = new Book(code, name, count);
+                        book.url = "http://202.115.80.170:8080/opac/" + url;
+                        books.add(book);
                     }
                     if (books.size() > 0) {
                         Elements elements1 = document.select("div.book_article");
@@ -494,6 +545,7 @@ public class NetRequest {
                     return books;
                 } catch (IOException e) {
                     e.printStackTrace();
+                    callBack.searchFailed("错误响应:" + e.getMessage());
                 }
                 return null;
             }
@@ -502,17 +554,51 @@ public class NetRequest {
             protected void onPostExecute(List<Book> books) {
                 super.onPostExecute(books);
                 if (books == null) {
-                    callBack.searchFailed();
+                    callBack.searchFailed("无数据,请重试");
                 } else {
                     callBack.searchSuccess(books, info);
                 }
             }
         }
-
+        String url = "https://api.douban.com/v2/book/search?q=" + key + "&start=" + page;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    int total = jsonObject.getInt("total");
+                    List<Book> books = new ArrayList<>();
+                    JSONArray jsonArray = jsonObject.getJSONArray("books");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        jsonObject = jsonArray.getJSONObject(i);
+                        String name = jsonObject.getString("title");
+                        String url = jsonObject.getString("alt");
+                        String price = jsonObject.getString("price");
+                        String publisher = jsonObject.getString("publisher");
+                        Book book = new Book(publisher, name, price);
+                        book.url = url;
+                        books.add(book);
+                    }
+                    callBack.searchSuccess(books, "搜索到" + total + "本" + ",与" + searchKey + "有关的书籍");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    callBack.searchFailed("错误响应:" + e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                callBack.searchFailed("错误响应:" + error);
+            }
+        });
         if (isNetworkConnected()) {
-            new SearchBookTask().execute();
+            if (action == 0) {
+                new SearchBookTask().execute();
+            } else if (action == 1) {
+                AppControl.getInstance().getRequestQueue().add(stringRequest);
+            }
         } else {
-            callBack.searchFailed();
+            callBack.searchFailed("网络未连接，请检查网络连接");
             AppControl.getInstance().showToast("网络未连接，请检查网络连接");
         }
     }
@@ -520,7 +606,7 @@ public class NetRequest {
     public interface SearchBookCallBack {
         void searchSuccess(List<Book> books, String info);
 
-        void searchFailed();
+        void searchFailed(String info);
     }
 
     /**
@@ -566,7 +652,7 @@ public class NetRequest {
         if (isNetworkConnected()) {
             new GetAnnounceTask().execute();
         } else {
-            showErrorDialog("网络错误,请检查网络连接");
+            AppControl.getInstance().showToast("网络错误,请检查网络连接");
         }
     }
 
@@ -574,46 +660,6 @@ public class NetRequest {
         void getAnnounceSuccess(List<Announce> announces);
 
         void getAnnounceFailed();
-    }
-
-    public void getAnnounceContent(final String url, final GetAnnounceContentCallBack callBack) {
-        class GetTask extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected String doInBackground(Void... params) {
-                Connection connection = Jsoup.connect(url);
-                try {
-                    Document document = connection.get();
-                    Elements elements = document.select("div#news_content");
-                    return elements.text();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return "-1";
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                if (s.equals("-1")) {
-                    callBack.getContentFailed();
-                } else {
-                    callBack.getContentSuccess(s);
-                }
-            }
-        }
-
-        if (isNetworkConnected()) {
-            new GetTask().execute();
-        } else {
-            showErrorDialog("网络错误,请检查网络连接");
-        }
-    }
-
-    public interface GetAnnounceContentCallBack {
-        void getContentSuccess(String content);
-
-        void getContentFailed();
     }
 
     /**
@@ -624,121 +670,134 @@ public class NetRequest {
      * @param checkCode 验证码
      */
     public void signJiaoWu(final String account, final String password, final String checkCode, final SignJiaoWuCallback callBack) {
-
-        class SignTask extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected String doInBackground(Void... params) {
-                Map<String, String> data = new HashMap<>();
-                data.put("txtUserName", account);
-                data.put("TextBox2", password);
-                data.put("txtSecretCode", checkCode);
-                data.put("RadioButtonList1", "%D1%A7%C9%FA");
-                data.put("Button1", "");
-                data.put("lbLanguage", "");
-                data.put("hidPdrs", "");
-                data.put("hidsc", "");
-                data.put("__VIEWSTATE", "dDwyODE2NTM0OTg7Oz7QBx05W486R++11e1KrLTLz5ET2Q==");
-                Connection connection = Jsoup.connect(SIGN_JIAO_WO);
-                connection.data(data);
-                connection.timeout(10000);
-                connection.method(Connection.Method.POST);
-                try {
-                    Connection.Response response = connection.execute();
-                    Document document = connection.get();
-                    Log.d("TAG", response.url().toString());
-                    Log.d("TAG", response.cookie(ASP_NET_SESSION));
-                    if (response.url().toString().equals("http://202.115.80.153/xs_main.aspx?xh=" + account)) {
-                        return response.cookie(ASP_NET_SESSION);
-                    } else {
-                        //账号、密码错误
-                        Elements elements = document.select("script[language]");
-                        for (Element element : elements) {
-                            if (element.data().contains("验证码不正确")) {
-                                Log.i("TAG", "验证码不正确");
-                            } else if (element.data().contains("用户名不能为空")) {
-                                Log.i("TAG", "用户名不能为空");
-                            } else if (element.data().contains("密码错误")) {
-                                Log.i("TAG", "密码或用户名错误");
-                            } else if (element.data().contains("密码不能为空")) {
-                                Log.i("TAG", "密码不能为空");
-                            }
-                        }
-                        return "0";
+        if (!isNetworkConnected()) {
+            AppControl.getInstance().showToast("网络未连接,请重试");
+            return;
+        }
+        OkHttpUtils.post()
+                //loginUrl就是你请求登录的url
+                .url(SIGN_JIAO_WO)
+                //下面数据抓包可以得到
+                .addParams("__VIEWSTATE", "dDwyODE2NTM0OTg7Oz7QBx05W486R++11e1KrLTLz5ET2Q==")
+                .addParams("txtUserName", account) //学号，
+                .addParams("TextBox2", password)//密码
+                .addParams("txtSecretCode", checkCode) //验证码
+                .addParams("RadioButtonList1", "%D1%A7%C9%FA")
+                .addParams("Button1", "")
+                .addParams("lbLanguage", "")
+                .addHeader("Host", "202.115.80.153")
+                .addHeader("Referer", "//202.115.80.153/default2.aspx")
+                .build()
+                .connTimeOut(5000)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        //请求失败
+                        callBack.signFailed("错误响应:" + e.getMessage());
+                        call.cancel();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-                return "-1";
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                switch (s) {
-                    case "0":
-                        showFailedDialog("登录失败", "检查学号密码，换个姿势，再来一次");
-                        callBack.signFailed();
-                        break;
-                    case "-1":
-                        if (signErrorCount > 3) {
-                            showFeedBack();
-                            signErrorCount = 0;
-                            break;
+                    @Override
+                    public void onResponse(String response) {
+                        //请求成功，response就是得到的html文件（网页源代码）
+                        if (response.contains("验证码不正确")) {
+                            //如果源代码包含“验证码不正确”
+                            callBack.signFailed("验证码不正确");
+                        } else if (response.contains("密码错误")) {
+                            //如果源代码包含“密码错误”
+                            callBack.signFailed("验证码不正确");
+                        } else if (response.contains("用户名不存在")) {
+                            //如果源代码包含“用户名不存在”
+                            callBack.signFailed("用户名不存在");
+                        } else {
+                            //登录成功
+                            callBack.signSuccess();
+                            User user = new User(account, password);
+                            AppControl.getInstance().getSpUtil().saveUser(user);
                         }
-                        showErrorDialog("服务器连接失败，请稍候重试");
-                        signErrorCount++;
-                        callBack.signFailed();
-                        break;
-                    default:
-                        showOkDialog("登录成功");
-                        callBack.signSuccess(s);
-                        break;
-                }
-            }
-        }
-
-        if (isNetworkConnected()) {
-            showGetDialog("登录教务系统中", "连啊，连啊，我的骄傲放纵");
-            new SignTask().execute();
-        } else {
-            showErrorDialog("网络错误,请检查网络连接");
-        }
+                    }
+                });
     }
 
     public interface SignJiaoWuCallback {
-        void signSuccess(String s);
+        void signSuccess();
 
-        void signFailed();
+        void signFailed(String info);
     }
 
     /**
      * 获取验证码
      */
-    public void getCheckCode(final GetCheckCodeCallBack callBack) {
-        ImageRequest imageRequest = new ImageRequest(SIGN_CODE, new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                callBack.getCodeSuccess(response, "");
-            }
-        }, 100, 100, ImageView.ScaleType.CENTER, Bitmap.Config.ARGB_4444, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                callBack.getCodeFailed();
-            }
-        });
-        if (isNetworkConnected()) {
-            AppControl.getInstance().getRequestQueue().add(imageRequest);
-        } else {
-            showErrorDialog("网络错误,请检查网络连接");
+    public void getCheckCode(String reLode, final GetCheckCodeCallBack callBack) {
+        if (reLode == null) {
+            reLode = "";
         }
+        if (!isNetworkConnected()) {
+            AppControl.getInstance().showToast("网络错误,请检查网络连接");
+            return;
+        }
+        OkHttpUtils
+                .get()
+                .url(SIGN_CODE + reLode)
+                .build()
+                .connTimeOut(5000)
+                .execute(new BitmapCallback() {
+                    @Override
+                    public void onError(okhttp3.Call call, Exception e) {
+                        //加载失败
+                        callBack.getCodeFailed();
+                    }
+
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        //设置验证码
+                        callBack.getCodeSuccess(response, "");
+                    }
+                });
+    }
+
+    public void reLoadCode(final GetCheckCodeCallBack callBack) {
+        getCheckCode("?", callBack);
     }
 
     public interface GetCheckCodeCallBack {
         void getCodeSuccess(Bitmap bitmap, String session);
 
         void getCodeFailed();
+    }
+
+    public void getEducationInfo(final GetEducationInfoCall call) {
+        if (!isNetworkConnected()) {
+            AppControl.getInstance().showToast("网络未连接,请重试");
+            return;
+        }
+        String url = "http://202.115.80.153/xskbcx.aspx?xh=" + AppControl.getInstance().getSpUtil().getUser().account +
+                "&xm=%BC%CD%D1%F4&gnmkdm=N121603";
+        OkHttpUtils
+                .get()
+                .addHeader("Host", "202.115.80.153")
+                .addHeader("Referer", url)
+                .url(url)
+                .build().connTimeOut(50000).execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(String response) {
+                Document document = Jsoup.parse(response);
+                Elements elements = document.select("body");
+                Log.d("TAG", elements.toString());
+            }
+        });
+
+    }
+
+    public interface GetEducationInfoCall {
+        void getOk();
+
+        void getFailed(String info);
     }
 
     public void feedBack(final String content, final String contact, final FeedBackCallBack callBack) {
@@ -785,12 +844,12 @@ public class NetRequest {
                 , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("TAG", "to server" + response);
+                Log.d("TAG", "传送登录信息到服务器,响应码:" + response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("TAG", "to server error" + error.toString());
+                Log.d("TAG", "传送登录信息到服务器,响应码:" + error.toString());
             }
         }) {
             @Override
@@ -805,6 +864,111 @@ public class NetRequest {
     }
 
     /**
+     * 获取首页成大图册
+     *
+     * @param call 回调
+     */
+    public void getHomeBanner(final GetHomeCall call) {
+        class Task extends AsyncTask<Void, Void, List<BannerBean>> {
+
+            @Override
+            protected List<BannerBean> doInBackground(Void... voids) {
+                Connection connection = Jsoup.connect(HOME);
+                try {
+                    Document document = connection.get();
+                    Elements elementsImage = document.select("div.p-img");
+                    List<BannerBean> bannerBeanList = new ArrayList<>();
+                    for (int i = 0; i < elementsImage.size(); i++) {
+                        Element element = elementsImage.get(i);
+                        String url = element.getElementsByTag("a").attr("href");
+                        String title = element.getElementsByTag("a").attr("title");
+                        String imageUrl = element.select("a >img").attr("src");
+                        bannerBeanList.add(new BannerBean(url, imageUrl, title));
+                    }
+                    return bannerBeanList;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    call.getBannerFailed(e.getMessage());
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(List<BannerBean> bannerBeanList) {
+                super.onPostExecute(bannerBeanList);
+                if (bannerBeanList != null) {
+                    call.getBannerOk(bannerBeanList);
+                }
+            }
+        }
+        if (isNetworkConnected()) {
+            new Task().execute();
+        } else {
+            call.getBannerFailed("网络未连接,请重试");
+        }
+    }
+
+    public interface GetHomeCall {
+        void getBannerOk(List<BannerBean> bannerBeanList);
+
+        void getBannerFailed(String info);
+    }
+
+    /**
+     * 获取成大相册
+     *
+     * @param url  图片地址
+     * @param call 回调
+     */
+    public void getImageAlbum(final String url, final GetAlbumCall call) {
+        class Task extends AsyncTask<Void, Void, List<Album>> {
+
+            @Override
+            protected List<Album> doInBackground(Void... voids) {
+                Connection connection = Jsoup.connect(url);
+                try {
+                    Document document = connection.get();
+                    Element element = document.select("div#news_content").first();
+                    Elements elements = element.select("p >img");
+                    List<Album> albumList = new ArrayList<>();
+                    for (int i = 0; i < elements.size(); i++) {
+                        String url = elements.get(i).attr("src");
+                        String author = elements.get(i).attr("alt");
+                        albumList.add(new Album(url, author));
+                    }
+                    return albumList;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    call.getAlumFailed(e.getMessage() + "获取失败,请重试");
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(List<Album> albumList) {
+                super.onPostExecute(albumList);
+                if (albumList != null) {
+                    call.getAlbumOk(albumList);
+                } else {
+                    call.getAlumFailed("获取失败,请重试");
+                }
+            }
+        }
+        if (isNetworkConnected()) {
+            new Task().execute();
+        } else {
+            call.getAlumFailed("网络未连接,请重试");
+        }
+    }
+
+    public interface GetAlbumCall {
+        void getAlbumOk(List<Album> albumList);
+
+        void getAlumFailed(String info);
+
+    }
+
+    /**
      * 判断网络是否连接
      *
      * @return 连接返回true, 未连接返回false
@@ -814,69 +978,6 @@ public class NetRequest {
                 .getSystemService(Context.CONNECTIVITY_SERVICE))
                 .getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isAvailable();
-    }
-
-    private void showGetDialog(String title, String content) {
-        if (dialog != null)
-            dialog.dismissWithAnimation();
-        dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
-        dialog.setTitleText(title).setContentText(content);
-        dialog.setCancelable(false);
-        dialog.show();
-    }
-
-    private void showOkDialog(String title) {
-        if (dialog != null) {
-            dialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-            dialog.setTitleText(title);
-            dialog.dismissWithAnimation();
-        }
-    }
-
-    private void showFailedDialog(String title, String content) {
-        if (dialog != null)
-            dialog.dismissWithAnimation();
-        dialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE);
-        dialog.setTitleText(title);
-        dialog.setContentText(content);
-        dialog.setConfirmText("确定");
-        dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                dialog.dismissWithAnimation();
-            }
-        });
-        dialog.show();
-    }
-
-    private void showErrorDialog(String error) {
-        if (dialog != null)
-            dialog.dismissWithAnimation();
-        dialog = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText(error)
-                .setConfirmText("确定");
-        dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                dialog.dismissWithAnimation();
-            }
-        });
-        dialog.show();
-    }
-
-    private void showFeedBack() {
-        if (dialog != null)
-            dialog.dismissWithAnimation();
-        dialog = new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
-                .setTitleText("请向我们反馈这个问题")
-                .setConfirmText("跳到反馈");
-        dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                dialog.dismissWithAnimation();
-            }
-        });
-        dialog.show();
     }
 
 }

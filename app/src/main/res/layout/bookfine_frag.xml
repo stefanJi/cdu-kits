@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <cn.youcute.library.diyView.LoadMoreListView
+    <ListView
         android:id="@+id/list_book_fine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="#eee"
-        android:dividerHeight="2dp"
+        android:dividerHeight="5dp"
         android:padding="5dp" />
 </android.support.v4.widget.SwipeRefreshLayout>

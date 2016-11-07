@@ -1,77 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_menu"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="#fff"
-    android:orientation="vertical">
-    <!--底部导航-->
+    android:layout_height="match_parent">
+
     <LinearLayout
-        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <View
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:text="-成大图片相册-"
+            android:textColor="@color/menu_text" />
+
+        <com.sivin.Banner
+            android:id="@+id/banner"
+            android:layout_width="360dp"
+            android:layout_height="240dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/tv_image_title"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#eee" />
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="14sp" />
 
-        <include
-            android:id="@+id/radioGroup_bottom"
-            layout="@layout/include_bottom_bar" />
-    </LinearLayout>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/layout"
-        android:orientation="vertical">
-        <!--顶部-->
-        <RelativeLayout
+        <TextView
+            android:id="@+id/tv_search"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@color/primary"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:background="@drawable/s_main_menu_text"
+            android:drawableEnd="@mipmap/ic_search"
+            android:drawableRight="@mipmap/ic_search"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="搜索校内图书/豆瓣图书"
+            android:textColor="@color/menu_text"
+            android:textSize="16sp" />
 
-            <ImageButton
-                android:id="@+id/imgBtn_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@color/transparent"
-                android:contentDescription="@string/app_name"
-                android:padding="5dp"
-                android:src="@drawable/selector_radio_drop" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
 
-            <ImageButton
-                android:id="@+id/imgBtn_right"
-                tools:ignore="ContentDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@color/transparent"
-                android:padding="5dp"
-                android:src="@drawable/selector_search_btn" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tv_main_title"
-                tools:ignore="RelativeOverlap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/app_name"
-                android:textColor="@color/icons"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+                android:id="@+id/tv_library"
+                style="@style/style_main_menu_text"
+                android:text="@string/library_info" />
+
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_announce"
+                style="@style/style_main_menu_text"
+                android:text="@string/announce_info" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_education"
+                style="@style/style_main_menu_text"
+                android:text="@string/education_info" />
+
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_net_education"
+                style="@style/style_main_menu_text"
+                android:text="@string/net_education_info" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="20dp" />
 
         <FrameLayout
-            android:id="@+id/main_frame"
+            android:id="@+id/frame_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:background="@color/window_bg" />
     </LinearLayout>
-</RelativeLayout>
+
+</ScrollView>
+

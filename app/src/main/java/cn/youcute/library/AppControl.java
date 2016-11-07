@@ -1,20 +1,17 @@
 package cn.youcute.library;
 
 import android.app.Application;
-import android.content.Context;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-import net.youmi.android.AdManager;
-
+import cn.youcute.library.util.BitmapCache;
 import cn.youcute.library.util.NetRequest;
 import cn.youcute.library.util.SpUtil;
 
 /**
- * Created by jy on 2016/9/22.
- * 单例类
+ * Created by jy on 2016/11/6.
  */
 public class AppControl extends Application {
     private static AppControl appControl;
@@ -22,12 +19,14 @@ public class AppControl extends Application {
     private static SpUtil spUtil;
     private Toast toast;
     private RequestQueue requestQueue;
+    private BitmapCache bitmapCache;
+    public String sessionLibrary;
+    public String sessionEducation;
 
     @Override
     public void onCreate() {
         super.onCreate();
         appControl = this;
-//        AdManager.getInstance(this).init("2cc49376cb40eedd", "ff1e699d9b499f89", true, true);
     }
 
     /**
@@ -45,11 +44,10 @@ public class AppControl extends Application {
      * @return NetRequest工具类
      */
     public NetRequest getNetRequest() {
+        if (netRequest == null) {
+            netRequest = new NetRequest();
+        }
         return netRequest;
-    }
-
-    public void initNetRequest(Context context) {
-        netRequest = new NetRequest(context);
     }
 
     /**
@@ -85,5 +83,17 @@ public class AppControl extends Application {
             requestQueue = Volley.newRequestQueue(getApplicationContext());
         }
         return requestQueue;
+    }
+
+    /**
+     * 获取图片缓存空间
+     *
+     * @return 缓存空间
+     */
+    public BitmapCache getBitmapCache() {
+        if (bitmapCache == null) {
+            bitmapCache = new BitmapCache();
+        }
+        return bitmapCache;
     }
 }

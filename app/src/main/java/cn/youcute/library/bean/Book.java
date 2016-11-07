@@ -12,6 +12,8 @@ public class Book {
     public String endData;//应还日期
     public String getCount;//续借量
     public String count;    //可借数量
+    public String check;    //续借编号
+    public String url;
 
     public Book() {
     }
@@ -30,6 +32,25 @@ public class Book {
         this.code = code;
         this.name = name;
         this.count = count;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        return code != null ? code.equals(book.code) : book.code == null && (author != null ? author.equals(book.author) : book.author == null && name.equals(book.name));
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = code != null ? code.hashCode() : 0;
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + name.hashCode();
+        return result;
     }
 
     @Override

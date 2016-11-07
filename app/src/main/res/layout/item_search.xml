@@ -2,30 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/s_main_menu_text"
     android:orientation="vertical"
     android:padding="5dp">
 
-    <TextView
-        android:id="@+id/tv_book_name"
-        style="@style/book_list_text"
-        android:maxLines="3" />
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="5dp" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_search_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/menu_text"
+        android:textSize="16sp" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="5dp" />
+
+    <TextView
+        android:id="@+id/tv_search_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:drawableEnd="@mipmap/ic_right"
+        android:drawableRight="@mipmap/ic_right"
+        android:textColor="@color/menu_text"
+        android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tv_book_count"
-            style="@style/book_list_text" />
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="5dp" />
 
-        <Space
-            android:layout_width="20dp"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/tv_book_code"
-            style="@style/book_list_text"
-            android:maxLines="2" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_search_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/menu_text"
+        android:textSize="14sp" />
 </LinearLayout>

@@ -9,6 +9,7 @@ public class History {
     public String name;
     public String getData;
     public String endData;
+    public String url;
 
     public History() {
     }

@@ -47,14 +47,14 @@ public class AdapterBookFine extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_bookfine, null);
             viewHolder = new ViewHolder();
+            viewHolder.tvCode = (TextView) convertView.findViewById(R.id.tv_fine_code);
+            viewHolder.tvName=(TextView) convertView.findViewById(R.id.tv_fine_name);
+            viewHolder.tvEMoney=(TextView) convertView.findViewById(R.id.tv_fine_money_e);
+            viewHolder.tvSMoney=(TextView) convertView.findViewById(R.id.tv_fine_money_s);
+            viewHolder.tvGetData=(TextView) convertView.findViewById(R.id.tv_fine_get);
+            viewHolder.tvEndData=(TextView) convertView.findViewById(R.id.tv_fine_end);
+            viewHolder.tvStatus=(TextView) convertView.findViewById(R.id.tv_fine_status);
             convertView.setTag(viewHolder);
-            viewHolder.tvCode = (TextView) convertView.findViewById(R.id.tv_book_code_fine);
-            viewHolder.tvName = (TextView) convertView.findViewById(R.id.tv_book_name_fine);
-            viewHolder.tvGetData = (TextView) convertView.findViewById(R.id.tv_getData_fine);
-            viewHolder.tvEndData = (TextView) convertView.findViewById(R.id.tv_book_endData_fine);
-            viewHolder.tvSMoney = (TextView) convertView.findViewById(R.id.tv_book_shouldMoney);
-            viewHolder.tvEMoney = (TextView) convertView.findViewById(R.id.tv_endMoney);
-            viewHolder.tvStatus = (TextView) convertView.findViewById(R.id.tv_book_status);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
