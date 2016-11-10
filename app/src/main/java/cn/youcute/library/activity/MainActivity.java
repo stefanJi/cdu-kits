@@ -12,16 +12,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-
 import cn.youcute.library.AppControl;
 import cn.youcute.library.R;
 import cn.youcute.library.util.NetRequest;
 import cn.youcute.library.util.ToastUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, NetRequest.FeedBackCallBack {
-    private ActionBar actionBar;
     private AlertDialog dialogProgress, dialogCount;
     private LinearLayout changeCount;
 
@@ -37,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -47,11 +43,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.notice).setOnClickListener(this);
         findViewById(R.id.education).setOnClickListener(this);
         findViewById(R.id.net).setOnClickListener(this);
-        findViewById(R.id.tv_search).setOnClickListener(this);
         findViewById(R.id.search).setOnClickListener(this);
         changeCount = (LinearLayout) findViewById(R.id.change);
         changeCount.setOnClickListener(this);
-        getAd();
     }
 
     @Override
@@ -62,15 +56,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             changeCount.setVisibility(View.INVISIBLE);
         }
-    }
-
-    /**
-     * 获取广告
-     */
-    private void getAd() {
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
     }
 
     private AlertDialog dialogFeedBack;
@@ -146,11 +131,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(MainActivity.this, AcNotice.class);
                 startActivity(intent);
                 break;
-            case R.id.tv_search:
-                intent = new Intent();
-                intent.setClass(MainActivity.this, AcSearch.class);
-                startActivity(intent);
-                break;
             case R.id.education:
                 intent = new Intent(MainActivity.this, AcEducation.class);
                 startActivity(intent);
@@ -195,6 +175,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void feedBackSuccess() {
         dialogProgress.dismiss();
         ToastUtil.showToast("反馈成功，谢谢反馈");
+        etFeed.setText("");
+        etContact.setText("");
     }
 
     @Override

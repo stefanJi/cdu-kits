@@ -3,10 +3,10 @@ package cn.youcute.library.activity.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,12 +18,13 @@ import cn.youcute.library.R;
 import cn.youcute.library.adapter.AdapterBookList;
 import cn.youcute.library.bean.Book;
 import cn.youcute.library.util.NetRequest;
+import cn.youcute.library.util.ToastUtil;
 
 /**
  * Created by jy on 2016/9/23.
  * 当前借阅
  */
-public class BookListFragment extends Fragment implements NetRequest.GetBookListCallBack {
+public class BookListFragment extends Fragment implements NetRequest.GetBookListCallBack, NetRequest.RenewBookCall {
     private View rootView;
     private ListView listView;
     private TextView tvInfo;
@@ -58,7 +59,7 @@ public class BookListFragment extends Fragment implements NetRequest.GetBookList
     }
 
     @Override
-    public void getBookListSuccess(List<Book> list) {
+    public void getBookListSuccess(final List<Book> list) {
         progressBar.setVisibility(View.INVISIBLE);
         if (list.size() == 0) {
             tvInfo.setVisibility(View.VISIBLE);
@@ -68,6 +69,13 @@ public class BookListFragment extends Fragment implements NetRequest.GetBookList
         if (adapterBookList == null) {
             adapterBookList = new AdapterBookList(getActivity(), list);
             listView.setAdapter(adapterBookList);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    AppControl.getInstance().getNetRequest().renewBook(list.get(i).code, list.get(i).check, BookListFragment.this);
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            });
         }
         adapterBookList.notifyDataSetChanged();
     }
@@ -78,4 +86,10 @@ public class BookListFragment extends Fragment implements NetRequest.GetBookList
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void renewCall(String info) {
+        ToastUtil.showToast(info);
+        progressBar.setVisibility(View.INVISIBLE);
+        AppControl.getInstance().getNetRequest().getBookList(this);
+    }
 }

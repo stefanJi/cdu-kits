@@ -1,7 +1,8 @@
 package cn.youcute.library;
 
-import android.app.Application;
-import android.widget.Toast;
+import android.content.Context;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -12,14 +13,21 @@ import cn.youcute.library.util.SpUtil;
 
 /**
  * Created by jy on 2016/11/6.
+ * my application
  */
-public class AppControl extends Application {
+public class AppControl extends MultiDexApplication {
     private static AppControl appControl;
     private static NetRequest netRequest;
     private static SpUtil spUtil;
     private RequestQueue requestQueue;
     private BitmapCache bitmapCache;
     public String sessionLibrary;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {

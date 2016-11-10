@@ -14,6 +14,7 @@ import cn.youcute.library.activity.fragment.GuideFrag4;
 
 /**
  * Created by jy on 2016/11/9.
+ * 引导页
  */
 
 public class AcGuide extends AppIntro {

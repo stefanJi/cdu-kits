@@ -29,6 +29,7 @@ import okhttp3.Call;
 
 /**
  * Created by jy on 2016/11/6.
+ * notice of school
  */
 
 public class AcNotice extends AcBase implements NetRequest.GetAnnounceCallBack {
@@ -91,9 +92,9 @@ public class AcNotice extends AcBase implements NetRequest.GetAnnounceCallBack {
     }
 
     @Override
-    public void getAnnounceFailed() {
+    public void getAnnounceFailed(String info) {
         progressBar.setVisibility(View.INVISIBLE);
-        tvInfo.setText("获取失败,请重试");
+        tvInfo.setText(info);
     }
 
     private void getContent(String url) {
@@ -136,6 +137,8 @@ public class AcNotice extends AcBase implements NetRequest.GetAnnounceCallBack {
                 @Override
                 public void onClick(View view) {
                     dialogGet.dismiss();
+                    tvContent.setText("");
+                    tvTitle.setText("");
                 }
             });
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

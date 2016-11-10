@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -15,10 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import cn.youcute.library.AppControl;
 import cn.youcute.library.R;
 import cn.youcute.library.bean.Book;
-import cn.youcute.library.util.NetRequest;
 
 /**
  * Created by jy on 2016/9/23.
@@ -59,9 +55,6 @@ public class AdapterBookList extends BaseAdapter {
             holder.tvBookEndData = (TextView) convertView.findViewById(R.id.tv_book_outData);
             holder.tvBorrowInfo = (TextView) convertView.findViewById(R.id.tv_borrow_info);
             holder.tvRenewCount = (TextView) convertView.findViewById(R.id.tv_renew_count);
-            holder.btnOn = (Button) convertView.findViewById(R.id.btn_on);
-            holder.progressBar = (ProgressBar) convertView.findViewById(R.id.progress_renew);
-            holder.tvRenewInfo = (TextView) convertView.findViewById(R.id.tv_renew_info);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -69,30 +62,11 @@ public class AdapterBookList extends BaseAdapter {
         holder.tvBookName.setText(books.get(position).name);
         holder.tvBookGetData.setText("借书日期:" + books.get(position).getData);
         holder.tvBookEndData.setText("还书日期:" + books.get(position).endData);
-        holder.progressBar.setVisibility(View.INVISIBLE);
         String count = books.get(position).getCount;
         String info = "续借量:" + String.valueOf(count);
         holder.tvRenewCount.setText(info);
-        final int countMore = Integer.parseInt(count); //已经续借量
-        holder.btnOn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (countMore >= 1) {
-                    holder.tvRenewInfo.setText("该书已续借1次，请到图书馆续借");
-                } else {
-                    holder.progressBar.setVisibility(View.VISIBLE);
-                    AppControl.getInstance().getNetRequest().renewBook(books.get(position).code, books.get(position).check, new NetRequest.RenewBookCall() {
-                        @Override
-                        public void renewCall(String info) {
-                            holder.tvRenewInfo.setText(info);
-                            holder.progressBar.setVisibility(View.INVISIBLE);
-                        }
-                    });
-                }
-            }
-        });
         //计算剩余返还天数
-        int countDay = 0;
+        int countDay;
         try {
             countDay = daysBetween(books.get(position).getData, books.get(position).endData);
             if (countDay > 0) {
@@ -118,15 +92,12 @@ public class AdapterBookList extends BaseAdapter {
         TextView tvBookEndData;
         TextView tvBorrowInfo;
         TextView tvRenewCount;
-        Button btnOn;  //续借
-        ProgressBar progressBar;
-        TextView tvRenewInfo;
     }
 
     /**
      * 字符串的日期格式的计算
      */
-    public static int daysBetween(String smdate, String bdate) throws ParseException {
+    private static int daysBetween(String smdate, String bdate) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
         cal.setTime(sdf.parse(smdate));

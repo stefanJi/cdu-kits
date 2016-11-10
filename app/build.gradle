@@ -10,12 +10,17 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        multiDexEnabled = true
     }
     buildTypes {
         debug{
-
         }
         release {
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            //Zipalign优化
+            zipAlignEnabled true
+
             minifyEnabled true  //是否混淆
             shrinkResources true //是否去除无效的资源文件
             //前一部分代表系统默认的android程序的混淆文件，该文件已经包含了基本的混淆声明
@@ -42,4 +47,5 @@ dependencies {
     compile 'com.zhy:okhttputils:2.3.9'
     //
     compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.android.support:multidex:1.0.1'
 }

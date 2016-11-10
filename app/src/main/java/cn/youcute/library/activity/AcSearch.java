@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,7 +38,7 @@ import cn.youcute.library.util.ToastUtil;
  * Created by jy on 2016/11/6.
  */
 
-public class AcSearch extends AppCompatActivity implements NetRequest.SearchBookCallBack {
+public class AcSearch extends AcBase implements NetRequest.SearchBookCallBack {
     private RadioGroup radioGroup;
     private EditText etSearch;
     private TextView tvSearch;
@@ -174,6 +173,7 @@ public class AcSearch extends AppCompatActivity implements NetRequest.SearchBook
         adapterSearch.setSearchKey(key);
         hideKeyBord();
         progressBar.setVisibility(View.VISIBLE);
+        tvLoadInfo.setText("点击加载更多");
         try {
             AppControl.getInstance().getNetRequest().searchBook(searchAction, key, page, this);
         } catch (UnsupportedEncodingException e) {

@@ -1,5 +1,8 @@
 package cn.youcute.library.activity;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -7,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
+import cn.youcute.library.AppControl;
 import cn.youcute.library.R;
 
 /**
@@ -48,4 +52,17 @@ public class AcBase extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    /**
+     * 判断网络是否连接
+     *
+     * @return 连接返回true, 未连接返回false
+     */
+    public boolean isNetworkConnected() {
+        NetworkInfo networkInfo = ((ConnectivityManager) AppControl.getInstance()
+                .getSystemService(Context.CONNECTIVITY_SERVICE))
+                .getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isAvailable();
+    }
+
 }

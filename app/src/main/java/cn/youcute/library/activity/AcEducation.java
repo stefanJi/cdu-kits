@@ -10,9 +10,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.AdView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -33,18 +32,16 @@ import okhttp3.Call;
 
 public class AcEducation extends AcBase {
     private ProgressBar progressBar;
-    private ListView listView;
     private Button btnRe;
     private List<String> stringList;
     private List<String> serverUrlList;
     private ArrayAdapter<String> adapter;
-    private InterstitialAd interstitial;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_education);
-        listView = (ListView) findViewById(R.id.list_education);
+        ListView listView = (ListView) findViewById(R.id.list_education);
         progressBar = (ProgressBar) findViewById(R.id.progress);
         btnRe = (Button) findViewById(R.id.btn_re);
         btnRe.setOnClickListener(new View.OnClickListener() {
@@ -68,26 +65,23 @@ public class AcEducation extends AcBase {
             }
         });
         listView.setAdapter(adapter);
-        // Create the interstitial.
-        interstitial = new InterstitialAd(this);
-        interstitial.setAdUnitId(getResources().getString(R.string.banner_ad_unit_id));
-        // Create ad request.
-        AdRequest adRequest = new AdRequest.Builder().build();
-        // Begin loading your interstitial.
-        interstitial.loadAd(adRequest);
-        interstitial.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                if (interstitial.isLoaded()) {
-                    interstitial.show();
-                }
-            }
-        });
+        getAd();
     }
 
+    /**
+     * 获取广告
+     */
+    private void getAd() {
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+    }
 
     private void getServer() {
+        if (!isNetworkConnected()) {
+            ToastUtil.showToast("网络未连接，请检查重试");
+            return;
+        }
         btnRe.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         OkHttpUtils
@@ -126,7 +120,7 @@ public class AcEducation extends AcBase {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(this);
+        super.onDestroy();
     }
 }

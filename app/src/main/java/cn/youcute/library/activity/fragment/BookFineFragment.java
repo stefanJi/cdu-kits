@@ -26,7 +26,6 @@ public class BookFineFragment extends Fragment implements NetRequest.GetBookFine
     private ListView listView;
     private AdapterBookFine adapterBookFine;
     private List<BookFine> bookFines;
-    private List<BookFine> oldFines;    //上一次加载更多的备份
 
     @Nullable
     @Override

@@ -16,6 +16,7 @@ import cn.youcute.library.adapter.MyFragmentAdapter;
 import cn.youcute.library.bean.User;
 import cn.youcute.library.util.NetRequest;
 import cn.youcute.library.util.SpUtil;
+import cn.youcute.library.util.ToastUtil;
 
 /**
  * Created by jy on 2016/11/6.
@@ -81,7 +82,8 @@ public class AcLibrary extends AcBase implements NetRequest.SignCallBack {
     }
 
     @Override
-    public void signFailed() {
+    public void signFailed(String info) {
+        ToastUtil.showToast(info);
         Intent intent = new Intent(AcLibrary.this, AcSignLibrary.class);
         startActivityForResult(intent, 1);
         overridePendingTransition(R.anim.right_in, R.anim.left_out);

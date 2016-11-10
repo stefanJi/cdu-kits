@@ -48,33 +48,33 @@ public class AdapterBookFine extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_bookfine, null);
             viewHolder = new ViewHolder();
             viewHolder.tvCode = (TextView) convertView.findViewById(R.id.tv_fine_code);
-            viewHolder.tvName=(TextView) convertView.findViewById(R.id.tv_fine_name);
-            viewHolder.tvEMoney=(TextView) convertView.findViewById(R.id.tv_fine_money_e);
-            viewHolder.tvSMoney=(TextView) convertView.findViewById(R.id.tv_fine_money_s);
-            viewHolder.tvGetData=(TextView) convertView.findViewById(R.id.tv_fine_get);
-            viewHolder.tvEndData=(TextView) convertView.findViewById(R.id.tv_fine_end);
-            viewHolder.tvStatus=(TextView) convertView.findViewById(R.id.tv_fine_status);
+            viewHolder.tvName = (TextView) convertView.findViewById(R.id.tv_fine_name);
+            viewHolder.tvEMoney = (TextView) convertView.findViewById(R.id.tv_fine_money_e);
+            viewHolder.tvSMoney = (TextView) convertView.findViewById(R.id.tv_fine_money_s);
+            viewHolder.tvGetData = (TextView) convertView.findViewById(R.id.tv_fine_get);
+            viewHolder.tvEndData = (TextView) convertView.findViewById(R.id.tv_fine_end);
+            viewHolder.tvStatus = (TextView) convertView.findViewById(R.id.tv_fine_status);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.tvCode.setText(bookFines.get(position).code);
+        viewHolder.tvCode.setText("编码:" + bookFines.get(position).code);
         viewHolder.tvName.setText(bookFines.get(position).name);
-        viewHolder.tvGetData.setText(bookFines.get(position).getData);
-        viewHolder.tvEndData.setText(bookFines.get(position).endData);
-        viewHolder.tvSMoney.setText(bookFines.get(position).shouldMoney);
-        viewHolder.tvEMoney.setText(bookFines.get(position).money);
+        viewHolder.tvGetData.setText("借书日期:" + bookFines.get(position).getData);
+        viewHolder.tvEndData.setText("还书日期:" + bookFines.get(position).endData);
+        viewHolder.tvSMoney.setText("欠款:" + bookFines.get(position).shouldMoney);
+        viewHolder.tvEMoney.setText("已还:" + bookFines.get(position).money);
         float money1, money2;
         money1 = Float.parseFloat(bookFines.get(position).shouldMoney);
         money2 = Float.parseFloat(bookFines.get(position).money);
         if (money1 > money2) {
             viewHolder.tvEMoney.setTextColor(Color.RED);
         }
-        viewHolder.tvStatus.setText(bookFines.get(position).status);
+        viewHolder.tvStatus.setText("状态:" + bookFines.get(position).status);
         return convertView;
     }
 
-    class ViewHolder {
+    private class ViewHolder {
         TextView tvCode;
         TextView tvName;
         TextView tvGetData;

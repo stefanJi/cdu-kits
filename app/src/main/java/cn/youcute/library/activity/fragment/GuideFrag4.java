@@ -18,7 +18,6 @@ import cn.youcute.library.R;
 public class GuideFrag4 extends Fragment {
     private View view;
     private ImageView ivBack;
-    private ImageView ivIcon;
     private TextView tvTitle, tvContent;
 
     @Nullable
@@ -33,13 +32,11 @@ public class GuideFrag4 extends Fragment {
 
     private void initView() {
         ivBack = (ImageView) view.findViewById(R.id.iv_back);
-        ivIcon = (ImageView) view.findViewById(R.id.iv_icon);
         tvTitle = (TextView) view.findViewById(R.id.tv_title);
         tvContent = (TextView) view.findViewById(R.id.tv_content);
-        ivBack.setImageResource(R.mipmap.color_education);
-        ivIcon.setImageResource(R.mipmap.img_education);
+        ivBack.setImageResource(R.mipmap.back_educatiion);
         tvTitle.setText("教务系统");
-        tvContent.setText("快捷登录教务管理系统，方便迅速");
+        tvContent.setText("快捷登录教务管理系统，便捷迅速");
     }
 
 }

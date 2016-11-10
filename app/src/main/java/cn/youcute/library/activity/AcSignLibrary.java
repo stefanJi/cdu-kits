@@ -1,14 +1,15 @@
 package cn.youcute.library.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class AcSignLibrary extends AppCompatActivity implements NetRequest.SignC
             return;
         }
         dialog.show();
+        etPass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         AppControl.getInstance().getNetRequest().sign(account, pass, this);
     }
 
@@ -64,7 +66,7 @@ public class AcSignLibrary extends AppCompatActivity implements NetRequest.SignC
         etPass.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == keyEvent.ACTION_DOWN) {
+                if (i == EditorInfo.IME_ACTION_DONE) {
                     signIn();
                 }
                 return false;
@@ -83,6 +85,7 @@ public class AcSignLibrary extends AppCompatActivity implements NetRequest.SignC
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
+                setResult(-1);
                 finish();
                 overridePendingTransition(R.anim.right_out, R.anim.left_in);
                 break;
@@ -112,8 +115,9 @@ public class AcSignLibrary extends AppCompatActivity implements NetRequest.SignC
     }
 
     @Override
-    public void signFailed() {
+    public void signFailed(String info) {
         dialog.dismiss();
-        ToastUtil.showToast("登录失败，请重试");
+        ToastUtil.showToast("登录失败" + info);
+        etPass.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
     }
 }

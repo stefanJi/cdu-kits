@@ -1,12 +1,13 @@
 package cn.youcute.library.activity.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import cn.youcute.library.AppControl;
 import cn.youcute.library.R;
+import cn.youcute.library.activity.AcWebViewSearch;
 import cn.youcute.library.adapter.AdapterBookHistory;
 import cn.youcute.library.bean.History;
 import cn.youcute.library.util.NetRequest;
@@ -84,6 +86,18 @@ public class BookHistoryFragment extends Fragment implements NetRequest.GetBookH
             });
             listHistory.addFooterView(view);
             listHistory.setAdapter(adapterBookHistory);
+            listHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    String title = BookHistoryFragment.this.historyList.get(i).name;
+                    String url = BookHistoryFragment.this.historyList.get(i).url;
+                    Intent intent = new Intent(getActivity(), AcWebViewSearch.class);
+                    intent.putExtra("title", title);
+                    intent.putExtra("url", url);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                }
+            });
         }
         adapterBookHistory.notifyDataSetChanged();
     }

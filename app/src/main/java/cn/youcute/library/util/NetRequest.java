@@ -34,9 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.youcute.library.AppControl;
-import cn.youcute.library.bean.Album;
 import cn.youcute.library.bean.Announce;
-import cn.youcute.library.bean.BannerBean;
 import cn.youcute.library.bean.Book;
 import cn.youcute.library.bean.BookFine;
 import cn.youcute.library.bean.History;
@@ -95,6 +93,7 @@ public class NetRequest {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    signCallBack.signFailed("错误响应:" + e.getMessage());
                 }
                 //服务器访问超时
                 return "-1";
@@ -105,10 +104,10 @@ public class NetRequest {
                 super.onPostExecute(s);
                 switch (s) {
                     case "0":
-                        signCallBack.signFailed();
+                        signCallBack.signFailed("账号或密码错误");
                         break;
                     case "-1":
-                        signCallBack.signFailed();
+                        signCallBack.signFailed("服务器访问超时");
                         break;
                     default:
                         signCallBack.signSuccess(s);
@@ -123,7 +122,7 @@ public class NetRequest {
         if (isNetworkConnected()) {
             new SignTask().execute();
         } else {
-            signCallBack.signFailed();
+            ToastUtil.showToast("网络未连接，请检查网络连接");
         }
     }
 
@@ -133,7 +132,7 @@ public class NetRequest {
     public interface SignCallBack {
         void signSuccess(String session);
 
-        void signFailed();
+        void signFailed(String info);
     }
 
     /**
@@ -613,55 +612,55 @@ public class NetRequest {
      * @param page 页码
      */
     public void getAnnounce(final int page, final GetAnnounceCallBack callBack) {
-        class GetAnnounceTask extends AsyncTask<Void, Void, List<Announce>> {
-
-            @Override
-            protected List<Announce> doInBackground(Void... params) {
-                Connection connection = Jsoup.connect(ANNOUNCE_API + String.valueOf(page));
-                try {
-                    Document document = connection.get();
-                    Elements elements = document.select("ul.w915").select("li");
-                    List<Announce> announces = new ArrayList<>();
-                    for (int i = 0; i < elements.size(); i++) {
-                        String name = elements.get(i).select("a").text();
-                        String all = elements.get(i).select("span").text();
-                        String data = all.replace("[通知公告]", "");
-                        String url = elements.get(i).select("a").attr("href");
-                        announces.add(new Announce(name, data, url));
-                    }
-                    return announces;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(List<Announce> announces) {
-                super.onPostExecute(announces);
-                if (announces == null) {
-                    callBack.getAnnounceFailed();
-                    return;
-                }
-                callBack.getAnnounceSuccess(announces);
-            }
-        }
-
-        if (isNetworkConnected()) {
-            new GetAnnounceTask().execute();
-        } else {
+        if (!isNetworkConnected()) {
             ToastUtil.showToast("网络错误,请检查网络连接");
+            return;
         }
+        OkHttpUtils
+                .get()
+                .url(ANNOUNCE_API + String.valueOf(page))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        callBack.getAnnounceFailed("错误响应:" + e.getMessage());
+                        call.cancel();
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        Document document = Jsoup.parse(response);
+                        if (document == null) {
+                            callBack.getAnnounceFailed("错误响应:" + "空白返回，请重试");
+                            return;
+                        }
+                        Elements elements = document.select("ul.w915").select("li");
+                        List<Announce> announces = new ArrayList<>();
+                        for (int i = 0; i < elements.size(); i++) {
+                            String name = elements.get(i).select("a").text();
+                            String all = elements.get(i).select("span").text();
+                            String data = all.replace("[通知公告]", "");
+                            String url = elements.get(i).select("a").attr("href");
+                            announces.add(new Announce(name, data, url));
+                        }
+                        callBack.getAnnounceSuccess(announces);
+                    }
+                });
+
     }
 
     public interface GetAnnounceCallBack {
         void getAnnounceSuccess(List<Announce> announces);
 
-        void getAnnounceFailed();
+        void getAnnounceFailed(String info);
     }
 
 
     public void signNet(final String account, final String pass, final SignNetCall signNetCall) {
+        if (!isNetworkConnected()) {
+            ToastUtil.showToast("网络未连接，请检查网络连接");
+            return;
+        }
         OkHttpUtils
                 .post()
                 .addParams("IPT_LOGINUSERNAME", account)
@@ -729,6 +728,8 @@ public class NetRequest {
         };
         if (isNetworkConnected()) {
             AppControl.getInstance().getRequestQueue().add(request);
+        } else {
+            ToastUtil.showToast("网络未连接，请检查网络连接");
         }
 
     }
@@ -761,111 +762,6 @@ public class NetRequest {
             }
         };
         AppControl.getInstance().getRequestQueue().add(request);
-    }
-
-    /**
-     * 获取首页成大图册
-     *
-     * @param call 回调
-     */
-    public void getHomeBanner(final GetHomeCall call) {
-        class Task extends AsyncTask<Void, Void, List<BannerBean>> {
-
-            @Override
-            protected List<BannerBean> doInBackground(Void... voids) {
-                Connection connection = Jsoup.connect(HOME);
-                try {
-                    Document document = connection.get();
-                    Elements elementsImage = document.select("div.p-img");
-                    List<BannerBean> bannerBeanList = new ArrayList<>();
-                    for (int i = 0; i < elementsImage.size(); i++) {
-                        Element element = elementsImage.get(i);
-                        String url = element.getElementsByTag("a").attr("href");
-                        String title = element.getElementsByTag("a").attr("title");
-                        String imageUrl = element.select("a >img").attr("src");
-                        bannerBeanList.add(new BannerBean(url, imageUrl, title));
-                    }
-                    return bannerBeanList;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    call.getBannerFailed(e.getMessage());
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(List<BannerBean> bannerBeanList) {
-                super.onPostExecute(bannerBeanList);
-                if (bannerBeanList != null) {
-                    call.getBannerOk(bannerBeanList);
-                }
-            }
-        }
-        if (isNetworkConnected()) {
-            new Task().execute();
-        } else {
-            call.getBannerFailed("网络未连接,请重试");
-        }
-    }
-
-    public interface GetHomeCall {
-        void getBannerOk(List<BannerBean> bannerBeanList);
-
-        void getBannerFailed(String info);
-    }
-
-    /**
-     * 获取成大相册
-     *
-     * @param url  图片地址
-     * @param call 回调
-     */
-    public void getImageAlbum(final String url, final GetAlbumCall call) {
-        class Task extends AsyncTask<Void, Void, List<Album>> {
-
-            @Override
-            protected List<Album> doInBackground(Void... voids) {
-                Connection connection = Jsoup.connect(url);
-                try {
-                    Document document = connection.get();
-                    Element element = document.select("div#news_content").first();
-                    Elements elements = element.select("p >img");
-                    List<Album> albumList = new ArrayList<>();
-                    for (int i = 0; i < elements.size(); i++) {
-                        String url = elements.get(i).attr("src");
-                        String author = elements.get(i).attr("alt");
-                        albumList.add(new Album(url, author));
-                    }
-                    return albumList;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    call.getAlumFailed(e.getMessage() + "获取失败,请重试");
-                    return null;
-                }
-            }
-
-            @Override
-            protected void onPostExecute(List<Album> albumList) {
-                super.onPostExecute(albumList);
-                if (albumList != null) {
-                    call.getAlbumOk(albumList);
-                } else {
-                    call.getAlumFailed("获取失败,请重试");
-                }
-            }
-        }
-        if (isNetworkConnected()) {
-            new Task().execute();
-        } else {
-            call.getAlumFailed("网络未连接,请重试");
-        }
-    }
-
-    public interface GetAlbumCall {
-        void getAlbumOk(List<Album> albumList);
-
-        void getAlumFailed(String info);
-
     }
 
     /**

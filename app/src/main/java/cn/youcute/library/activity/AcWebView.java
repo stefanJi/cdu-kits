@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -18,7 +20,7 @@ import cn.youcute.library.R;
  * Created by jy on 2016/11/7.
  */
 
-public class AcWebView extends AcBase {
+public class AcWebView extends AppCompatActivity {
     private ProgressBar progressBar;
     private WebView webView;
     private String url, title;
@@ -35,6 +37,11 @@ public class AcWebView extends AcBase {
 
     private void initView() {
         actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_back);
+        }
         progressBar = (ProgressBar) findViewById(R.id.progress);
         webView = (WebView) findViewById(R.id.webView);
         final WebViewClient webViewClient = new WebViewClient() {
@@ -71,5 +78,16 @@ public class AcWebView extends AcBase {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
