@@ -28,11 +28,22 @@
 
     <style name="style_main_menu_text">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_height">80dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:background">@drawable/s_main_menu_text</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/menu_text</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="style_main_text_info">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/s_main_menu_text</item>
+        <item name="android:drawableEnd">@mipmap/ic_right</item>
+        <item name="android:drawableRight">@mipmap/ic_right</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>

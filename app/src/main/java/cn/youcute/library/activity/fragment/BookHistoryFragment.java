@@ -19,6 +19,7 @@ import cn.youcute.library.R;
 import cn.youcute.library.adapter.AdapterBookHistory;
 import cn.youcute.library.bean.History;
 import cn.youcute.library.util.NetRequest;
+import cn.youcute.library.util.ToastUtil;
 
 /**
  * Created by jy on 2016/9/23.
@@ -89,7 +90,7 @@ public class BookHistoryFragment extends Fragment implements NetRequest.GetBookH
 
     @Override
     public void getHistoryFailed() {
-        AppControl.getInstance().showToast("获取失败,请重试");
+        ToastUtil.showToast("获取失败,请重试");
     }
 
 }

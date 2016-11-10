@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "cn.youcute.library"
@@ -30,13 +30,16 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:support-v4'
     compile 'com.android.support:design:25.0.0'
-    compile "com.android.support:support-core-utils:25.0.0"
+    compile 'com.android.support:support-core-utils:25.0.0'
     //jsoup
     compile 'org.jsoup:jsoup:1.9.2'
     //google volley库
     compile 'com.mcxiaoke.volley:library:1.0.19'
+    //引导页
+    compile 'com.github.paolorotolo:appintro:4.1.0'
     //轮播图
     compile 'com.xiwenhec:banner:1.0.2'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     compile 'com.zhy:okhttputils:2.3.9'
+    //
+    compile 'com.google.android.gms:play-services:9.8.0'
 }

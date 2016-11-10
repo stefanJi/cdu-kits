@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebResourceRequest;
@@ -31,7 +30,6 @@ public class AcWebView extends AcBase {
         setContentView(R.layout.layout_web);
         url = getIntent().getStringExtra("url");
         title = getIntent().getStringExtra("title");
-        Log.d("TAG", title + url);
         initView();
     }
 
@@ -39,7 +37,7 @@ public class AcWebView extends AcBase {
         actionBar = getSupportActionBar();
         progressBar = (ProgressBar) findViewById(R.id.progress);
         webView = (WebView) findViewById(R.id.webView);
-        WebViewClient webViewClient = new WebViewClient() {
+        final WebViewClient webViewClient = new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 view.loadUrl(url);
@@ -57,12 +55,12 @@ public class AcWebView extends AcBase {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 progressBar.setVisibility(View.VISIBLE);
-                actionBar.setTitle("---加载中");
+                actionBar.setTitle("加载中");
             }
         };
         WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);//支持js
-        webSettings.setSupportZoom(true);  //支持缩放
+        webSettings.setJavaScriptEnabled(true);//支持javascript
+        webSettings.setUseWideViewPort(true);
         webView.setWebViewClient(webViewClient);
         webView.loadUrl(url);
     }

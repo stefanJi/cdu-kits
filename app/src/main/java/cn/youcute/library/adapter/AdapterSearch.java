@@ -1,7 +1,6 @@
 package cn.youcute.library.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.youcute.library.R;
-import cn.youcute.library.activity.AcWebView;
 import cn.youcute.library.bean.Book;
+import cn.youcute.library.util.TextUtil;
 
 /**
  * Created by jy on 2016/9/26.
@@ -22,10 +21,15 @@ import cn.youcute.library.bean.Book;
 public class AdapterSearch extends BaseAdapter {
     private Context context;
     private List<Book> books;
+    private String searchKey;
 
     public AdapterSearch(Context context, List<Book> books) {
         this.context = context;
         this.books = books;
+    }
+
+    public void setSearchKey(String searchKey) {
+        this.searchKey = searchKey;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class AdapterSearch extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_search, null);
@@ -53,19 +57,10 @@ public class AdapterSearch extends BaseAdapter {
             holder.tvCode = (TextView) convertView.findViewById(R.id.tv_search_code);
             holder.tvCount = (TextView) convertView.findViewById(R.id.tv_search_count);
             convertView.setTag(holder);
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, AcWebView.class);
-                    intent.putExtra("url", books.get(position).url);
-                    intent.putExtra("title", books.get(position).name);
-                    context.startActivity(intent);
-                }
-            });
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tvName.setText(books.get(position).name);
+        holder.tvName.setText(TextUtil.highlight(books.get(position).name.toLowerCase(), searchKey.toLowerCase()));
         holder.tvCount.setText(books.get(position).count);
         holder.tvCode.setText(books.get(position).code);
         return convertView;

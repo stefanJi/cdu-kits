@@ -15,7 +15,6 @@
     <string name="help">帮助</string>
     <string name="sina">微博:</string>
     <string name="sina_link">http://weibo.com/00wifi</string>
-    <string name="about_app">专为成都学院内部人员使用的一款APP\n查询图书借阅信息，图书续借\n快速浏览学校最新通知公告\n快速查询个人教务系统</string>
     <string name="author">开发者:\@JiYang</string>
     <string name="library_info">图书借阅信息</string>
     <string name="education_info">教务管理系统</string>
@@ -40,8 +39,10 @@
     <string name="change_account">切换账户</string>
     <string name="net_connent_error">网络连接失败，点击重试</string>
     <string name="send_feedback">发送反馈</string>
-    <string name="banner_ad_unit_id">ca-app-pub-1821932431592350~1142713021</string>
-    <string name="ad_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="image_show">成大图册展示</string>
     <string name="refresh">刷新</string>
+    <string name="search_info">搜索图书</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad_unit_id2">ca-app-pub-1821932431592350/5572912621</string>
+
 </resources>

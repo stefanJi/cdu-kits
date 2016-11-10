@@ -2,11 +2,20 @@ package cn.youcute.library.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +25,7 @@ import cn.youcute.library.R;
 import cn.youcute.library.adapter.AdapterAnnounce;
 import cn.youcute.library.bean.Announce;
 import cn.youcute.library.util.NetRequest;
+import okhttp3.Call;
 
 /**
  * Created by jy on 2016/11/6.
@@ -27,7 +37,7 @@ public class AcNotice extends AcBase implements NetRequest.GetAnnounceCallBack {
     private ProgressBar progressBar, progressBarFooter;
     private TextView tvInfo;
     private AdapterAnnounce adapterAnnounce;
-    private int page = 0;
+    private int page = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +78,13 @@ public class AcNotice extends AcBase implements NetRequest.GetAnnounceCallBack {
             });
             listView.addFooterView(view);
             listView.setAdapter(adapterAnnounce);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    showContent(announceList.get(i).title);
+                    getContent(announceList.get(i).url);
+                }
+            });
         }
         this.announceList.addAll(announces);
         adapterAnnounce.notifyDataSetChanged();
@@ -77,5 +94,56 @@ public class AcNotice extends AcBase implements NetRequest.GetAnnounceCallBack {
     public void getAnnounceFailed() {
         progressBar.setVisibility(View.INVISIBLE);
         tvInfo.setText("获取失败,请重试");
+    }
+
+    private void getContent(String url) {
+        OkHttpUtils
+                .get()
+                .url(url)
+                .build()
+                .connTimeOut(5000)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        progressBarGet.setVisibility(View.INVISIBLE);
+                        tvContent.setText("错误响应:" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        progressBarGet.setVisibility(View.INVISIBLE);
+                        Document document = Jsoup.parse(response);
+                        String content = document.select("div#news_content").text();
+                        if (content != null)
+                            tvContent.setText(content);
+                    }
+                });
+    }
+
+    private AlertDialog dialogGet;
+    private ProgressBar progressBarGet;
+    private TextView tvTitle, tvContent;
+    private Button btnClose;
+
+    private void showContent(String title) {
+        if (dialogGet == null) {
+            View view = LayoutInflater.from(this).inflate(R.layout.dialog_notice_show, null, false);
+            progressBarGet = (ProgressBar) view.findViewById(R.id.progress);
+            tvTitle = (TextView) view.findViewById(R.id.tv_title);
+            tvContent = (TextView) view.findViewById(R.id.tv_content);
+            btnClose = (Button) view.findViewById(R.id.btn_close);
+            btnClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogGet.dismiss();
+                }
+            });
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setView(view);
+            dialogGet = builder.create();
+        }
+        progressBarGet.setVisibility(View.VISIBLE);
+        tvTitle.setText(title);
+        dialogGet.show();
     }
 }

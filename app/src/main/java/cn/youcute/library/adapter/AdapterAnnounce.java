@@ -1,8 +1,6 @@
 package cn.youcute.library.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.youcute.library.R;
-import cn.youcute.library.activity.AcWebView;
 import cn.youcute.library.bean.Announce;
 
 /**
@@ -45,22 +42,13 @@ public class AdapterAnnounce extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_announce_list, null);
             holder = new ViewHolder();
             holder.tvTitle = (TextView) convertView.findViewById(R.id.tv_announce_title);
             holder.tvData = (TextView) convertView.findViewById(R.id.tv_announce_data);
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, AcWebView.class);
-                    intent.putExtra("title", data.get(position).title);
-                    intent.putExtra("url", data.get(position).url);
-                    context.startActivity(intent);
-                }
-            });
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -75,10 +63,4 @@ public class AdapterAnnounce extends BaseAdapter {
         TextView tvData;
     }
 
-
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        Log.d("TAG", String.valueOf(data.size()));
-    }
 }

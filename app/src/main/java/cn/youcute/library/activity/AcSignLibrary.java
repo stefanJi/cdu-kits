@@ -16,6 +16,7 @@ import cn.youcute.library.AppControl;
 import cn.youcute.library.R;
 import cn.youcute.library.bean.User;
 import cn.youcute.library.util.NetRequest;
+import cn.youcute.library.util.ToastUtil;
 
 /**
  * Created by jy on 2016/11/6.
@@ -97,12 +98,6 @@ public class AcSignLibrary extends AppCompatActivity implements NetRequest.SignC
                 finish();
                 overridePendingTransition(R.anim.right_out, R.anim.left_in);
                 break;
-            case R.id.action_more:
-                Intent intentMore = new Intent();
-                intentMore.setClass(AcSignLibrary.this, AcMore.class);
-                startActivity(intentMore);
-                overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -119,6 +114,6 @@ public class AcSignLibrary extends AppCompatActivity implements NetRequest.SignC
     @Override
     public void signFailed() {
         dialog.dismiss();
-        AppControl.getInstance().showToast("登录失败，请重试");
+        ToastUtil.showToast("登录失败，请重试");
     }
 }

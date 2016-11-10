@@ -44,7 +44,13 @@ public *;
 -dontwarn okio.**
 -keep class okio.**{*;}
 #-------------------------------------------------------------------------
+-keep public class com.google.android.gms.ads.** {
+   public *;
+}
 
+-keep public class com.google.ads.** {
+   public *;
+}
 #---------------------------------3.与js互相调用的类------------------------
 
 

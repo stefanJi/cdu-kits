@@ -9,14 +9,13 @@ import java.io.Serializable;
 
 public class Course implements Serializable {
     public String name;
-    public String number;
     public String teacher;
-    public String college;
+    public String lid;
 
-    public Course(String name, String number, String teacher, String college) {
+
+    public Course(String name, String teacher, String lid) {
         this.name = name;
-        this.number = number;
         this.teacher = teacher;
-        this.college = college;
+        this.lid = lid;
     }
 }

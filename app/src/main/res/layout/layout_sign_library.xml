@@ -13,7 +13,8 @@
         android:hint="@string/input_account"
         android:imeOptions="actionNext"
         android:inputType="phone"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:textSize="14sp" />
 
     <Space
         android:layout_width="wrap_content"

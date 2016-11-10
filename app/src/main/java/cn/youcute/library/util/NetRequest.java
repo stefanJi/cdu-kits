@@ -1,7 +1,6 @@
 package cn.youcute.library.util;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -15,7 +14,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
@@ -60,8 +58,8 @@ public class NetRequest {
     private static final String SEARCH_BOOK_API = "http://202.115.80.170:8080/opac/openlink.php?strSearchType=title&match_flag=forward&historyCount=1&strText=";
     private static final String SEARCH_BOOK_API2 = "&doctype=ALL&with_ebook=on&displaypg=10&showmode=list&sort=CATA_DATE&orderby=desc&location=ALL&page=";
     private static final String ANNOUNCE_API = "http://news.cdu.edu.cn/index.php?m=announce&a=slist&cat_id=1&page=";
-    private static final String SIGN_JIAO_WO = "http://202.115.80.153/default2.aspx";
-    private static final String SIGN_CODE = "http://202.115.80.153/CheckCode.aspx";
+    private static final String SIGN_JIAO_WO = "http://202.115.80.220:8080/default2.aspx";
+    private static final String SIGN_CODE = "http://202.115.80.220:8080/CheckCode.aspx";
     public static final String PHP_SESSION_ID = "PHPSESSID";
     public static final String ASP_NET_SESSION = "ASP.NET_SessionId";
     private static final String FEED_BACK = "http://youcute.cn/jy/library/feedBack.php";
@@ -189,7 +187,7 @@ public class NetRequest {
         if (isNetworkConnected()) {
             new GetTask().execute();
         } else {
-            AppControl.getInstance().showToast("网络连接失败，请检查网络连接");
+            ToastUtil.showToast("网络连接失败，请检查网络连接");
             getInfoCallBack.getFailed();
         }
     }
@@ -334,7 +332,7 @@ public class NetRequest {
             new GetBookHistoryTask().execute();
         else {
             callBack.getHistoryFailed();
-            AppControl.getInstance().showToast("网络连接失败，请检查网络连接");
+            ToastUtil.showToast("网络连接失败，请检查网络连接");
         }
     }
 
@@ -379,7 +377,7 @@ public class NetRequest {
         if (isNetworkConnected()) {
             new GetBookAccountTask().execute();
         } else {
-            AppControl.getInstance().showToast("网络错误,请检查网络连接");
+            ToastUtil.showToast("网络错误,请检查网络连接");
             callBack.getBookAccountFailed();
         }
     }
@@ -441,7 +439,7 @@ public class NetRequest {
         if (isNetworkConnected()) {
             new GetBookFineTask().execute();
         } else {
-            AppControl.getInstance().showToast("网络错误,请检查网络连接");
+            ToastUtil.showToast("网络错误,请检查网络连接");
             callBack.getBookFineFailed();
         }
     }
@@ -499,7 +497,7 @@ public class NetRequest {
         if (isNetworkConnected()) {
             new Task().execute();
         } else {
-            AppControl.getInstance().showToast("网络未连接,请重试");
+            ToastUtil.showToast("网络未连接,请重试");
         }
     }
 
@@ -599,7 +597,7 @@ public class NetRequest {
             }
         } else {
             callBack.searchFailed("网络未连接，请检查网络连接");
-            AppControl.getInstance().showToast("网络未连接，请检查网络连接");
+            ToastUtil.showToast("网络未连接，请检查网络连接");
         }
     }
 
@@ -652,7 +650,7 @@ public class NetRequest {
         if (isNetworkConnected()) {
             new GetAnnounceTask().execute();
         } else {
-            AppControl.getInstance().showToast("网络错误,请检查网络连接");
+            ToastUtil.showToast("网络错误,请检查网络连接");
         }
     }
 
@@ -662,142 +660,44 @@ public class NetRequest {
         void getAnnounceFailed();
     }
 
-    /**
-     * 登录教务管理系统
-     *
-     * @param account   学号
-     * @param password  教务管理系统密码
-     * @param checkCode 验证码
-     */
-    public void signJiaoWu(final String account, final String password, final String checkCode, final SignJiaoWuCallback callBack) {
-        if (!isNetworkConnected()) {
-            AppControl.getInstance().showToast("网络未连接,请重试");
-            return;
-        }
-        OkHttpUtils.post()
-                //loginUrl就是你请求登录的url
-                .url(SIGN_JIAO_WO)
-                //下面数据抓包可以得到
-                .addParams("__VIEWSTATE", "dDwyODE2NTM0OTg7Oz7QBx05W486R++11e1KrLTLz5ET2Q==")
-                .addParams("txtUserName", account) //学号，
-                .addParams("TextBox2", password)//密码
-                .addParams("txtSecretCode", checkCode) //验证码
-                .addParams("RadioButtonList1", "%D1%A7%C9%FA")
-                .addParams("Button1", "")
-                .addParams("lbLanguage", "")
-                .addHeader("Host", "202.115.80.153")
-                .addHeader("Referer", "//202.115.80.153/default2.aspx")
-                .build()
-                .connTimeOut(5000)
+
+    public void signNet(final String account, final String pass, final SignNetCall signNetCall) {
+        OkHttpUtils
+                .post()
+                .addParams("IPT_LOGINUSERNAME", account)
+                .addParams("IPT_LOGINPASSWORD", pass)
+                .addHeader("Host", "kcxt.cdu.edu.cn")
+                .addHeader("Referer", "kcxt.cdu.edu.cn/eol/homepage/common/index.jsp")
+                .url("http://kcxt.cdu.edu.cn/eol/homepage/common/login.jsp")
+                .build().connTimeOut(5000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
-                        //请求失败
-                        callBack.signFailed("错误响应:" + e.getMessage());
+                        signNetCall.signNetFailed("错误响应:" + e.getMessage());
                         call.cancel();
                     }
 
                     @Override
                     public void onResponse(String response) {
-                        //请求成功，response就是得到的html文件（网页源代码）
-                        if (response.contains("验证码不正确")) {
-                            //如果源代码包含“验证码不正确”
-                            callBack.signFailed("验证码不正确");
-                        } else if (response.contains("密码错误")) {
-                            //如果源代码包含“密码错误”
-                            callBack.signFailed("验证码不正确");
-                        } else if (response.contains("用户名不存在")) {
-                            //如果源代码包含“用户名不存在”
-                            callBack.signFailed("用户名不存在");
+                        if (response.contains("登录失败")) {
+                            signNetCall.signNetFailed("登录失败,请重试");
                         } else {
-                            //登录成功
-                            callBack.signSuccess();
-                            User user = new User(account, password);
-                            AppControl.getInstance().getSpUtil().saveUser(user);
+                            signNetCall.signNetOk();
+                            AppControl.getInstance().getSpUtil().setIsSignNet(true);
+                            AppControl.getInstance().getSpUtil().saveAccount(account);
+                            AppControl.getInstance().getSpUtil().saveNetPass(pass);
+                            Document document = Jsoup.parse(response);
+                            Element element = document.select("div.login-text").select("span").first();
+                            ToastUtil.showToast(element.data() + "欢迎登录");
                         }
                     }
                 });
     }
 
-    public interface SignJiaoWuCallback {
-        void signSuccess();
+    public interface SignNetCall {
+        void signNetOk();
 
-        void signFailed(String info);
-    }
-
-    /**
-     * 获取验证码
-     */
-    public void getCheckCode(String reLode, final GetCheckCodeCallBack callBack) {
-        if (reLode == null) {
-            reLode = "";
-        }
-        if (!isNetworkConnected()) {
-            AppControl.getInstance().showToast("网络错误,请检查网络连接");
-            return;
-        }
-        OkHttpUtils
-                .get()
-                .url(SIGN_CODE + reLode)
-                .build()
-                .connTimeOut(5000)
-                .execute(new BitmapCallback() {
-                    @Override
-                    public void onError(okhttp3.Call call, Exception e) {
-                        //加载失败
-                        callBack.getCodeFailed();
-                    }
-
-                    @Override
-                    public void onResponse(Bitmap response) {
-                        //设置验证码
-                        callBack.getCodeSuccess(response, "");
-                    }
-                });
-    }
-
-    public void reLoadCode(final GetCheckCodeCallBack callBack) {
-        getCheckCode("?", callBack);
-    }
-
-    public interface GetCheckCodeCallBack {
-        void getCodeSuccess(Bitmap bitmap, String session);
-
-        void getCodeFailed();
-    }
-
-    public void getEducationInfo(final GetEducationInfoCall call) {
-        if (!isNetworkConnected()) {
-            AppControl.getInstance().showToast("网络未连接,请重试");
-            return;
-        }
-        String url = "http://202.115.80.153/xskbcx.aspx?xh=" + AppControl.getInstance().getSpUtil().getUser().account +
-                "&xm=%BC%CD%D1%F4&gnmkdm=N121603";
-        OkHttpUtils
-                .get()
-                .addHeader("Host", "202.115.80.153")
-                .addHeader("Referer", url)
-                .url(url)
-                .build().connTimeOut(50000).execute(new StringCallback() {
-            @Override
-            public void onError(Call call, Exception e) {
-
-            }
-
-            @Override
-            public void onResponse(String response) {
-                Document document = Jsoup.parse(response);
-                Elements elements = document.select("body");
-                Log.d("TAG", elements.toString());
-            }
-        });
-
-    }
-
-    public interface GetEducationInfoCall {
-        void getOk();
-
-        void getFailed(String info);
+        void signNetFailed(String info);
     }
 
     public void feedBack(final String content, final String contact, final FeedBackCallBack callBack) {

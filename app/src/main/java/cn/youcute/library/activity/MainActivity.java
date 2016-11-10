@@ -6,37 +6,34 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.sivin.Banner;
-import com.sivin.BannerAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import cn.youcute.library.AppControl;
 import cn.youcute.library.R;
-import cn.youcute.library.bean.BannerBean;
 import cn.youcute.library.util.NetRequest;
+import cn.youcute.library.util.ToastUtil;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, NetRequest.GetHomeCall {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, NetRequest.FeedBackCallBack {
     private ActionBar actionBar;
-    private Banner banner;
-    private BannerAdapter<BannerBean> bannerAdapter;
-    private List<BannerBean> bannerBeanList;
-    private TextView tvImageTitle;
+    private AlertDialog dialogProgress, dialogCount;
+    private LinearLayout changeCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        if (AppControl.getInstance().getSpUtil().getIsFirst()) {
+            Intent intent = new Intent(MainActivity.this, AcGuide.class);
+            startActivity(intent);
+        }
     }
 
     private void initView() {
@@ -46,16 +43,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_good);
         }
-        banner = (Banner) findViewById(R.id.banner);
-        findViewById(R.id.tv_library).setOnClickListener(this);
-        findViewById(R.id.tv_announce).setOnClickListener(this);
-        findViewById(R.id.tv_education).setOnClickListener(this);
-        findViewById(R.id.tv_net_education).setOnClickListener(this);
+        findViewById(R.id.library).setOnClickListener(this);
+        findViewById(R.id.notice).setOnClickListener(this);
+        findViewById(R.id.education).setOnClickListener(this);
+        findViewById(R.id.net).setOnClickListener(this);
         findViewById(R.id.tv_search).setOnClickListener(this);
-        tvImageTitle = (TextView) findViewById(R.id.tv_image_title);
-        this.bannerBeanList = new ArrayList<>();
-        AppControl.getInstance().getNetRequest().getHomeBanner(this);
+        findViewById(R.id.search).setOnClickListener(this);
+        changeCount = (LinearLayout) findViewById(R.id.change);
+        changeCount.setOnClickListener(this);
+        getAd();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (AppControl.getInstance().getSpUtil().getIsSignNet() || AppControl.getInstance().getSpUtil().getIsSign()) {
+            changeCount.setVisibility(View.VISIBLE);
+        } else {
+            changeCount.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * 获取广告
+     */
+    private void getAd() {
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+    }
+
+    private AlertDialog dialogFeedBack;
+    private View viewFeed;
+    private EditText etContact;
+    private EditText etFeed;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -63,38 +84,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case android.R.id.home:
                 new AlertDialog.Builder(this)
                         .setTitle("欢迎使用橙子助手")
-                        .setMessage("作者:阳仔")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        .setMessage("查询图书借阅信息 图书续借 搜索图书\n浏览学校最新通知公告\n查询个人教务系统\n就用橙子助手\n\n作者:阳仔 @新浪微博:道_阳")
+                        .setNeutralButton("帮助", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(MainActivity.this, AcGuide.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setPositiveButton("反馈", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
-                            }
-                        })
-                        .setNegativeButton("查看帮助", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-                        .setNeutralButton("反馈", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
+                                if (dialogFeedBack == null) {
+                                    viewFeed = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_feed_back, null, false);
+                                    etFeed = (EditText) viewFeed.findViewById(R.id.et_feed_back);
+                                    etContact = (EditText) viewFeed.findViewById(R.id.et_feed_contact);
+                                    dialogFeedBack = new AlertDialog.Builder(MainActivity.this).setView(viewFeed)
+                                            .setPositiveButton("发送反馈", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    String content = etFeed.getText().toString();
+                                                    String contact = etContact.getText().toString();
+                                                    if (content.equals("")) {
+                                                        ToastUtil.showToast("反馈内容不能为空");
+                                                        return;
+                                                    }
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                                    View viewProgress = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_progess, null);
+                                                    builder.setView(viewProgress);
+                                                    builder.setTitle("反馈中");
+                                                    builder.setCancelable(false);
+                                                    dialogProgress = builder.create();
+                                                    AppControl.getInstance().getNetRequest().feedBack(content, contact, MainActivity.this);
+                                                }
+                                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            }).create();
+                                }
+                                dialogFeedBack.show();
                             }
                         })
                         .create().show();
-                break;
-            case R.id.action_search:
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, AcSearch.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                break;
-            case R.id.action_more:
-                Intent intentMore = new Intent();
-                intentMore.setClass(MainActivity.this, AcMore.class);
-                startActivity(intentMore);
-                overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -104,11 +138,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
-            case R.id.tv_library:
+            case R.id.library:
                 intent = new Intent(MainActivity.this, AcLibrary.class);
                 startActivity(intent);
                 break;
-            case R.id.tv_announce:
+            case R.id.notice:
                 intent = new Intent(MainActivity.this, AcNotice.class);
                 startActivity(intent);
                 break;
@@ -117,57 +151,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.setClass(MainActivity.this, AcSearch.class);
                 startActivity(intent);
                 break;
-            case R.id.tv_education:
-                intent = new Intent(MainActivity.this, AcSignEducation.class);
+            case R.id.education:
+                intent = new Intent(MainActivity.this, AcEducation.class);
                 startActivity(intent);
+                break;
+            case R.id.net:
+                intent = new Intent(MainActivity.this, AcNet.class);
+                startActivity(intent);
+                break;
+            case R.id.search:
+                intent = new Intent(MainActivity.this, AcSearch.class);
+                startActivity(intent);
+                break;
+            case R.id.change:
+                if (dialogCount == null) {
+                    dialogCount = new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("确定切换账户?")
+                            .setMessage("切换账户会退出当前已登录账户")
+                            .setPositiveButton("确定切换", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    AppControl.getInstance().getSpUtil().setIsSignNet(false);
+                                    AppControl.getInstance().getSpUtil().setIsSign(false);
+                                    ToastUtil.showToast("当前账户已退出登录");
+                                    changeCount.setVisibility(View.INVISIBLE);
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogCount.dismiss();
+                                }
+                            })
+                            .create();
+                }
+                dialogCount.show();
                 break;
         }
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.home_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+    public void feedBackSuccess() {
+        dialogProgress.dismiss();
+        ToastUtil.showToast("反馈成功，谢谢反馈");
     }
 
     @Override
-    public void getBannerOk(List<BannerBean> bannerBeanList) {
-        if (bannerAdapter == null) {
-            bannerAdapter = new BannerAdapter<BannerBean>(this.bannerBeanList) {
-                @Override
-                protected void bindTips(TextView tv, BannerBean bannerBean) {
-                    tvImageTitle.setText(bannerBean.title);
-                }
-
-                @Override
-                public void bindImage(ImageView imageView, BannerBean bannerBean) {
-                    ImageLoader.ImageListener listener =
-                            ImageLoader.getImageListener(imageView, R.mipmap.ic_good, R.mipmap.ic_good);
-                    ImageLoader imageLoader = new ImageLoader(AppControl.getInstance().getRequestQueue(),
-                            AppControl.getInstance().getBitmapCache());
-                    imageLoader.get(bannerBean.imageUrl, listener);
-                }
-            };
-            banner.setBannerAdapter(bannerAdapter);
-            banner.setOnBannerItemClickListener(new Banner.OnBannerItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    Intent intent = new Intent(MainActivity.this, AcImageShow.class);
-                    intent.putExtra("title", MainActivity.this.bannerBeanList.get(position).title);
-                    intent.putExtra("url", MainActivity.this.bannerBeanList.get(position).url);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                }
-            });
-        }
-        this.bannerBeanList.addAll(bannerBeanList);
-        banner.notifiDataHasChanged();
-    }
-
-    @Override
-    public void getBannerFailed(String info) {
-        AppControl.getInstance().showToast(info);
+    public void feedBackError(String error) {
+        dialogProgress.dismiss();
+        ToastUtil.showToast("反馈失败" + error);
     }
 }

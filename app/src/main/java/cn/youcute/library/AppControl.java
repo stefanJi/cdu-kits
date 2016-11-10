@@ -17,11 +17,9 @@ public class AppControl extends Application {
     private static AppControl appControl;
     private static NetRequest netRequest;
     private static SpUtil spUtil;
-    private Toast toast;
     private RequestQueue requestQueue;
     private BitmapCache bitmapCache;
     public String sessionLibrary;
-    public String sessionEducation;
 
     @Override
     public void onCreate() {
@@ -60,19 +58,6 @@ public class AppControl extends Application {
             spUtil = new SpUtil(appControl);
         }
         return spUtil;
-    }
-
-    /**
-     * 显示全局toast
-     *
-     * @param info 显示消息
-     */
-    public void showToast(String info) {
-        if (toast == null) {
-            toast = Toast.makeText(appControl, "", Toast.LENGTH_SHORT);
-        }
-        toast.setText(info);
-        toast.show();
     }
 
     /**

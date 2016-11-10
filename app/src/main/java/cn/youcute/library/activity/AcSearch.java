@@ -12,12 +12,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -28,6 +33,7 @@ import cn.youcute.library.R;
 import cn.youcute.library.adapter.AdapterSearch;
 import cn.youcute.library.bean.Book;
 import cn.youcute.library.util.NetRequest;
+import cn.youcute.library.util.ToastUtil;
 
 /**
  * Created by jy on 2016/11/6.
@@ -39,6 +45,7 @@ public class AcSearch extends AppCompatActivity implements NetRequest.SearchBook
     private TextView tvSearch;
     private ProgressBar progressBar;
     private TextView tvSearchInfo;
+    private TextView tvCollection;
     private ListView listView;
     private AdapterSearch adapterSearch;
     private int searchAction = 0;
@@ -48,6 +55,7 @@ public class AcSearch extends AppCompatActivity implements NetRequest.SearchBook
     private ProgressBar progressBarFooter;
     private TextView tvLoadInfo;
     private int maxPage = 1;
+    private View footerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,12 +71,43 @@ public class AcSearch extends AppCompatActivity implements NetRequest.SearchBook
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_back);
         }
-        tvSearch = (TextView) findViewById(R.id.tv_search);
-        progressBar = (ProgressBar) findViewById(R.id.progress);
-        tvSearchInfo = (TextView) findViewById(R.id.tv_search_info);
-        radioGroup = (RadioGroup) findViewById(R.id.radio_group);
-        etSearch = (EditText) findViewById(R.id.et_search);
+        books = new ArrayList<>();
+        View headView = LayoutInflater.from(this).inflate(R.layout.item_list_search_head, null, false);
+        tvSearch = (TextView) headView.findViewById(R.id.tv_search);
+        progressBar = (ProgressBar) headView.findViewById(R.id.progress);
+        tvSearchInfo = (TextView) headView.findViewById(R.id.tv_search_info);
+        radioGroup = (RadioGroup) headView.findViewById(R.id.radio_group);
+        etSearch = (EditText) headView.findViewById(R.id.et_search);
+        tvCollection = (TextView) headView.findViewById(R.id.tv_collection);
         listView = (ListView) findViewById(R.id.list_search);
+        footerView = LayoutInflater.from(this).inflate(R.layout.layout_list_footer, null, false);
+        progressBarFooter = (ProgressBar) footerView.findViewById(R.id.progress_footer);
+        tvLoadInfo = (TextView) footerView.findViewById(R.id.tv_load_more);
+        progressBarFooter.setVisibility(View.INVISIBLE);
+        footerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (searchAction == 0) {
+                    if (page >= maxPage) {
+                        tvLoadInfo.setText("无更多");
+                        return;
+                    }
+                }
+                tvLoadInfo.setText("点击加载更多");
+                progressBarFooter.setVisibility(View.VISIBLE);
+                page++;
+                try {
+                    AppControl.getInstance().getNetRequest().searchBook(searchAction, key, page, AcSearch.this);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        listView.addHeaderView(headView);
+        listView.addFooterView(footerView);
+        footerView.setVisibility(View.INVISIBLE);
+        adapterSearch = new AdapterSearch(this, this.books);
+        listView.setAdapter(adapterSearch);
         progressBar.setVisibility(View.INVISIBLE);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -83,7 +122,7 @@ public class AcSearch extends AppCompatActivity implements NetRequest.SearchBook
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == KeyEvent.KEYCODE_SEARCH) {
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
                     page = 1;
                     AcSearch.this.books.clear();
                     search();
@@ -100,14 +139,39 @@ public class AcSearch extends AppCompatActivity implements NetRequest.SearchBook
                 search();
             }
         });
-        books = new ArrayList<>();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (books.size() > 0) {
+                    String title = books.get(i - 1).name;
+                    String url = books.get(i - 1).url;
+                    Intent intent = new Intent(AcSearch.this, AcWebViewSearch.class);
+                    intent.putExtra("title", title);
+                    intent.putExtra("url", url);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                }
+            }
+        });
+        getAd();
+    }
+
+    /**
+     * 获取广告
+     */
+    private void getAd() {
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void search() {
         key = etSearch.getText().toString();
         if (key.equals("")) {
+            ToastUtil.showToast("输入不能为空");
             return;
         }
+        adapterSearch.setSearchKey(key);
         hideKeyBord();
         progressBar.setVisibility(View.VISIBLE);
         try {
@@ -129,24 +193,35 @@ public class AcSearch extends AppCompatActivity implements NetRequest.SearchBook
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        final String[] collection = AppControl.getInstance().getSpUtil().getBook();
+        if (collection[0].equals("")) {
+            tvCollection.setText("无");
+            return;
+        }
+        tvCollection.setText(collection[0]);
+        tvCollection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AcSearch.this, AcWebViewSearch.class);
+                intent.putExtra("title", collection[0]);
+                intent.putExtra("url", collection[1]);
+                startActivity(intent);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
+            }
+        });
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 break;
-            case R.id.action_more:
-                Intent intentMore = new Intent();
-                intentMore.setClass(AcSearch.this, AcMore.class);
-                startActivity(intentMore);
-                overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                break;
             case R.id.action_refresh:
-                try {
-                    AppControl.getInstance().getNetRequest().searchBook(searchAction, key, page, this);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                search();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -166,36 +241,10 @@ public class AcSearch extends AppCompatActivity implements NetRequest.SearchBook
             progressBarFooter.setVisibility(View.INVISIBLE);
         }
         if (books.size() == 0) {
+            tvSearchInfo.setText("无该书记录");
             return;
         }
-        if (adapterSearch == null) {
-            View view = LayoutInflater.from(this).inflate(R.layout.layout_list_footer, null, false);
-            progressBarFooter = (ProgressBar) view.findViewById(R.id.progress_footer);
-            tvLoadInfo = (TextView) view.findViewById(R.id.tv_load_more);
-            progressBarFooter.setVisibility(View.INVISIBLE);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (searchAction == 0) {
-                        if (page >= maxPage) {
-                            tvLoadInfo.setText("无更多");
-                            return;
-                        }
-                    }
-                    tvLoadInfo.setText("点击加载更多");
-                    progressBarFooter.setVisibility(View.VISIBLE);
-                    page++;
-                    try {
-                        AppControl.getInstance().getNetRequest().searchBook(searchAction, key, page, AcSearch.this);
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            listView.addFooterView(view);
-            adapterSearch = new AdapterSearch(this, this.books);
-            listView.setAdapter(adapterSearch);
-        }
+        footerView.setVisibility(View.VISIBLE);
         this.books.addAll(books);
         adapterSearch.notifyDataSetChanged();
         if (info.equals("")) {
