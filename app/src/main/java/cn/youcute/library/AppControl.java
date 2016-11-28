@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import cn.jpush.android.api.JPushInterface;
 import cn.youcute.library.util.BitmapCache;
 import cn.youcute.library.util.NetRequest;
 import cn.youcute.library.util.SpUtil;
@@ -33,6 +34,7 @@ public class AppControl extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         appControl = this;
+        JPushInterface.init(this);
     }
 
     /**

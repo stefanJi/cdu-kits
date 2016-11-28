@@ -23,9 +23,6 @@
 #-------------------------------------------------------------------------
 
 #---------------------------------2.第三方包-------------------------------
--keep class cn.pedant.SweetAlert.Rotate3dAnimation {
-    public <init>(...);
- }
 -keep public class org.jsoup.** {
 public *;
 }
@@ -51,6 +48,17 @@ public *;
 -keep public class com.google.ads.** {
    public *;
 }
+
+-dontoptimize
+-dontpreverify
+
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+
+-dontwarn com.google.**
+-keep class com.google.gson.** {*;}
+-keep class com.google.protobuf.** {*;}
+
 #---------------------------------3.与js互相调用的类------------------------
 
 

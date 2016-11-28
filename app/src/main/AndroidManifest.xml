@@ -55,8 +55,8 @@
             android:label="@string/net_education_info"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcEducation"
-            android:label="选择服务器"
+            android:name=".activity.AcSignEducation"
+            android:label="登录教务系统"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AcSignNet"
@@ -66,6 +66,9 @@
             android:name=".activity.AcWebViewSearch"
             android:label="图书搜索"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AcCourseTab"
+            android:label="课程表" />
         <activity
             android:name=".activity.AcGuide"
             android:screenOrientation="portrait"

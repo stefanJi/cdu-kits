@@ -25,6 +25,7 @@ import cn.youcute.library.R;
 import cn.youcute.library.adapter.AdapterAnnounce;
 import cn.youcute.library.bean.Announce;
 import cn.youcute.library.util.NetRequest;
+import cn.youcute.library.util.ToastUtil;
 import okhttp3.Call;
 
 /**
@@ -98,6 +99,10 @@ public class AcNotice extends AcBase implements NetRequest.GetAnnounceCallBack {
     }
 
     private void getContent(String url) {
+        if(!isNetworkConnected()){
+            ToastUtil.showToast("网络未连接，请检查网络");
+            return;
+        }
         OkHttpUtils
                 .get()
                 .url(url)

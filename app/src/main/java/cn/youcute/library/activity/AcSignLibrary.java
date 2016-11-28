@@ -21,6 +21,7 @@ import cn.youcute.library.util.ToastUtil;
 
 /**
  * Created by jy on 2016/11/6.
+ * 登录图书馆
  */
 
 public class AcSignLibrary extends AppCompatActivity implements NetRequest.SignCallBack {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import cn.youcute.library.bean.User;
-import cn.youcute.library.bean.UserInfo;
 
 /**
  * Created by jy on 2016/9/21.
@@ -30,20 +29,12 @@ public class SpUtil {
         editor.apply();
     }
 
-    public void saveUserInfo(UserInfo userInfo) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("name", userInfo.name);
-        editor.putString("user_account", userInfo.account);
-        editor.putString("lear_type", userInfo.learnType);
-        editor.apply();
+    public void saveName(String name) {
+        preferences.edit().putString("name", name).apply();
     }
 
-    public UserInfo getUserInfo() {
-        UserInfo userInfo = new UserInfo();
-        userInfo.name = preferences.getString("name", "0");
-        userInfo.account = preferences.getString("user_account", "");
-        userInfo.learnType = preferences.getString("learn_type", "");
-        return userInfo;
+    public String getName() {
+        return preferences.getString("name", "");
     }
 
     public boolean getIsSign() {
@@ -94,5 +85,13 @@ public class SpUtil {
 
     public boolean getIsFirst() {
         return preferences.getBoolean("first_start", true);
+    }
+
+    public String getTableString() {
+        return preferences.getString("table", "");
+    }
+
+    public void saveTableStr(String str) {
+        preferences.edit().putString("table", str).apply();
     }
 }

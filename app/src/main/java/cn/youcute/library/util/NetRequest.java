@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v4.util.ArrayMap;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -39,7 +38,6 @@ import cn.youcute.library.bean.Book;
 import cn.youcute.library.bean.BookFine;
 import cn.youcute.library.bean.History;
 import cn.youcute.library.bean.User;
-import cn.youcute.library.bean.UserInfo;
 import okhttp3.Call;
 
 /**
@@ -135,67 +133,6 @@ public class NetRequest {
         void signFailed(String info);
     }
 
-    /**
-     * 获得图书馆个人信息
-     *
-     * @param getInfoCallBack 回调
-     */
-    public void getUserInfo(final GetInfoCallBack getInfoCallBack) {
-
-        class GetTask extends AsyncTask<Void, Void, UserInfo> {
-
-            @Override
-            protected UserInfo doInBackground(Void... params) {
-                Connection connection = Jsoup.connect(INFO_API);
-                connection.cookie(NetRequest.PHP_SESSION_ID, AppControl.getInstance().sessionLibrary);
-                //获取登录之后的Html
-                try {
-                    Document document = connection.get();
-                    //解析获取到的html.....
-                    Map<Integer, String> userInfoMap = new ArrayMap<>();
-                    Elements elements = document.select("#mylib_info").select("table").select("tbody").select("tr");
-                    int count = 0;
-                    for (int i = 0; i < elements.size(); i++) {
-                        Elements elements1 = elements.get(i).select("td");
-                        for (int j = 0; j < elements1.size(); j++) {
-                            String t = elements1.get(j).select("span").text();
-                            String all = elements1.get(j).text();
-                            String sub = all.replace(t, "");
-                            userInfoMap.put(count, sub);
-                            count++;
-                        }
-                    }
-                    return new UserInfo(userInfoMap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(UserInfo userInfo) {
-                super.onPostExecute(userInfo);
-                if (null == userInfo) {
-                    getInfoCallBack.getFailed();
-                } else {
-                    getInfoCallBack.getSuccess(userInfo);
-                    AppControl.getInstance().getSpUtil().saveUserInfo(userInfo);
-                }
-            }
-        }
-        if (isNetworkConnected()) {
-            new GetTask().execute();
-        } else {
-            ToastUtil.showToast("网络连接失败，请检查网络连接");
-            getInfoCallBack.getFailed();
-        }
-    }
-
-    public interface GetInfoCallBack {
-        void getSuccess(UserInfo userInfo);
-
-        void getFailed();
-    }
 
     /**
      * 获取当前借阅
@@ -614,12 +551,14 @@ public class NetRequest {
     public void getAnnounce(final int page, final GetAnnounceCallBack callBack) {
         if (!isNetworkConnected()) {
             ToastUtil.showToast("网络错误,请检查网络连接");
+            callBack.getAnnounceFailed("网络错误,请检查网络连接");
             return;
         }
         OkHttpUtils
                 .get()
                 .url(ANNOUNCE_API + String.valueOf(page))
                 .build()
+                .connTimeOut(50000)
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {

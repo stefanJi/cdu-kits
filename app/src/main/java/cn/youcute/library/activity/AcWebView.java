@@ -18,6 +18,8 @@ import cn.youcute.library.R;
 
 /**
  * Created by jy on 2016/11/7.
+ *
+ *
  */
 
 public class AcWebView extends AppCompatActivity {
@@ -67,7 +69,6 @@ public class AcWebView extends AppCompatActivity {
         };
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);//支持javascript
-        webSettings.setUseWideViewPort(true);
         webView.setWebViewClient(webViewClient);
         webView.loadUrl(url);
     }

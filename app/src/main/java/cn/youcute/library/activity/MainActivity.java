@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.education).setOnClickListener(this);
         findViewById(R.id.net).setOnClickListener(this);
         findViewById(R.id.search).setOnClickListener(this);
+        findViewById(R.id.table).setOnClickListener(this);
         changeCount = (LinearLayout) findViewById(R.id.change);
         changeCount.setOnClickListener(this);
     }
@@ -132,7 +133,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.education:
-                intent = new Intent(MainActivity.this, AcEducation.class);
+                intent = new Intent(MainActivity.this, AcWebView.class);
+                intent.putExtra("title", "选择服务器");
+                intent.putExtra("url", "http://jw.cdu.edu.cn/Others/jwglxt.aspx");
                 startActivity(intent);
                 break;
             case R.id.net:
@@ -141,6 +144,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.search:
                 intent = new Intent(MainActivity.this, AcSearch.class);
+                startActivity(intent);
+                break;
+            case R.id.table:
+                intent = new Intent(MainActivity.this, AcCourseTab.class);
                 startActivity(intent);
                 break;
             case R.id.change:
