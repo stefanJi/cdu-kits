@@ -12,7 +12,7 @@
         android:background="@color/actionbar_bg"
         android:hint="@string/input_account"
         android:imeOptions="actionNext"
-        android:inputType="phone"
+        android:inputType="text"
         android:padding="5dp" />
 
     <Space
