@@ -67,15 +67,8 @@ public class BookListFragment extends Fragment implements NetRequest.GetBookList
             tvInfo.setVisibility(View.INVISIBLE);
         }
         if (adapterBookList == null) {
-            adapterBookList = new AdapterBookList(getActivity(), list);
+            adapterBookList = new AdapterBookList(getActivity(), list, this);
             listView.setAdapter(adapterBookList);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    AppControl.getInstance().getNetRequest().renewBook(list.get(i).code, list.get(i).check, BookListFragment.this);
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-            });
         }
         adapterBookList.notifyDataSetChanged();
     }
