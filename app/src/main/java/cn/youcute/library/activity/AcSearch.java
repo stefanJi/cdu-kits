@@ -20,9 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,16 +149,6 @@ public class AcSearch extends AcBase implements NetRequest.SearchBookCallBack {
                 }
             }
         });
-        getAd();
-    }
-
-    /**
-     * 获取广告
-     */
-    private void getAd() {
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
     }
 
     private void search() {

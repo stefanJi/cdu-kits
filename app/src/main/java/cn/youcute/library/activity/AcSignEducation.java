@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -66,7 +64,6 @@ public class AcSignEducation extends AcBase implements View.OnClickListener {
         builder.setTitle("登录中");
         builder.setCancelable(false);
         dialog = builder.create();
-        getAd();
         getCheck();
     }
 
@@ -156,15 +153,6 @@ public class AcSignEducation extends AcBase implements View.OnClickListener {
                 ivCode.setImageBitmap(response);
             }
         });
-    }
-
-    /**
-     * 获取广告
-     */
-    private void getAd() {
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
     }
 
     @Override
