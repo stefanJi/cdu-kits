@@ -2,25 +2,21 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.0'
+    buildToolsVersion '26.0.1'
 
     defaultConfig {
-        applicationId "cn.youcute.library"
+        applicationId "io.gitHub.JiYang.library"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 3
-        versionName "3.1"
+        versionCode 4
+        versionName "4.1"
         multiDexEnabled = true
-        ndk {
-            //选择要添加的对应cpu类型的.so库。
-            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a','x86', 'x86_64', 'mips', 'mips64'
-        }
-        manifestPlaceholders = [
-                JPUSH_PKGNAME : applicationId,
-                JPUSH_APPKEY : "0e18d22999a6c092b0c0d1af", //JPush上注册的包名对应的appkey.
-                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
-        ]
     }
+
+    dataBinding {
+        enabled = true
+    }
+
     buildTypes {
         debug{
         }
@@ -45,15 +41,10 @@ dependencies {
     compile 'com.android.support:support-v4'
     compile 'com.android.support:design:26.0.0-alpha1'
     compile 'com.android.support:support-core-utils:26.0.0-alpha1'
-    //jsoup
     compile 'org.jsoup:jsoup:1.9.2'
-    //google volley库
     compile 'com.mcxiaoke.volley:library:1.0.19'
-    //引导页
-    compile 'com.github.paolorotolo:appintro:4.1.0'
-    //轮播图
-    compile 'com.xiwenhec:banner:1.0.2'
-    compile 'com.zhy:okhttputils:2.3.9'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'cn.jiguang:jpush:2.1.8'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 }

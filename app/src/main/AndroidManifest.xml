@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.youcute.library">
+    package="io.gitHub.JiYang.library">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
-        android:name=".AppControl"
+        android:name="io.gitHub.JiYang.library.AppControl"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name="io.gitHub.JiYang.library.activity.AcHome"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -25,50 +25,46 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.AcBase"
+            android:name="io.gitHub.JiYang.library.activity.AcBase"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcLibrary"
+            android:name="io.gitHub.JiYang.library.activity.AcLibrary"
             android:label="@string/library_info"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcSearch"
+            android:name="io.gitHub.JiYang.library.activity.AcSearch"
             android:label="@string/search"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcSignLibrary"
+            android:name="io.gitHub.JiYang.library.activity.AcSignLibrary"
             android:label="登录图书馆"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcNotice"
+            android:name="io.gitHub.JiYang.library.activity.AcNotice"
             android:label="@string/announce_info"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcWebView"
+            android:name="io.gitHub.JiYang.library.activity.AcWebView"
             android:label="浏览" />
         <activity
-            android:name=".activity.AcNet"
+            android:name="io.gitHub.JiYang.library.activity.AcNet"
             android:label="@string/net_education_info"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcSignEducation"
+            android:name="io.gitHub.JiYang.library.activity.AcSignEducation"
             android:label="登录教务系统"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcSignNet"
+            android:name="io.gitHub.JiYang.library.activity.AcSignNet"
             android:label="登录网络教学平台"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcWebViewSearch"
+            android:name="io.gitHub.JiYang.library.activity.AcWebViewSearch"
             android:label="图书搜索"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.AcCourseTab"
+            android:name="io.gitHub.JiYang.library.activity.AcCourseTab"
             android:label="课程表" />
-        <activity
-            android:name=".activity.AcGuide"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
     </application>
 
 </manifest>
