@@ -2,7 +2,6 @@ package io.gitHub.JiYang.library.controller;
 
 import android.util.Log;
 
-import io.gitHub.JiYang.library.bean.User;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -29,18 +28,18 @@ public class RestApiManager {
     }
 
 
-    public void loginLib(Observer<Boolean> observer, User user) {
+    public void loginLib(Observer<Boolean> observer, String account, final String password) {
         RetrofitController.getRetrofitInstance()
                 //登录类型：cert_no学号 email邮箱
                 .getRestApis()
-                .loginLib(user.account, "cert_no", user.password)
+                .loginLib(account, "cert_no", "", password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(new Function<ResponseBody, Boolean>() {
                     @Override
                     public Boolean apply(ResponseBody body) throws Exception {
-                        Log.i("TAG", body.string());
-                        return null;
+                        String page = body.string().replace(" ", "").replace("\n", "");
+                        return !page.contains("登录");
                     }
                 })
                 .subscribe(observer);

@@ -33,8 +33,8 @@
     <string name="contact">你的联系方式:电话/邮箱/QQ(选填)</string>
     <string name="blind_account">账户绑定</string>
     <string name="blind">绑定</string>
-    <string name="input_password">请输入图书馆密码</string>
-    <string name="input_account">请输入学号</string>
+    <string name="input_password">图书馆密码</string>
+    <string name="input_account">学号</string>
     <string name="renew">点击续借</string>
     <string name="change_account">切换账户</string>
     <string name="chengji">成绩查询</string>

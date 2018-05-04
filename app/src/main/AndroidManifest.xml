@@ -15,8 +15,9 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="io.gitHub.JiYang.library.activity.AcHome"
+            android:name=".ui.activity.LoginActivity"
             android:launchMode="singleTask"
+            android:label="@string/sign_library"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,47 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcBase"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcLibrary"
-            android:label="@string/library_info"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcSearch"
-            android:label="@string/search"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcSignLibrary"
-            android:label="登录图书馆"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcNotice"
-            android:label="@string/announce_info"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcWebView"
-            android:label="浏览" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcNet"
-            android:label="@string/net_education_info"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcSignEducation"
-            android:label="登录教务系统"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcSignNet"
-            android:label="登录网络教学平台"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcWebViewSearch"
-            android:label="图书搜索"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="io.gitHub.JiYang.library.activity.AcCourseTab"
-            android:label="课程表" />
+        <activity android:name=".ui.common.BaseActivity" />
+
     </application>
 
 </manifest>

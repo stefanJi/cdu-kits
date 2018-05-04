@@ -5,7 +5,7 @@
     <!--状态栏颜色-->
     <color name="colorPrimaryDark">#666</color>
     <!--光标、点选按钮等颜色-->
-    <color name="colorAccent">#000</color>
+    <color name="colorAccent">#4298ed</color>
     <!--透明transparent-->
     <color name="transparent">#00000000</color>
     <color name="actionbar_bg">#fff</color>
