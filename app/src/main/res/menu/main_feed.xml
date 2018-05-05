@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_feeds"
+        android:icon="@mipmap/notice"
+        android:title="@string/feeds"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/nav_library"
+        android:icon="@mipmap/library"
+        android:title="@string/library"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/nav_platform"
+        android:icon="@mipmap/education"
+        android:title="@string/platform"
+        app:showAsAction="always" />
+</menu>

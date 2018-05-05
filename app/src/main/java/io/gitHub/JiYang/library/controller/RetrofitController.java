@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Email: jiyang@idealens.com
  */
 class RetrofitController {
-    private static final long DEF_TIME_OUT_DELAY = 10;   // seconds
+    private static final long DEF_TIME_OUT_DELAY = 7;   // seconds
     private Retrofit mRetrofit;
     private RestApis mRestApis;
     private OkHttpClient mClient;
@@ -35,6 +35,10 @@ class RetrofitController {
 
     static RetrofitController getRetrofitInstance() {
         String baseUrl = "http://202.115.80.170:8080/";
+        return getRetrofitInstance(baseUrl);
+    }
+
+    static RetrofitController getRetrofitInstance(String baseUrl) {
         if (TextUtils.isEmpty(baseUrl)) {
             try {
                 throw new Exception("retrofit base url empty!!!");

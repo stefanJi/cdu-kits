@@ -1,9 +1,7 @@
-package io.gitHub.JiYang.library.presenter.impl;
+package io.gitHub.JiYang.library.presenter.LoginLibrary;
 
 import io.gitHub.JiYang.library.model.LoginModel;
 import io.gitHub.JiYang.library.model.impl.LoginModelImpl;
-import io.gitHub.JiYang.library.presenter.LoginPresenter;
-import io.gitHub.JiYang.library.presenter.OnLoginListener;
 import io.gitHub.JiYang.library.ui.view.LoginView;
 
 public class LoginPresenterImpl implements LoginPresenter, OnLoginListener {

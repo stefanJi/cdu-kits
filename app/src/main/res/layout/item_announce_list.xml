@@ -1,42 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/s_main_menu_text"
-    android:padding="5dp">
+    android:layout_margin="6dp">
 
-    <ImageView
-        android:id="@+id/iv_right"
-        android:layout_width="32dp"
-        android:layout_height="16dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:contentDescription="@string/app_name"
-        android:src="@mipmap/ic_right" />
-
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/iv_right"
-        android:layout_toStartOf="@id/iv_right"
-        android:orientation="vertical">
+        android:padding="10dp">
 
         <TextView
-            android:id="@+id/tv_announce_title"
-            android:layout_width="wrap_content"
+            android:id="@+id/announceTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@string/app_name"
-            android:textColor="#000"
-            android:textSize="16sp" />
+            android:hint="@string/app_name"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_announce_data"
-            android:layout_width="wrap_content"
+            android:id="@+id/announceData"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="@string/app_name"
-            android:textColor="#666"
-            android:textSize="14sp" />
-    </LinearLayout>
-</RelativeLayout>
+            android:layout_marginTop="8dp"
+            android:gravity="end"
+            android:hint="@string/app_name"
+            android:textAlignment="textEnd"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/announceTitle" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

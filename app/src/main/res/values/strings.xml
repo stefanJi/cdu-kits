@@ -23,6 +23,8 @@
     <string name="library_sign_info">查询图书借阅等信息，请先绑定学号</string>
     <string name="home">首页</string>
     <string name="library">图书馆</string>
+    <string name="feeds">发现</string>
+    <string name="platform">平台</string>
     <string name="sign_library">登录图书馆</string>
     <string name="sign_education">登录教务系统</string>
     <string name="sign_net_education">登录网络教学平台</string>

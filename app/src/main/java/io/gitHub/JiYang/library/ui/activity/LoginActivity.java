@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import io.gitHub.JiYang.library.R;
-import io.gitHub.JiYang.library.presenter.LoginPresenter;
-import io.gitHub.JiYang.library.presenter.impl.LoginPresenterImpl;
+import io.gitHub.JiYang.library.presenter.LoginLibrary.LoginPresenter;
+import io.gitHub.JiYang.library.presenter.LoginLibrary.LoginPresenterImpl;
 import io.gitHub.JiYang.library.ui.common.BaseActivity;
 import io.gitHub.JiYang.library.ui.view.LoginView;
 

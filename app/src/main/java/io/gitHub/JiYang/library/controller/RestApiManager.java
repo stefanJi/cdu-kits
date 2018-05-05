@@ -1,7 +1,14 @@
 package io.gitHub.JiYang.library.controller;
 
-import android.util.Log;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import io.gitHub.JiYang.library.model.enty.Announce;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -40,6 +47,33 @@ public class RestApiManager {
                     public Boolean apply(ResponseBody body) throws Exception {
                         String page = body.string().replace(" ", "").replace("\n", "");
                         return !page.contains("登录");
+                    }
+                })
+                .subscribe(observer);
+    }
+
+    public void getAnnounce(Observer<List<Announce>> observer, int page) {
+        RetrofitController.getRetrofitInstance("http://news.cdu.edu.cn/")
+                .getRestApis().getAnnounce(page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Function<ResponseBody, List<Announce>>() {
+                    @Override
+                    public List<Announce> apply(ResponseBody responseBody) throws IOException {
+                        Document document = Jsoup.parse(responseBody.string());
+                        if (document == null) {
+                            return null;
+                        }
+                        Elements elements = document.select("ul.w915").select("li");
+                        List<Announce> announces = new ArrayList<>();
+                        for (int i = 0; i < elements.size(); i++) {
+                            String name = elements.get(i).select("a").text();
+                            String all = elements.get(i).select("span").text();
+                            String data = all.replace("[通知公告]", "");
+                            String url = elements.get(i).select("a").attr("href");
+                            announces.add(new Announce(name, data, url));
+                        }
+                        return announces;
                     }
                 })
                 .subscribe(observer);
