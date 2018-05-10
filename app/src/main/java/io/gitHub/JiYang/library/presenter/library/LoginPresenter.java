@@ -1,4 +1,4 @@
-package io.gitHub.JiYang.library.presenter.LoginLibrary;
+package io.gitHub.JiYang.library.presenter.library;
 
 public interface LoginPresenter {
 

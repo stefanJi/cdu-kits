@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 
 import io.gitHub.JiYang.library.util.BitmapCache;
 import io.gitHub.JiYang.library.util.NetRequest;
@@ -66,15 +65,6 @@ public class AppControl extends Application {
         return spUtil;
     }
 
-    /**
-     * @return Volley Request 队列，如果不存在将创建队列
-     */
-    public RequestQueue getRequestQueue() {
-        if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(getApplicationContext());
-        }
-        return requestQueue;
-    }
 
     /**
      * 获取图片缓存空间

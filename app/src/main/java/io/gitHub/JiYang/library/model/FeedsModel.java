@@ -4,5 +4,7 @@ import io.gitHub.JiYang.library.presenter.feeds.OnFeedsListener;
 
 public interface FeedsModel {
 
-    void fetchAnnounce(int page, OnFeedsListener onFeedsListener);
+    void fetchFeeds(String newsType, int page, int type, final OnFeedsListener onFeedsListener);
+
+    void fetchHQCFeeds(int page, final OnFeedsListener onFeedsListener);
 }

@@ -46,6 +46,39 @@
         android:layout_width="wrap_content"
         android:layout_height="10dp" />
 
+    <RadioGroup
+        android:id="@+id/loginLibraryUserTypeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkedButton="@id/loginByCard"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/loginByCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/card_number" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/loginBySerNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/ser_number" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/loginByEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/email" />
+    </RadioGroup>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp" />
+
     <Button
         android:id="@+id/btn_sign"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"

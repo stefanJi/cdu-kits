@@ -19,6 +19,15 @@ interface RestApis {
                                       @Field("returnUrl") String returnUrl,
                                       @Field("passwd") String pwd);
 
-    @GET("index.php?m=announce&a=slist&cat_id=1")
-    Observable<ResponseBody> getAnnounce(@Query("page") int page);
+    @GET("index.php?a=slist")
+    Observable<ResponseBody> getFeeds(
+            @Query("m") String newsType,
+            @Query("page") int page,
+            @Query("cat_id") int cat_id
+    );
+
+    @GET("index.php?a=lists&catid=13")
+    Observable<ResponseBody> getHqcFeeds(
+            @Query("page") int page
+    );
 }

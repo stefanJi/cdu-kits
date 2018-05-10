@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cookie;
@@ -29,9 +30,7 @@ class RetrofitController {
     private Retrofit mRetrofit;
     private RestApis mRestApis;
     private OkHttpClient mClient;
-    private static String mBaseUrl;
-
-    private static RetrofitController retrofitInstance;
+    private static Map<String, RetrofitController> retrofitControllerMap = new HashMap<>();
 
     static RetrofitController getRetrofitInstance() {
         String baseUrl = "http://202.115.80.170:8080/";
@@ -46,19 +45,16 @@ class RetrofitController {
                 e.printStackTrace();
             }
         }
-        if (retrofitInstance == null) {
-            retrofitInstance = new RetrofitController(baseUrl, RestApis.class);
-        } else {
-            if (!baseUrl.equals(mBaseUrl)) {
-                retrofitInstance.refreshSelf(baseUrl, RestApis.class);
-            }
+        RetrofitController retrofitController = retrofitControllerMap.get(baseUrl);
+        if (retrofitController == null) {
+            retrofitController = new RetrofitController(baseUrl, RestApis.class);
+            retrofitControllerMap.put(baseUrl, retrofitController);
         }
-        return retrofitInstance;
+        return retrofitController;
     }
 
     private RetrofitController(String baseUrl, Class restApis) {
-        mBaseUrl = baseUrl;
-        initRetrofit(mBaseUrl, restApis);
+        initRetrofit(baseUrl, restApis);
     }
 
     private void initRetrofit(String mBaseUrl, Class restApis) {
@@ -82,6 +78,7 @@ class RetrofitController {
                             Request re = chain.request();
                             Log.i("TAG1", "*********REQUEST********");
                             Log.i("TAG1", re.headers().toString());
+                            Log.i("TAG1", re.url().toString());
                             return chain.proceed(re);
                         }
                     }).cookieJar(new CookieJar() {
@@ -101,11 +98,6 @@ class RetrofitController {
                     .build();
         }
         return mClient;
-    }
-
-    private void refreshSelf(String baseUrl, Class apiClass) {
-        releaseRetrofit();
-        initRetrofit(baseUrl, apiClass);
     }
 
     private void releaseRetrofit() {

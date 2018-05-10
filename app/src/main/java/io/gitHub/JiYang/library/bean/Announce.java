@@ -34,7 +34,7 @@ public class Announce {
 
     @Override
     public String toString() {
-        return "Announce{" +
+        return "Feed{" +
                 "title='" + title + '\'' +
                 ", data='" + data + '\'' +
                 ", url='" + url + '\'' +

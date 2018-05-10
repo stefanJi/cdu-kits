@@ -2,7 +2,7 @@ package io.gitHub.JiYang.library.model.impl;
 
 import io.gitHub.JiYang.library.controller.RestApiManager;
 import io.gitHub.JiYang.library.model.LoginModel;
-import io.gitHub.JiYang.library.presenter.LoginLibrary.OnLoginListener;
+import io.gitHub.JiYang.library.presenter.library.OnLoginListener;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 

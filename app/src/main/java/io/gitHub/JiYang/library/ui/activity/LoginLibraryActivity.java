@@ -10,12 +10,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import io.gitHub.JiYang.library.R;
-import io.gitHub.JiYang.library.presenter.LoginLibrary.LoginPresenter;
-import io.gitHub.JiYang.library.presenter.LoginLibrary.LoginPresenterImpl;
+import io.gitHub.JiYang.library.presenter.library.LoginPresenter;
+import io.gitHub.JiYang.library.presenter.library.LoginPresenterImpl;
 import io.gitHub.JiYang.library.ui.common.BaseActivity;
-import io.gitHub.JiYang.library.ui.view.LoginView;
+import io.gitHub.JiYang.library.ui.view.LoginLibraryView;
 
-public class LoginActivity extends BaseActivity implements LoginView, View.OnClickListener {
+public class LoginLibraryActivity extends BaseActivity implements LoginLibraryView, View.OnClickListener {
     private ProgressDialog loadingDialog;
 
     private LoginPresenter loginPresenter;
@@ -42,22 +42,22 @@ public class LoginActivity extends BaseActivity implements LoginView, View.OnCli
 
 
     @Override
-    public void showLoading() {
+    public void showLoginProgress() {
         loadingDialog.show();
     }
 
     @Override
-    public void hideLoading() {
+    public void hideLoginProgress() {
         loadingDialog.dismiss();
     }
 
     @Override
-    public void showError(String error) {
+    public void showLoginError(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showSuccess() {
+    public void showLoginSuccess() {
         Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
     }
 

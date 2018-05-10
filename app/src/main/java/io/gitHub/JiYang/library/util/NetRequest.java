@@ -527,7 +527,7 @@ public class NetRequest {
             if (action == 0) {
                 new SearchBookTask().execute();
             } else if (action == 1) {
-                AppControl.getInstance().getRequestQueue().add(stringRequest);
+
             }
         } else {
             callBack.searchFailed("网络未连接，请检查网络连接");
@@ -572,13 +572,13 @@ public class NetRequest {
 //                            return;
 //                        }
 //                        Elements elements = document.select("ul.w915").select("li");
-//                        List<Announce> announces = new ArrayList<>();
+//                        List<Feed> announces = new ArrayList<>();
 //                        for (int i = 0; i < elements.size(); i++) {
 //                            String name = elements.get(i).select("a").text();
 //                            String all = elements.get(i).select("span").text();
 //                            String data = all.replace("[通知公告]", "");
 //                            String url = elements.get(i).select("a").attr("href");
-//                            announces.add(new Announce(name, data, url));
+//                            announces.add(new Feed(name, data, url));
 //                        }
 //                        callBack.getAnnounceSuccess(announces);
 //                    }
@@ -664,7 +664,7 @@ public class NetRequest {
             }
         };
         if (isNetworkConnected()) {
-            AppControl.getInstance().getRequestQueue().add(request);
+
         } else {
             ToastUtil.showToast("网络未连接，请检查网络连接");
         }
@@ -698,7 +698,7 @@ public class NetRequest {
                 return map;
             }
         };
-        AppControl.getInstance().getRequestQueue().add(request);
+
     }
 
     /**

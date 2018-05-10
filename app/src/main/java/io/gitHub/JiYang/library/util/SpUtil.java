@@ -16,6 +16,22 @@ public class SpUtil {
         preferences = context.getSharedPreferences("jyLibrary", Context.MODE_PRIVATE);
     }
 
+    public void setString(String key, String value) {
+        preferences.edit().putString(key, value).apply();
+    }
+
+    public String getString(String key) {
+        return preferences.getString(key, null);
+    }
+
+    public void setBool(String key, boolean value) {
+        preferences.edit().putBoolean(key, value).apply();
+    }
+
+    public boolean getBool(String key) {
+        return preferences.getBoolean(key, false);
+    }
+
     public User getUser() {
         String account = preferences.getString("user_account", "");
         String password = preferences.getString("user_password", "");

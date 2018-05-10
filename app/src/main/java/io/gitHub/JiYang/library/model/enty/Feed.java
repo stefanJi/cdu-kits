@@ -1,11 +1,11 @@
 package io.gitHub.JiYang.library.model.enty;
 
-public class Announce {
+public class Feed {
     public String title;
     public String data;
     public String url;
 
-    public Announce(String title, String data, String url) {
+    public Feed(String title, String data, String url) {
         this.title = title;
         this.data = data;
         this.url = url;
@@ -15,8 +15,8 @@ public class Announce {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Announce announce = (Announce) o;
-        return url != null ? url.equals(announce.url) : announce.url == null;
+        Feed feed = (Feed) o;
+        return url != null ? url.equals(feed.url) : feed.url == null;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class Announce {
 
     @Override
     public String toString() {
-        return "Announce{" +
+        return "Feed{" +
                 "title='" + title + '\'' +
                 ", data='" + data + '\'' +
                 ", url='" + url + '\'' +

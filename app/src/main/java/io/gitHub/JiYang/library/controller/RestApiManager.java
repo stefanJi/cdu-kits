@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.gitHub.JiYang.library.model.enty.Announce;
+import io.gitHub.JiYang.library.model.enty.Feed;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -21,6 +21,8 @@ import okhttp3.ResponseBody;
  */
 
 public class RestApiManager {
+    private static final String CDU_FEED_HOST = "http://news.cdu.edu.cn/";
+    private static final String CDU_HQC_HOST = "http://hqc.cdu.edu.cn/";
     private static RestApiManager mInstance;
 
     private RestApiManager() {
@@ -52,28 +54,54 @@ public class RestApiManager {
                 .subscribe(observer);
     }
 
-    public void getAnnounce(Observer<List<Announce>> observer, int page) {
-        RetrofitController.getRetrofitInstance("http://news.cdu.edu.cn/")
-                .getRestApis().getAnnounce(page)
+    public void getFeeds(Observer<List<Feed>> observer, String newsType, int page, int cat) {
+        RetrofitController.getRetrofitInstance(CDU_FEED_HOST)
+                .getRestApis().getFeeds(newsType, page, cat)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<ResponseBody, List<Announce>>() {
+                .map(new Function<ResponseBody, List<Feed>>() {
                     @Override
-                    public List<Announce> apply(ResponseBody responseBody) throws IOException {
+                    public List<Feed> apply(ResponseBody responseBody) throws IOException {
                         Document document = Jsoup.parse(responseBody.string());
                         if (document == null) {
                             return null;
                         }
                         Elements elements = document.select("ul.w915").select("li");
-                        List<Announce> announces = new ArrayList<>();
+                        List<Feed> feeds = new ArrayList<>();
                         for (int i = 0; i < elements.size(); i++) {
                             String name = elements.get(i).select("a").text();
                             String all = elements.get(i).select("span").text();
                             String data = all.replace("[通知公告]", "");
                             String url = elements.get(i).select("a").attr("href");
-                            announces.add(new Announce(name, data, url));
+                            feeds.add(new Feed(name, data, url));
                         }
-                        return announces;
+                        return feeds;
+                    }
+                })
+                .subscribe(observer);
+    }
+
+    public void getHQCFeeds(Observer<List<Feed>> observer, int page) {
+        RetrofitController.getRetrofitInstance(CDU_HQC_HOST)
+                .getRestApis().getHqcFeeds(page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Function<ResponseBody, List<Feed>>() {
+                    @Override
+                    public List<Feed> apply(ResponseBody responseBody) throws IOException {
+                        Document document = Jsoup.parse(responseBody.string());
+                        if (document == null) {
+                            return null;
+                        }
+                        Elements elements = document.select("div.dd").select("ul.list").select("li");
+                        List<Feed> feeds = new ArrayList<>();
+                        for (int i = 0; i < elements.size(); i++) {
+                            String name = elements.get(i).select("a").text();
+                            String data = elements.get(i).select("span").text();
+                            String url = "http://hqc.cdu.edu.cn" + elements.get(i).select("a").attr("href");
+                            feeds.add(new Feed(name, data, url));
+                        }
+                        return feeds;
                     }
                 })
                 .subscribe(observer);

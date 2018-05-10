@@ -36,7 +36,7 @@
     <string name="blind_account">账户绑定</string>
     <string name="blind">绑定</string>
     <string name="input_password">图书馆密码</string>
-    <string name="input_account">学号</string>
+    <string name="input_account">用户名(学号/证件号/邮箱)</string>
     <string name="renew">点击续借</string>
     <string name="change_account">切换账户</string>
     <string name="chengji">成绩查询</string>
@@ -45,7 +45,13 @@
     <string name="image_show">成大图册展示</string>
     <string name="refresh">刷新</string>
     <string name="search_info">搜索图书</string>
+    <string name="campus">校园</string>
     <string name="banner_ad_unit_id2">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_ad_unit_id">ca-app-pub-1821932431592350/5572912621</string>
+    <string name="nav_close">nav_close</string>
+    <string name="nav_open">nav_open</string>
+    <string name="card_number">证件号</string>
+    <string name="ser_number">条码号</string>
+    <string name="email">邮箱</string>
 
 </resources>
