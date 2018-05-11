@@ -41,7 +41,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsAdapter.Holder> impl
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         Feed feed = feeds.get(position);
         holder.title.setText(feed.title);
-        holder.data.setText(feed.data);
+        holder.data.setText(feed.date);
         holder.itemView.setTag(position);
     }
 
@@ -71,7 +71,7 @@ public class FeedsAdapter extends RecyclerView.Adapter<FeedsAdapter.Holder> impl
             super(itemView);
             this.itemView = itemView;
             title = itemView.findViewById(R.id.announceTitle);
-            data = itemView.findViewById(R.id.announceData);
+            data = itemView.findViewById(R.id.announceDate);
         }
     }
 

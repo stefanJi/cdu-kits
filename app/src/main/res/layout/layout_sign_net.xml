@@ -36,7 +36,7 @@
         android:layout_height="10dp" />
 
     <Button
-        android:id="@+id/btn_sign"
+        android:id="@+id/btnLoginLibrary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

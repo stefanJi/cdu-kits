@@ -12,12 +12,12 @@ import retrofit2.http.Query;
 interface RestApis {
 
     @FormUrlEncoded
-    @Headers("content-type: application/x-www-form-urlencoded")
+    @Headers({"user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36"})
     @POST("reader/redr_verify.php")
     Observable<ResponseBody> loginLib(@Field("number") String number,
+                                      @Field("passwd") String pwd,
                                       @Field("select") String type,
-                                      @Field("returnUrl") String returnUrl,
-                                      @Field("passwd") String pwd);
+                                      @Field("returnUrl") String returnUrl);
 
     @GET("index.php?a=slist")
     Observable<ResponseBody> getFeeds(

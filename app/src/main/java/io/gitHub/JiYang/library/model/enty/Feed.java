@@ -2,12 +2,12 @@ package io.gitHub.JiYang.library.model.enty;
 
 public class Feed {
     public String title;
-    public String data;
+    public String date;
     public String url;
 
-    public Feed(String title, String data, String url) {
+    public Feed(String title, String date, String url) {
         this.title = title;
-        this.data = data;
+        this.date = date;
         this.url = url;
     }
 
@@ -28,7 +28,7 @@ public class Feed {
     public String toString() {
         return "Feed{" +
                 "title='" + title + '\'' +
-                ", data='" + data + '\'' +
+                ", date='" + date + '\'' +
                 ", url='" + url + '\'' +
                 '}';
     }

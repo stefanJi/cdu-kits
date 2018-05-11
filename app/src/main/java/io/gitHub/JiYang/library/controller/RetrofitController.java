@@ -76,22 +76,35 @@ class RetrofitController {
                         @Override
                         public Response intercept(Chain chain) throws IOException {
                             Request re = chain.request();
-                            Log.i("TAG1", "*********REQUEST********");
-                            Log.i("TAG1", re.headers().toString());
-                            Log.i("TAG1", re.url().toString());
-                            return chain.proceed(re);
+                            Log.i("TAG", "*********REQUEST********");
+                            Log.i("TAG", re.url().toString());
+                            Log.i("TAG", re.headers().toString());
+                            Response resp = chain.proceed(re);
+                            Log.i("TAG", "*********RESPONSE********");
+                            Log.i("TAG", "status code: " + resp.code());
+                            Log.i("TAG", resp.headers().toString());
+                            Log.i("TAG", "*************************");
+                            return resp;
                         }
                     }).cookieJar(new CookieJar() {
                         private final HashMap<String, List<Cookie>> cookieMap = new HashMap<>();
 
                         @Override
                         public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                            Log.i("TAG", "**************save cookies************");
+                            Log.i("TAG", cookies.toString());
+                            Log.i("TAG", "*********************************");
                             cookieMap.put(url.host(), cookies);
                         }
 
                         @Override
                         public List<Cookie> loadForRequest(HttpUrl url) {
                             List<Cookie> cookies = cookieMap.get(url.host());
+                            Log.i("TAG", "**************load cookies************");
+                            if (cookies != null) {
+                                Log.i("TAG", cookies.toString());
+                            }
+                            Log.i("TAG", "*********************************");
                             return cookies != null ? cookies : new ArrayList<Cookie>();
                         }
                     })

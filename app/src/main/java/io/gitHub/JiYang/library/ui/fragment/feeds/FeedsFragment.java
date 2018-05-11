@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import io.gitHub.JiYang.library.R;
 import io.gitHub.JiYang.library.presenter.feeds.FeedsPresenter;
-import io.gitHub.JiYang.library.ui.fragment.BaseFragment;
+import io.gitHub.JiYang.library.ui.common.BaseFragment;
 
 public class FeedsFragment extends BaseFragment {
 
@@ -47,7 +47,6 @@ public class FeedsFragment extends BaseFragment {
                 FeedsItemFragment.newInstance(FeedsPresenter.COLOR_CAMPUS),
                 FeedsItemFragment.newInstance(FeedsPresenter.ARTICLE)
         };
-        viewPager.setOffscreenPageLimit(baseFragments.length);
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {

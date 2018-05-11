@@ -3,8 +3,6 @@ package io.gitHub.JiYang.library;
 import android.app.Application;
 import android.content.Context;
 
-import com.android.volley.RequestQueue;
-
 import io.gitHub.JiYang.library.util.BitmapCache;
 import io.gitHub.JiYang.library.util.NetRequest;
 import io.gitHub.JiYang.library.util.SpUtil;
@@ -17,7 +15,6 @@ public class AppControl extends Application {
     private static AppControl appControl;
     private static NetRequest netRequest;
     private static SpUtil spUtil;
-    private RequestQueue requestQueue;
     private BitmapCache bitmapCache;
     public String sessionLibrary;
 

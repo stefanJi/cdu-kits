@@ -1,15 +1,22 @@
 package io.gitHub.JiYang.library.ui.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.gitHub.JiYang.library.R;
 import io.gitHub.JiYang.library.presenter.MainViewPresenter;
@@ -22,6 +29,7 @@ import io.gitHub.JiYang.library.ui.view.MainView;
 
 public class MainActivity extends BaseActivity implements MainView, NavigationView.OnNavigationItemSelectedListener {
 
+    public static final int REQUEST_CODE = 107;
     private FragmentManager mFragmentManager;
     private MainViewPresenter mainViewPresenter;
     private DrawerLayout mDrawerLayout;
@@ -31,6 +39,7 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_main);
+        checkPermission();
         init();
     }
 
@@ -100,6 +109,35 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
                 setTitle(platformFragment.getTitle());
                 break;
             default:
+                break;
+        }
+    }
+
+    private void checkPermission() {
+        String[] permissions = {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        };
+        List<String> permissionList = new ArrayList<>();
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(permission);
+            }
+        }
+        permissions = new String[permissionList.size()];
+        for (int i = 0; i < permissionList.size(); i++) {
+            permissions[i] = permissionList.get(i);
+        }
+        if (permissions.length > 0) {
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE:
+
                 break;
         }
     }

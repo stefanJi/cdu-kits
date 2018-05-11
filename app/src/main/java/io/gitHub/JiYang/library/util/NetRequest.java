@@ -576,9 +576,9 @@ public class NetRequest {
 //                        for (int i = 0; i < elements.size(); i++) {
 //                            String name = elements.get(i).select("a").text();
 //                            String all = elements.get(i).select("span").text();
-//                            String data = all.replace("[通知公告]", "");
+//                            String date = all.replace("[通知公告]", "");
 //                            String url = elements.get(i).select("a").attr("href");
-//                            announces.add(new Feed(name, data, url));
+//                            announces.add(new Feed(name, date, url));
 //                        }
 //                        callBack.getAnnounceSuccess(announces);
 //                    }
@@ -624,7 +624,7 @@ public class NetRequest {
 //                            AppControl.getInstance().getSpUtil().saveNetPass(pass);
 //                            Document document = Jsoup.parse(response);
 //                            Element element = document.select("div.login-text").select("span").first();
-//                            ToastUtil.showToast(element.data() + "欢迎登录");
+//                            ToastUtil.showToast(element.date() + "欢迎登录");
 //                        }
 //                    }
 //                });

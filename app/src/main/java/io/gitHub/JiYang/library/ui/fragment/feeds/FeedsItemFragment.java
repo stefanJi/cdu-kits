@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,13 +21,15 @@ import io.gitHub.JiYang.library.model.enty.Feed;
 import io.gitHub.JiYang.library.presenter.feeds.FeedsPresenter;
 import io.gitHub.JiYang.library.presenter.feeds.FeedsPresenterImpl;
 import io.gitHub.JiYang.library.ui.activity.WebActivity;
-import io.gitHub.JiYang.library.ui.fragment.BaseFragment;
+import io.gitHub.JiYang.library.ui.common.AdapterItem;
+import io.gitHub.JiYang.library.ui.common.BaseFragment;
+import io.gitHub.JiYang.library.ui.common.CommAdapter;
 import io.gitHub.JiYang.library.ui.view.FeedsView;
 import io.gitHub.JiYang.library.ui.widget.EndlessRecyclerOnScrollListener;
 
 public class FeedsItemFragment extends BaseFragment implements FeedsView,
         SwipeRefreshLayout.OnRefreshListener,
-        FeedsAdapter.OnItemClickListener {
+        CommAdapter.OnItemClickListener {
 
     public static FeedsItemFragment newInstance(int feedsType) {
         FeedsItemFragment feedsItemFragment = new FeedsItemFragment();
@@ -36,7 +39,7 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
 
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView mRecyclerView;
-    private FeedsAdapter feedsAdapter;
+    private CommAdapter<Feed> feedsAdapter;
     private ArrayList<Feed> feeds;
     private FeedsPresenter announcePresenter;
 
@@ -64,8 +67,34 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
         refreshLayout.setOnRefreshListener(this);
 
 
-        feedsAdapter = new FeedsAdapter(this.getContext(), feeds);
-        feedsAdapter.setOnItemClickListener(this);
+        feedsAdapter = new CommAdapter<Feed>(feeds) {
+
+            @Override
+            public AdapterItem<Feed> createItem() {
+                return new AdapterItem<Feed>() {
+                    TextView title, date;
+
+                    @Override
+                    public void handleData(Feed data, int position) {
+                        title.setText(data.title);
+                        date.setText(data.date);
+                    }
+
+                    @Override
+                    public int getResId() {
+                        return R.layout.item_feeds_list;
+                    }
+
+                    @Override
+                    public void bindViews(View itemView) {
+                        title = itemView.findViewById(R.id.announceTitle);
+                        date = itemView.findViewById(R.id.announceDate);
+                    }
+                };
+            }
+        };
+
+        feedsAdapter.setItemClickListener(this);
 
         mRecyclerView = view.findViewById(R.id.announceListView);
         mRecyclerView.setAdapter(feedsAdapter);
@@ -167,7 +196,7 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
     }
 
     @Override
-    public void onItemClick(View view, int position) {
+    public void OnItemClick(int position) {
         Feed feed = feeds.get(position);
         WebActivity.start(this.getActivity(), feed.url);
     }

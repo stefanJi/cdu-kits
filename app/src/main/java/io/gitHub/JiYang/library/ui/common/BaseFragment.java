@@ -1,4 +1,4 @@
-package io.gitHub.JiYang.library.ui.fragment;
+package io.gitHub.JiYang.library.ui.common;
 
 import android.support.v4.app.Fragment;
 

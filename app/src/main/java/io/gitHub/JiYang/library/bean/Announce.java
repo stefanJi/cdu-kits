@@ -36,7 +36,7 @@ public class Announce {
     public String toString() {
         return "Feed{" +
                 "title='" + title + '\'' +
-                ", data='" + data + '\'' +
+                ", date='" + data + '\'' +
                 ", url='" + url + '\'' +
                 '}';
     }

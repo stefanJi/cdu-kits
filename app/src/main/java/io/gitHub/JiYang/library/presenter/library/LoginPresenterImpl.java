@@ -1,6 +1,7 @@
 package io.gitHub.JiYang.library.presenter.library;
 
 import io.gitHub.JiYang.library.model.LoginModel;
+import io.gitHub.JiYang.library.model.enty.LibraryUserInfo;
 import io.gitHub.JiYang.library.model.impl.LoginModelImpl;
 import io.gitHub.JiYang.library.ui.view.LoginLibraryView;
 
@@ -16,15 +17,15 @@ public class LoginPresenterImpl implements LoginPresenter, OnLoginListener {
     }
 
     @Override
-    public void login(String account, String password) {
+    public void login(String account, String password, String type) {
         loginLibraryView.showLoginProgress();
-        loginModel.login(account, password, this);
+        loginModel.login(account, password, type, this);
     }
 
     @Override
-    public void onSuccess() {
+    public void onSuccess(LibraryUserInfo userInfo) {
         loginLibraryView.hideLoginProgress();
-        loginLibraryView.showLoginSuccess();
+        loginLibraryView.showLoginSuccess(userInfo);
     }
 
     @Override

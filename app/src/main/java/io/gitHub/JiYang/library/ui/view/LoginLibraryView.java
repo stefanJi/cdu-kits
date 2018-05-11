@@ -1,5 +1,7 @@
 package io.gitHub.JiYang.library.ui.view;
 
+import io.gitHub.JiYang.library.model.enty.LibraryUserInfo;
+
 public interface LoginLibraryView {
     void showLoginProgress();
 
@@ -7,5 +9,5 @@ public interface LoginLibraryView {
 
     void showLoginError(String error);
 
-    void showLoginSuccess();
+    void showLoginSuccess(LibraryUserInfo userInfo);
 }

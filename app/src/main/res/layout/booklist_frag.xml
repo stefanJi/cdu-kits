@@ -12,11 +12,10 @@
         android:textColor="#000"
         android:textSize="16sp" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/list_book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:dividerHeight="5dp"
         android:padding="5dp" />
 
     <ProgressBar

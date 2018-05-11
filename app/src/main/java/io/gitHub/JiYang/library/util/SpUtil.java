@@ -13,7 +13,7 @@ public class SpUtil {
     private SharedPreferences preferences;
 
     public SpUtil(Context context) {
-        preferences = context.getSharedPreferences("jyLibrary", Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("cdu_kits", Context.MODE_PRIVATE);
     }
 
     public void setString(String key, String value) {
