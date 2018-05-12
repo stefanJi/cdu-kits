@@ -28,8 +28,8 @@ public class SpUtil {
         preferences.edit().putBoolean(key, value).apply();
     }
 
-    public boolean getBool(String key) {
-        return preferences.getBoolean(key, false);
+    public boolean getBool(String key, boolean defaultValue) {
+        return preferences.getBoolean(key, defaultValue);
     }
 
     public User getUser() {

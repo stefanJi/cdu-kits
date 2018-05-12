@@ -3,6 +3,8 @@ package io.gitHub.JiYang.library;
 import android.app.Application;
 import android.content.Context;
 
+import com.litesuits.orm.LiteOrm;
+
 import io.gitHub.JiYang.library.util.BitmapCache;
 import io.gitHub.JiYang.library.util.NetRequest;
 import io.gitHub.JiYang.library.util.SpUtil;
@@ -17,6 +19,7 @@ public class AppControl extends Application {
     private static SpUtil spUtil;
     private BitmapCache bitmapCache;
     public String sessionLibrary;
+    private static LiteOrm liteOrm;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -73,5 +76,17 @@ public class AppControl extends Application {
             bitmapCache = new BitmapCache();
         }
         return bitmapCache;
+    }
+
+    public LiteOrm getLiteOrm() {
+        if (liteOrm == null) {
+            liteOrm = this.newSingleInstance();
+            liteOrm.setDebugged(true);
+        }
+        return liteOrm;
+    }
+
+    private LiteOrm newSingleInstance() {
+        return LiteOrm.newSingleInstance(this, "cdu_kits.db");
     }
 }

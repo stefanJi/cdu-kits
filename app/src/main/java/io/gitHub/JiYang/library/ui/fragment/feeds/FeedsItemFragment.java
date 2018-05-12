@@ -1,22 +1,22 @@
 package io.gitHub.JiYang.library.ui.fragment.feeds;
 
-import android.graphics.Color;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.gitHub.JiYang.library.R;
+import io.gitHub.JiYang.library.databinding.FragmentFeedsItemBinding;
+import io.gitHub.JiYang.library.databinding.ItemFeedsListBinding;
 import io.gitHub.JiYang.library.model.enty.Feed;
 import io.gitHub.JiYang.library.presenter.feeds.FeedsPresenter;
 import io.gitHub.JiYang.library.presenter.feeds.FeedsPresenterImpl;
@@ -26,6 +26,7 @@ import io.gitHub.JiYang.library.ui.common.BaseFragment;
 import io.gitHub.JiYang.library.ui.common.CommAdapter;
 import io.gitHub.JiYang.library.ui.view.FeedsView;
 import io.gitHub.JiYang.library.ui.widget.EndlessRecyclerOnScrollListener;
+import io.gitHub.JiYang.library.ui.widget.UiUtils;
 
 public class FeedsItemFragment extends BaseFragment implements FeedsView,
         SwipeRefreshLayout.OnRefreshListener,
@@ -37,13 +38,12 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
         return feedsItemFragment;
     }
 
-    private SwipeRefreshLayout refreshLayout;
-    private RecyclerView mRecyclerView;
+    private FragmentFeedsItemBinding binding;
     private CommAdapter<Feed> feedsAdapter;
     private ArrayList<Feed> feeds;
-    private FeedsPresenter announcePresenter;
+    private FeedsPresenter feedsPresenter;
 
-    private int announcePage = 1;
+    private int feedsPage = 1;
 
     private int feedsType;
 
@@ -54,30 +54,30 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_announce, container, false);
-        init(view);
+        View view = inflater.inflate(R.layout.fragment_feeds_item, container, false);
+        binding = DataBindingUtil.bind(view);
+        init();
         return view;
     }
 
-    private void init(View view) {
+    private void init() {
         feeds = new ArrayList<>();
 
-        refreshLayout = view.findViewById(R.id.refreshAnnounceLayout);
-        refreshLayout.setColorSchemeColors(Color.BLUE);
-        refreshLayout.setOnRefreshListener(this);
-
+        setRefreshLayoutColor(binding.refreshLayout);
+        binding.refreshLayout.setOnRefreshListener(this);
 
         feedsAdapter = new CommAdapter<Feed>(feeds) {
 
             @Override
             public AdapterItem<Feed> createItem() {
                 return new AdapterItem<Feed>() {
-                    TextView title, date;
+                    ItemFeedsListBinding itemBinding;
 
                     @Override
-                    public void handleData(Feed data, int position) {
-                        title.setText(data.title);
-                        date.setText(data.date);
+                    public void handleData(int position) {
+                        Feed data = feeds.get(position);
+                        itemBinding.feedTitle.setText(data.title);
+                        itemBinding.feedDate.setText(data.date);
                     }
 
                     @Override
@@ -87,8 +87,7 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
 
                     @Override
                     public void bindViews(View itemView) {
-                        title = itemView.findViewById(R.id.announceTitle);
-                        date = itemView.findViewById(R.id.announceDate);
+                        itemBinding = DataBindingUtil.bind(itemView);
                     }
                 };
             }
@@ -96,35 +95,21 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
 
         feedsAdapter.setItemClickListener(this);
 
-        mRecyclerView = view.findViewById(R.id.announceListView);
-        mRecyclerView.setAdapter(feedsAdapter);
+
+        binding.recyclerView.setAdapter(feedsAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
+        binding.recyclerView.setLayoutManager(layoutManager);
+        binding.recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int current_page) {
-                announcePage = current_page;
-                announcePresenter.fetchFeeds(current_page, feedsType);
+                feedsPage = current_page;
+                feedsPresenter.fetchFeeds(current_page, feedsType);
             }
         });
-
-        view.findViewById(R.id.backTop).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView
-                        .getLayoutManager();
-                layoutManager.scrollToPositionWithOffset(0, 0);
-            }
-        });
-
-        announcePresenter = new FeedsPresenterImpl(this);
+        feedsPresenter = new FeedsPresenterImpl(this);
+        feedsPresenter.fetchFeeds(feedsPage, feedsType);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        announcePresenter.fetchFeeds(announcePage, feedsType);
-    }
 
     @Override
     public String getTitle() {
@@ -160,23 +145,23 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
 
     @Override
     public void showLoading() {
-        refreshLayout.setRefreshing(true);
+        binding.refreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
-        refreshLayout.setRefreshing(false);
+        binding.refreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showError(String error) {
-        Toast.makeText(this.getContext(), error, Toast.LENGTH_SHORT).show();
+        UiUtils.showErrorSnackbar(this.getActivity(), binding.recyclerView, error);
     }
 
     @Override
     public void setAnnounceList(List<Feed> feeds) {
         if (feeds == null || feeds.size() == 0) {
-            Toast.makeText(this.getContext(), "无更多", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), "无更多", Snackbar.LENGTH_SHORT).show();
             return;
         }
         final ArrayList<Feed> update = new ArrayList<>();
@@ -192,7 +177,7 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
 
     @Override
     public void onRefresh() {
-        announcePresenter.fetchFeeds(announcePage, feedsType);
+        feedsPresenter.fetchFeeds(feedsPage, feedsType);
     }
 
     @Override

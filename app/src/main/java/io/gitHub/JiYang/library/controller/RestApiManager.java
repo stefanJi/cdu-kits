@@ -11,7 +11,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.gitHub.JiYang.library.model.enty.Book;
+import io.gitHub.JiYang.library.model.enty.BookHistory;
 import io.gitHub.JiYang.library.model.enty.Feed;
+import io.gitHub.JiYang.library.model.enty.LibrarySearchHistory;
 import io.gitHub.JiYang.library.model.enty.LibraryUserInfo;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -123,6 +126,175 @@ public class RestApiManager {
                         return feeds;
                     }
                 })
+                .subscribe(observer);
+    }
+
+    public void getBookList(Observer<List<Book>> observer) {
+        RetrofitController.getRetrofitInstance().getRestApis()
+                .getBookList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .map(new Function<ResponseBody, List<Book>>() {
+                    @Override
+                    public List<Book> apply(ResponseBody responseBody) throws Exception {
+                        Document document = Jsoup.parse(responseBody.string());
+                        Elements elements = document.select("table.table_line");
+                        elements = elements.select("tbody");
+                        elements = elements.select("tr");
+                        List<Book> books = new ArrayList<>();
+                        for (int i = 1; i < elements.size(); i++) {
+                            Elements elements1 = elements.get(i).select("td");
+                            SparseArray<String> data = new SparseArray<>();
+                            Book book = new Book();
+                            for (int j = 0; j < elements1.size(); j++) {
+                                data.put(j, elements1.get(j).text());
+                            }
+                            //条码号
+                            book.code = data.get(0);
+                            //书名
+                            book.name = data.get(1);
+                            //借阅日期
+                            book.getData = data.get(2);
+                            //归还日期
+                            book.endData = data.get(3);
+                            //续借量
+                            book.getCount = data.get(4);
+                            //抓取续借号
+                            Element element = elements1.last();
+                            String temp = element.select("input").attr("onclick");
+                            temp = temp.replace("getInLib", "");
+                            temp = temp.replace("(", "");
+                            temp = temp.replace(")", "");
+                            temp = temp.replace(",", "");
+                            temp = temp.replace(";", "");
+                            temp = temp.replace("'", "");
+                            temp = temp.replace(book.code, "");
+                            temp = temp.substring(0, temp.length() - 1);
+                            book.check = temp;
+                            books.add(book);
+                        }
+                        return books;
+                    }
+                }).subscribe(observer);
+    }
+
+    public void reBook(Observer<Boolean> observer, final Book book) {
+        RetrofitController.getRetrofitInstance()
+                .getRestApis()
+                .reBook(book.code, book.check)
+                .map(new Function<ResponseBody, Boolean>() {
+                    @Override
+                    public Boolean apply(ResponseBody responseBody) throws Exception {
+                        Document document = Jsoup.parse(responseBody.string());
+                        String info = document.getElementsByTag("body").first().select("font").first().text();
+                        if (info.contains("不得续借")) {
+                            throw new Exception(info);
+                        }
+                        return Boolean.TRUE;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void libraryHistory(Observer<List<BookHistory>> observer) {
+        final String para = "all";
+        final int toPage = 1;
+        RetrofitController.getRetrofitInstance().getRestApis()
+                .libraryHistory(para, toPage)
+                .map(new Function<ResponseBody, List<BookHistory>>() {
+                    @Override
+                    public List<BookHistory> apply(ResponseBody responseBody) throws Exception {
+                        List<BookHistory> histories = new ArrayList<>();
+                        Document document = Jsoup.parse(responseBody.string());
+                        Elements elements = document.select("#mylib_content")
+                                .select("table")
+                                .select("tbody")
+                                .select("tr");
+                        for (int i = 1; i < elements.size(); i++) {
+                            Elements elements1 = elements.get(i).select("td");
+                            BookHistory bookHistory = new BookHistory();
+                            SparseArray<String> data = new SparseArray<>();
+                            for (int j = 0; j < elements1.size(); j++) {
+                                data.put(j, elements1.get(j).text());
+                            }
+                            bookHistory.historyId = data.get(0);
+                            bookHistory.name = data.get(2);
+                            bookHistory.getData = data.get(4);
+                            bookHistory.endData = data.get(5);
+                            String url = elements1.get(2).select("a").first().attr("href");
+                            url = url.replace("..", "");
+                            url = "http://202.115.80.170:8080" + url;
+                            bookHistory.url = url;
+                            histories.add(bookHistory);
+                        }
+                        return histories;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void librarySearchHistory(Observer<List<LibrarySearchHistory>> observer) {
+        RetrofitController.getRetrofitInstance().getRestApis()
+                .librarySearchHistory()
+                .map(new Function<ResponseBody, List<LibrarySearchHistory>>() {
+                    @Override
+                    public List<LibrarySearchHistory> apply(ResponseBody responseBody) throws Exception {
+                        Document document = Jsoup.parse(responseBody.string());
+                        Elements elements = document.select("table").select("tbody").select("tr");
+                        List<LibrarySearchHistory> histories = new ArrayList<>();
+                        for (int i = 1; i < elements.size(); i++) {
+                            Element element = elements.get(i);
+                            Elements es = element.select("td");
+                            LibrarySearchHistory searchHistory = new LibrarySearchHistory();
+                            searchHistory.searchKey = es.get(1).text();
+                            searchHistory.searchDate = es.get(2).text();
+                            histories.add(searchHistory);
+                        }
+                        return histories;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+
+    }
+
+    public void searchBook(Observer<List<Book>> observer, String key, String searchType,
+                           String docType, String matchFlag, int page) {
+        RetrofitController.getRetrofitInstance()
+                .getRestApis().searchBook(searchType, matchFlag, docType, page, key)
+                .map(new Function<ResponseBody, List<Book>>() {
+                    @Override
+                    public List<Book> apply(ResponseBody responseBody) throws Exception {
+                        Document document = Jsoup.parse(responseBody.string());
+                        String info = null;
+                        Elements elements = document.select("li.book_list_info");
+                        List<Book> books = new ArrayList<>();
+                        for (int i = 0; i < elements.size(); i++) {
+                            Element element = elements.get(i);
+                            String name = element.select("h3").select("a").text();
+                            String url = element.select("h3").select("a").attr("href");
+                            String code = element.select("h3").text().replace(name, "");
+                            String count = element.select("p").select("span").text();
+                            Book book = new Book(code, name, count);
+                            book.url = "http://202.115.80.170:8080/opac/" + url;
+                            books.add(book);
+                        }
+                        if (books.size() > 0) {
+                            Elements elements1 = document.select("div.book_article");
+                            Element element = elements1.get(0);
+                            elements1 = element.select("div");
+                            info = elements1.get(1).text();
+                        }
+                        return books;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
 }

@@ -2,6 +2,8 @@ package io.gitHub.JiYang.library.ui.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,16 +11,17 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.gitHub.JiYang.library.R;
+import io.gitHub.JiYang.library.databinding.ActivityMainBinding;
 import io.gitHub.JiYang.library.presenter.MainViewPresenter;
 import io.gitHub.JiYang.library.presenter.MainViewPresenterImpl;
 import io.gitHub.JiYang.library.ui.common.BaseActivity;
@@ -32,13 +35,14 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
     public static final int REQUEST_CODE = 107;
     private FragmentManager mFragmentManager;
     private MainViewPresenter mainViewPresenter;
-    private DrawerLayout mDrawerLayout;
-
+    private int checkNavId;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ac_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         checkPermission();
         init();
     }
@@ -46,30 +50,53 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
     private void init() {
         mFragmentManager = getSupportFragmentManager();
         mainViewPresenter = new MainViewPresenterImpl();
-        Toolbar mToolbar = findViewById(R.id.toolbarMain);
-        setSupportActionBar(mToolbar);
+
+        setSupportActionBar(binding.appbar.toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(true);
         }
-        mDrawerLayout = findViewById(R.id.drawer_menu);
-        NavigationView navigationView = findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_feeds);
-        navigationView.setItemIconTintList(null);
-
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.nav_open, R.string.nav_close);
-        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
+        initNav();
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, binding.drawerMenu, binding.appbar.toolbar, R.string.nav_open, R.string.nav_close);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            actionBarDrawerToggle.getDrawerArrowDrawable().setColor(getColor(R.color.white));
+        } else {
+            actionBarDrawerToggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
+        }
+        binding.drawerMenu.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         switchFragment(R.id.nav_feeds);
+    }
+
+    private void initNav() {
+        binding.navMenu.navigationView.setNavigationItemSelectedListener(this);
+        checkNavId = R.id.nav_feeds;
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switchFragment(item.getItemId());
-        mDrawerLayout.closeDrawers();
+        binding.drawerMenu.closeDrawers();
         item.setCheckable(true);
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_library_search:
+                LibrarySearchActivity.start(this);
+                break;
+        }
         return true;
     }
 
@@ -85,6 +112,7 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
                     mFragmentManager.beginTransaction().replace(containerId, libraryFragment, LibraryFragment.TAG).commit();
                 }
                 setTitle(libraryFragment.getTitle());
+                checkNavId = menuId;
                 break;
 
             case R.id.nav_feeds:
@@ -96,6 +124,7 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
                     mFragmentManager.beginTransaction().replace(containerId, feedsFragment, FeedsFragment.TAG).commit();
                 }
                 setTitle(feedsFragment.getTitle());
+                checkNavId = menuId;
                 break;
 
             case R.id.nav_platform:
@@ -107,6 +136,20 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
                     mFragmentManager.beginTransaction().replace(containerId, platformFragment, PlatformFragment.TAG).commit();
                 }
                 setTitle(platformFragment.getTitle());
+                checkNavId = menuId;
+                break;
+            case R.id.nav_search:
+                LibrarySearchActivity.start(this);
+                break;
+            case R.id.nav_fav:
+                FavBookActivity.start(this);
+                break;
+            case R.id.nav_setting:
+                SettingActivity.start(this);
+                break;
+            case R.id.nav_about:
+                break;
+            case R.id.nav_feedBack:
                 break;
             default:
                 break;
@@ -134,6 +177,12 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        binding.navMenu.navigationView.setCheckedItem(checkNavId);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE:
@@ -141,4 +190,5 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
                 break;
         }
     }
+
 }

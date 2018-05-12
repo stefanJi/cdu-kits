@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Email: jiyang@idealens.com
  */
 class RetrofitController {
-    private static final long DEF_TIME_OUT_DELAY = 7;   // seconds
+    private static final long DEF_TIME_OUT_DELAY = 20;   // seconds
     private Retrofit mRetrofit;
     private RestApis mRestApis;
     private OkHttpClient mClient;

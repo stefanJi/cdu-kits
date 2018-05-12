@@ -32,9 +32,9 @@ import java.util.Map;
 
 import io.gitHub.JiYang.library.AppControl;
 import io.gitHub.JiYang.library.bean.Announce;
-import io.gitHub.JiYang.library.bean.Book;
+import io.gitHub.JiYang.library.model.enty.BookHistory;
+import io.gitHub.JiYang.library.model.enty.Book;
 import io.gitHub.JiYang.library.bean.BookFine;
-import io.gitHub.JiYang.library.bean.History;
 import io.gitHub.JiYang.library.bean.User;
 
 /**
@@ -217,33 +217,33 @@ public class NetRequest {
      * @param callBack 回调
      */
     public void getBookHistory(final int page, final GetBookHistoryCallBack callBack) {
-        class GetBookHistoryTask extends AsyncTask<Void, Void, List<History>> {
+        class GetBookHistoryTask extends AsyncTask<Void, Void, List<BookHistory>> {
 
             @Override
-            protected List<History> doInBackground(Void... params) {
+            protected List<BookHistory> doInBackground(Void... params) {
                 Connection connection = Jsoup.connect(GET_BOOK_HISTORY + String.valueOf(page));
                 connection.cookie(NetRequest.PHP_SESSION_ID, AppControl.getInstance().sessionLibrary);
                 //获取登录之后的Html
                 try {
                     Document document = connection.get();
-                    List<History> histories = new ArrayList<>();
+                    List<BookHistory> histories = new ArrayList<>();
                     Elements elements = document.select("#mylib_content").select("table").select("tbody").select("tr");
                     for (int i = 1; i < elements.size(); i++) {
                         Elements elements1 = elements.get(i).select("td");
-                        History history = new History();
+                        BookHistory bookHistory = new BookHistory();
                         SparseArray<String> data = new SparseArray<>();
                         for (int j = 0; j < elements1.size(); j++) {
                             data.put(j, elements1.get(j).text());
                         }
-                        history.historyId = data.get(0);
-                        history.name = data.get(2);
-                        history.getData = data.get(4);
-                        history.endData = data.get(5);
+                        bookHistory.historyId = data.get(0);
+                        bookHistory.name = data.get(2);
+                        bookHistory.getData = data.get(4);
+                        bookHistory.endData = data.get(5);
                         String url = elements1.get(2).select("a").first().attr("href");
                         url = url.replace("..", "");
                         url = "http://202.115.80.170:8080" + url;
-                        history.url = url;
-                        histories.add(history);
+                        bookHistory.url = url;
+                        histories.add(bookHistory);
                     }
                     return histories;
                 } catch (IOException e) {
@@ -253,7 +253,7 @@ public class NetRequest {
             }
 
             @Override
-            protected void onPostExecute(List<History> list) {
+            protected void onPostExecute(List<BookHistory> list) {
                 super.onPostExecute(list);
                 if (list != null) {
                     callBack.getHistorySuccess(list);
@@ -271,7 +271,7 @@ public class NetRequest {
     }
 
     public interface GetBookHistoryCallBack {
-        void getHistorySuccess(List<History> list);
+        void getHistorySuccess(List<BookHistory> list);
 
         void getHistoryFailed();
     }

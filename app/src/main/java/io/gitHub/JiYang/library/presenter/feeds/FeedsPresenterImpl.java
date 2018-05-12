@@ -2,9 +2,9 @@ package io.gitHub.JiYang.library.presenter.feeds;
 
 import java.util.List;
 
-import io.gitHub.JiYang.library.model.FeedsModel;
+import io.gitHub.JiYang.library.model.feeds.FeedsModel;
 import io.gitHub.JiYang.library.model.enty.Feed;
-import io.gitHub.JiYang.library.model.impl.FeedsModelImpl;
+import io.gitHub.JiYang.library.model.feeds.FeedsModelImpl;
 import io.gitHub.JiYang.library.ui.view.FeedsView;
 
 public class FeedsPresenterImpl implements OnFeedsListener, FeedsPresenter {

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+        <group
+            android:id="@+id/nanGroupFeed"
+            android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_feeds"
+                android:checked="true"
+                android:icon="@drawable/ic_round_explore"
+                android:title="@string/feeds"
+                app:showAsAction="always" />
+        </group>
+        <group
+            android:id="@+id/navGroupLibrary"
+            android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_library"
+                android:icon="@drawable/ic_round_bookmarks"
+                android:title="@string/library"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/nav_search"
+                android:icon="@drawable/ic_round_search_grey"
+                android:title="@string/search"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/nav_fav"
+                android:icon="@drawable/ic_round_favorite"
+                android:title="@string/fav_book" />
+        </group>
+        <group
+            android:id="@+id/navPlatform"
+            android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_platform"
+                android:icon="@drawable/ic_round_platform"
+                android:title="@string/platform"
+                app:showAsAction="ifRoom" />
+        </group>
+        <group
+            android:id="@+id/navFunction"
+            android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_round_settings"
+                android:title="@string/setting"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/nav_feedBack"
+                android:icon="@drawable/ic_round_bug_report"
+                android:title="@string/feedback"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_round_info"
+                android:title="@string/about"
+                app:showAsAction="ifRoom" />
+        </group>
+    </group>
+</menu>

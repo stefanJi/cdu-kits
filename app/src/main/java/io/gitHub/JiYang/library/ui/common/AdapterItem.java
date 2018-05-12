@@ -3,7 +3,7 @@ package io.gitHub.JiYang.library.ui.common;
 import android.view.View;
 
 public interface AdapterItem<T> {
-    void handleData(T data, int position);
+    void handleData(int position);
 
     int getResId();
 

@@ -1,9 +1,9 @@
 package io.gitHub.JiYang.library.presenter.library;
 
-import io.gitHub.JiYang.library.model.LoginModel;
+import io.gitHub.JiYang.library.model.library.LoginModel;
 import io.gitHub.JiYang.library.model.enty.LibraryUserInfo;
-import io.gitHub.JiYang.library.model.impl.LoginModelImpl;
-import io.gitHub.JiYang.library.ui.view.LoginLibraryView;
+import io.gitHub.JiYang.library.model.library.LoginModelImpl;
+import io.gitHub.JiYang.library.ui.view.library.LoginLibraryView;
 
 public class LoginPresenterImpl implements LoginPresenter, OnLoginListener {
     // presenter作为中间层，持有 View 和 Model 的引用

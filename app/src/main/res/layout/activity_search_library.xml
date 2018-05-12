@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:elevation="4dp">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:title="@string/search">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingTop="?actionBarSize"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.7">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
+                        android:text="@string/search_type"
+                        android:textColor="@color/white" />
+
+                    <HorizontalScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbarSize="1dp"
+                        android:scrollbarThumbHorizontal="@color/colorAccent">
+
+                        <RadioGroup
+                            android:id="@+id/searchTypeGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkedButton="@id/searchType1"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/searchType1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/book_search_type_1"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/searchType2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/book_search_type_2"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/searchType3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/book_search_type_3"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/searchType4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/book_search_type_4"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/searchType5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/book_search_type_5"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/searchType6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/book_search_type_6"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/searchType7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/book_search_type_7"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/searchType8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/book_search_type_8"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <RadioButton
+                                android:id="@+id/searchType9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/book_search_type_9"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                        </RadioGroup>
+                    </HorizontalScrollView>
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="5dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
+                        android:text="@string/search_match_type"
+                        android:textColor="@color/white" />
+
+                    <RadioGroup
+                        android:id="@+id/searchBookMatchGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checkedButton="@id/match_type_1"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <android.support.v7.widget.AppCompatRadioButton
+                            android:id="@+id/match_type_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/search_match_type_1"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <android.support.v7.widget.AppCompatRadioButton
+                            android:id="@+id/match_type_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/search_match_type_2"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <android.support.v7.widget.AppCompatRadioButton
+                            android:id="@+id/match_type_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/search_match_type_3"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </RadioGroup>
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="5dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
+                        android:text="@string/search_book_type"
+                        android:textColor="@color/white" />
+
+                    <HorizontalScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scrollbarSize="1dp"
+                        android:scrollbarThumbHorizontal="@color/colorAccent">
+
+                        <RadioGroup
+                            android:id="@+id/searchBookTypeGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkedButton="@id/bookType1"
+                            android:orientation="horizontal">
+
+                            <android.support.v7.widget.AppCompatRadioButton
+                                android:id="@+id/bookType1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/search_book_type_1"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <android.support.v7.widget.AppCompatRadioButton
+                                android:id="@+id/bookType2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/search_book_type_2"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <android.support.v7.widget.AppCompatRadioButton
+                                android:id="@+id/bookType3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/search_book_type_3"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <android.support.v7.widget.AppCompatRadioButton
+                                android:id="@+id/bookType4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/search_book_type_4"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                            <android.support.v7.widget.AppCompatRadioButton
+                                android:id="@+id/bookType5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/search_book_type_5"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+
+                        </RadioGroup>
+                    </HorizontalScrollView>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/searchKeyInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/search_info"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text" />
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    style="?android:actionBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_collapseMode="pin"
+                    app:title="@string/search"
+                    app:titleTextColor="@color/white" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>

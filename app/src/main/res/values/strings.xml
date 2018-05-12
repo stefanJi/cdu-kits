@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">橙子助手</string>
     <string name="name">姓名:</string>
-    <string name="books">当前借阅:</string>
+    <string name="books">当前借阅</string>
     <string name="welcome">欢迎使用成大校园助手</string>
     <string name="about">关于</string>
     <string name="setting">设置</string>
@@ -33,16 +33,9 @@
     <string name="more">更多</string>
     <string name="feedback_info">留下你想说的哟!想加的功能，希望改善的功能都可以</string>
     <string name="contact">你的联系方式:电话/邮箱/QQ(选填)</string>
-    <string name="blind_account">账户绑定</string>
-    <string name="blind">绑定</string>
-    <string name="input_password">图书馆密码</string>
-    <string name="input_account">用户名(学号/证件号/邮箱)</string>
-    <string name="renew">点击续借</string>
-    <string name="change_account">切换账户</string>
-    <string name="chengji">成绩查询</string>
+    <string name="renew">续借</string>
     <string name="net_connent_error">网络连接失败，点击重试</string>
     <string name="send_feedback">发送反馈</string>
-    <string name="image_show">成大图册展示</string>
     <string name="refresh">刷新</string>
     <string name="search_info">搜索图书</string>
     <string name="campus">校园</string>
@@ -53,5 +46,45 @@
     <string name="card_number">证件号</string>
     <string name="ser_number">条码号</string>
     <string name="email">邮箱</string>
+    <string name="book_date">借阅:%1$s</string>
+    <string name="book_end_date">应还:%1$s</string>
+    <string name="book_out_of_date">距离还书还有 %1$d 天</string>
+    <string name="book_times">续借次数: %1$s 天</string>
+    <string name="input_account">帐号</string>
+    <string name="input_password">图书馆登录密码</string>
+    <string name="booked_count">累计借书</string>
+    <string name="book_max_count">最大可借</string>
+    <string name="max_book_order_count">最大预约</string>
+    <string name="max_book_illegal_count">违章次数</string>
+    <string name="detail">详情</string>
+    <string name="book_search_type_1">标题</string>
+    <string name="book_search_type_2">作者</string>
+    <string name="book_search_type_3">主题词</string>
+    <string name="book_search_type_4">ISBN/ISSN</string>
+    <string name="book_search_type_5">订购号</string>
+    <string name="book_search_type_6">分类号</string>
+    <string name="book_search_type_7">索书号</string>
+    <string name="book_search_type_8">出版社</string>
+    <string name="book_search_type_9">从书名</string>
+    <string name="search_type">搜索类型</string>
 
+    <string name="search_match_type">匹配方式</string>
+    <string name="search_match_type_1">前方一致</string>
+    <string name="search_match_type_2">完全匹配</string>
+    <string name="search_match_type_3">任意匹配</string>
+
+    <string name="search_book_type">书籍类型</string>
+    <string name="search_book_type_1">所有书刊</string>
+    <string name="search_book_type_2">中文图书</string>
+    <string name="search_book_type_3">西文图书</string>
+    <string name="search_book_type_4">中文期刊</string>
+    <string name="search_book_type_5">西文期刊</string>
+
+    <string name="fav_book">图书收藏</string>
+    <string name="go_login">图书馆鼓舞需要先登录，点击去登录</string>
+    <string name="cancel">取消</string>
+    <string name="pref_category_general">基本</string>
+    <string name="pref_title_library_user_info">图书馆用户</string>
+    <string name="pref_log_out">登出</string>
+    <string name="pref_login_library">登录图书馆</string>
 </resources>

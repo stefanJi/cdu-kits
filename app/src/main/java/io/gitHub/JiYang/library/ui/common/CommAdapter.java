@@ -40,7 +40,7 @@ public abstract class CommAdapter<T> extends RecyclerView.Adapter<CommHolder> im
     public void onBindViewHolder(@NonNull CommHolder holder, int position) {
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(this);
-        holder.item.handleData(data.get(position), position);
+        holder.item.handleData(position);
     }
 
     @Override

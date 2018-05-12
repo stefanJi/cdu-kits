@@ -1,29 +1,29 @@
 package io.gitHub.JiYang.library.ui.fragment.feeds;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import io.gitHub.JiYang.library.R;
+import io.gitHub.JiYang.library.databinding.FragmentFeedsBinding;
 import io.gitHub.JiYang.library.presenter.feeds.FeedsPresenter;
 import io.gitHub.JiYang.library.ui.common.BaseFragment;
 
 public class FeedsFragment extends BaseFragment {
-
+    private static final String FIRST_COME_FEEDS = "first_come" + FeedsFragment.class.getName();
     public static String TAG = "feeds_fragment";
     private BaseFragment[] baseFragments;
+    private FragmentFeedsBinding feedsBinding;
 
     public static FeedsFragment newInstance() {
         return new FeedsFragment();
     }
-
 
     @Nullable
     @Override
@@ -31,13 +31,12 @@ public class FeedsFragment extends BaseFragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feeds, container, false);
-        init(view);
+        feedsBinding = DataBindingUtil.bind(view);
+        init();
         return view;
     }
 
-    private void init(View view) {
-        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
-        ViewPager viewPager = view.findViewById(R.id.viewPager);
+    private void init() {
         baseFragments = new BaseFragment[]{
                 FeedsItemFragment.newInstance(FeedsPresenter.ANNOUNCE),
                 FeedsItemFragment.newInstance(FeedsPresenter.HQC_ANNOUNCE),
@@ -47,7 +46,7 @@ public class FeedsFragment extends BaseFragment {
                 FeedsItemFragment.newInstance(FeedsPresenter.COLOR_CAMPUS),
                 FeedsItemFragment.newInstance(FeedsPresenter.ARTICLE)
         };
-        viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
+        feedsBinding.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 return baseFragments[position];
@@ -63,10 +62,9 @@ public class FeedsFragment extends BaseFragment {
             public CharSequence getPageTitle(int position) {
                 return baseFragments[position].getTitle();
             }
-
-
         });
-        tabLayout.setupWithViewPager(viewPager);
+        feedsBinding.tabLayout.setupWithViewPager(feedsBinding.viewPager);
+        isFirstCome("下拉可刷新，点击可查看详情");
     }
 
 

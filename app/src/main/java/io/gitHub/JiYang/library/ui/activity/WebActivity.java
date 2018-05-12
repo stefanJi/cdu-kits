@@ -3,6 +3,8 @@ package io.gitHub.JiYang.library.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -48,6 +50,10 @@ public class WebActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        Drawable navIcon = toolbar.getNavigationIcon();
+        if (navIcon != null) {
+            navIcon.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         }
         progressBar = findViewById(R.id.progress);
         webView = findViewById(R.id.webView);
@@ -101,7 +107,7 @@ public class WebActivity extends BaseActivity {
                 finish();
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
