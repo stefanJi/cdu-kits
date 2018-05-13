@@ -34,9 +34,7 @@ import io.gitHub.JiYang.library.ui.common.CommAdapter;
 import io.gitHub.JiYang.library.ui.view.library.FavBookView;
 import io.gitHub.JiYang.library.ui.widget.UiUtils;
 
-public class FavBookActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, FavBookView {
-    private static final String FIRST_COME_FAV_BOOK_ACTIVITY = "first_come_fav_book_activity" + FavBookActivity.class.getName();
-    private boolean isFirstCome = true;
+public class FavBookActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, FavBookView, CommAdapter.OnItemClickListener {
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, FavBookActivity.class));
@@ -88,6 +86,7 @@ public class FavBookActivity extends BaseActivity implements SwipeRefreshLayout.
                 };
             }
         };
+        adapter.setItemClickListener(this);
         binding.recycleView.setAdapter(adapter);
         binding.recycleView.setLayoutManager(new LinearLayoutManager(this));
         ItemTouchHelper.Callback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -106,7 +105,6 @@ public class FavBookActivity extends BaseActivity implements SwipeRefreshLayout.
         touchHelper.attachToRecyclerView(binding.recycleView);
         presenter = new FavBookPresenterImpl(this);
         presenter.fetchFevBooks();
-        isFirstCome = AppControl.getInstance().getSpUtil().getBool(FIRST_COME_FAV_BOOK_ACTIVITY, true);
     }
 
     @Override
@@ -167,5 +165,11 @@ public class FavBookActivity extends BaseActivity implements SwipeRefreshLayout.
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void OnItemClick(int position) {
+        FavBook favBook = favBooks.get(position);
+        WebActivity.start(this, favBook.bookUrl);
     }
 }

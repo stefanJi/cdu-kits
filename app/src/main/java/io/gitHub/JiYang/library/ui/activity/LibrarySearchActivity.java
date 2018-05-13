@@ -3,12 +3,14 @@ package io.gitHub.JiYang.library.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.RadioGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -39,78 +41,12 @@ import io.gitHub.JiYang.library.ui.view.library.LibrarySearchView;
 import io.gitHub.JiYang.library.ui.widget.EndlessRecyclerOnScrollListener;
 import io.gitHub.JiYang.library.ui.widget.UiUtils;
 
-public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, LibrarySearchView, RadioGroup.OnCheckedChangeListener, CommAdapter.OnItemClickListener {
+public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, LibrarySearchView, CommAdapter.OnItemClickListener {
     ActivitySearchLibraryBinding binding;
     private List<Book> bookList;
     private LibrarySearchPresenter presenter;
     private int page = 1;
 
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (group.getId()) {
-            case R.id.searchTypeGroup:
-                break;
-            case R.id.searchBookMatchGroup:
-                break;
-            case R.id.searchBookTypeGroup:
-                break;
-        }
-        switch (checkedId) {
-            case R.id.searchType1:
-                searchType = SEARCH_CONST.STR_SEARCH_TYPE_TITLE;
-                break;
-            case R.id.searchType2:
-                searchType = SEARCH_CONST.STR_SEARCH_TYPE_AUTHOR;
-                break;
-            case R.id.searchType3:
-                searchType = SEARCH_CONST.STR_SEARCH_TYPE_KEYWORD;
-                break;
-            case R.id.searchType4:
-                searchType = SEARCH_CONST.STR_SEARCH_TYPE_ISBN;
-                break;
-            case R.id.searchType5:
-                searchType = SEARCH_CONST.STR_SEARCH_TYPE_ASORDNO;
-                break;
-            case R.id.searchType6:
-                searchType = SEARCH_CONST.STR_SEARCH_TYPE_CODEN;
-                break;
-            case R.id.searchType7:
-                searchType = SEARCH_CONST.STR_SEARCH_TYPE_CALLNO;
-                break;
-            case R.id.searchType8:
-                searchType = SEARCH_CONST.STR_SEARCH_TYPE_PUBLISHER;
-                break;
-            case R.id.searchType9:
-                searchType = SEARCH_CONST.STR_SEARCH_TYPE_SERIES;
-                break;
-
-            case R.id.match_type_1:
-                matchType = SEARCH_CONST.MATCH_TYPE_FORWARD;
-                break;
-            case R.id.match_type_2:
-                matchType = SEARCH_CONST.MATCH_TYPE_FULL;
-                break;
-            case R.id.match_type_3:
-                matchType = SEARCH_CONST.MATCH_TYPE_ANY;
-                break;
-
-            case R.id.bookType1:
-                docType = SEARCH_CONST.DOC_TYPE_ALL;
-                break;
-            case R.id.bookType2:
-                docType = SEARCH_CONST.DOC_TYPE_01;
-                break;
-            case R.id.bookType3:
-                docType = SEARCH_CONST.DOC_TYPE_02;
-                break;
-            case R.id.bookType4:
-                docType = SEARCH_CONST.DOC_TYPE_11;
-                break;
-            case R.id.bookType5:
-                docType = SEARCH_CONST.DOC_TYPE_12;
-                break;
-        }
-    }
 
     @Override
     public void OnItemClick(int position) {
@@ -167,7 +103,7 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
             navIcon.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         }
 
-        binding.searchKeyInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        binding.inputSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -225,10 +161,6 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.recycleView.setLayoutManager(layoutManager);
         binding.refreshLayout.setOnRefreshListener(this);
-
-        binding.searchTypeGroup.setOnCheckedChangeListener(this);
-        binding.searchBookMatchGroup.setOnCheckedChangeListener(this);
-        binding.searchBookTypeGroup.setOnCheckedChangeListener(this);
         binding.recycleView.addOnScrollListener(new EndlessRecyclerOnScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int current_page) {
@@ -237,7 +169,90 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
             }
         });
         adapter.setItemClickListener(this);
+
+        binding.spinnerSearchType.setOnItemSelectedListener(spinnerSelectedListener);
+        binding.spinnerSearchBookType.setOnItemSelectedListener(spinnerSelectedListener);
+        binding.spinnerSearchMatchType.setOnItemSelectedListener(spinnerSelectedListener);
+        binding.refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
     }
+
+    private AdapterView.OnItemSelectedListener spinnerSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+            ((TextView) parent.getChildAt(0)).setTextSize(14);
+            switch (parent.getId()) {
+                case R.id.spinnerSearchType:
+                    switch (position) {
+                        case 0:
+                            searchType = SEARCH_CONST.STR_SEARCH_TYPE_TITLE;
+                            break;
+                        case 1:
+                            searchType = SEARCH_CONST.STR_SEARCH_TYPE_AUTHOR;
+                            break;
+                        case 2:
+                            searchType = SEARCH_CONST.STR_SEARCH_TYPE_KEYWORD;
+                            break;
+                        case 3:
+                            searchType = SEARCH_CONST.STR_SEARCH_TYPE_ISBN;
+                            break;
+                        case 4:
+                            searchType = SEARCH_CONST.STR_SEARCH_TYPE_ASORDNO;
+                            break;
+                        case 5:
+                            searchType = SEARCH_CONST.STR_SEARCH_TYPE_CODEN;
+                            break;
+                        case 6:
+                            searchType = SEARCH_CONST.STR_SEARCH_TYPE_CALLNO;
+                            break;
+                        case 7:
+                            searchType = SEARCH_CONST.STR_SEARCH_TYPE_PUBLISHER;
+                            break;
+                        case 8:
+                            searchType = SEARCH_CONST.STR_SEARCH_TYPE_SERIES;
+                            break;
+                    }
+                    break;
+                case R.id.spinnerSearchMatchType:
+                    switch (position) {
+                        case 0:
+                            matchType = SEARCH_CONST.MATCH_TYPE_ANY;
+                            break;
+                        case 1:
+                            matchType = SEARCH_CONST.MATCH_TYPE_FULL;
+                            break;
+                        case 2:
+                            matchType = SEARCH_CONST.MATCH_TYPE_FORWARD;
+                            break;
+                    }
+                    break;
+                case R.id.spinnerSearchBookType:
+                    switch (position) {
+                        case 0:
+                            docType = SEARCH_CONST.DOC_TYPE_ALL;
+                            break;
+                        case 1:
+                            docType = SEARCH_CONST.DOC_TYPE_01;
+                            break;
+                        case 2:
+                            docType = SEARCH_CONST.DOC_TYPE_02;
+                            break;
+                        case 3:
+                            docType = SEARCH_CONST.DOC_TYPE_11;
+                            break;
+                        case 4:
+                            docType = SEARCH_CONST.DOC_TYPE_12;
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -252,15 +267,15 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
     }
 
     private void search() {
-        String key = binding.searchKeyInput.getText().toString();
+        String key = binding.inputSearch.getText().toString();
         if (TextUtils.isEmpty(key)) {
             binding.refreshLayout.setRefreshing(false);
             return;
         }
-        binding.searchKeyInput.clearFocus();
+        binding.inputSearch.clearFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.hideSoftInputFromWindow(binding.searchKeyInput.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(binding.inputSearch.getWindowToken(), 0);
         }
         presenter.searchBook(key, searchType, docType, matchType, page);
     }
@@ -298,7 +313,12 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
 
     @Override
     public void showError(String error) {
-        UiUtils.showErrorSnackbar(this, binding.getRoot(), error);
+        UiUtils.showErrorSnackbar(this, binding.getRoot(), error, "重试", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search();
+            }
+        });
     }
 
     @Override

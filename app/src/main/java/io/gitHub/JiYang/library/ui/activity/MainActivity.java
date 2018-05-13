@@ -1,8 +1,10 @@
 package io.gitHub.JiYang.library.ui.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.gitHub.JiYang.library.Constant;
 import io.gitHub.JiYang.library.R;
 import io.gitHub.JiYang.library.databinding.ActivityMainBinding;
 import io.gitHub.JiYang.library.presenter.MainViewPresenter;
@@ -29,6 +32,7 @@ import io.gitHub.JiYang.library.ui.fragment.feeds.FeedsFragment;
 import io.gitHub.JiYang.library.ui.fragment.library.LibraryFragment;
 import io.gitHub.JiYang.library.ui.fragment.platform.PlatformFragment;
 import io.gitHub.JiYang.library.ui.view.MainView;
+import io.gitHub.JiYang.library.ui.widget.UiUtils;
 
 public class MainActivity extends BaseActivity implements MainView, NavigationView.OnNavigationItemSelectedListener {
 
@@ -148,8 +152,18 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
                 SettingActivity.start(this);
                 break;
             case R.id.nav_about:
+                AboutActivity.start(this);
                 break;
             case R.id.nav_feedBack:
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse(Constant.CONTACT_EMAIL));
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.about_email_intent));
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    UiUtils.showErrorSnackbar(this, binding.getRoot(), getString(R.string.about_not_found_email));
+                }
                 break;
             default:
                 break;

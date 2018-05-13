@@ -155,6 +155,11 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
 
     @Override
     public void showError(String error) {
+        if (this.feeds.size() > 0) {
+            binding.emptyTip.setVisibility(View.GONE);
+        } else {
+            binding.emptyTip.setVisibility(View.VISIBLE);
+        }
         UiUtils.showErrorSnackbar(this.getActivity(), binding.recyclerView, error);
     }
 
@@ -172,6 +177,11 @@ public class FeedsItemFragment extends BaseFragment implements FeedsView,
             update.add(feed);
         }
         this.feeds.addAll(update);
+        if (this.feeds.size() > 0) {
+            binding.emptyTip.setVisibility(View.GONE);
+        } else {
+            binding.emptyTip.setVisibility(View.VISIBLE);
+        }
         feedsAdapter.notifyDataSetChanged();
     }
 

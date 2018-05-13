@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">橙子助手</string>
+    <string name="app_name">成橙Kits</string>
     <string name="name">姓名:</string>
     <string name="books">当前借阅</string>
     <string name="welcome">欢迎使用成大校园助手</string>
@@ -8,7 +8,8 @@
     <string name="load_more">点击加载更多</string>
     <string name="sign">登录</string>
     <string name="search">搜索</string>
-    <string name="feedback">反馈</string>
+    <string name="search_library">搜索图书</string>
+    <string name="feedback">反馈(E-mail)</string>
     <string name="account">学号</string>
     <string name="library_password">图书馆密码</string>
     <string name="support">点击广告，支持开发者</string>
@@ -57,29 +58,6 @@
     <string name="max_book_order_count">最大预约</string>
     <string name="max_book_illegal_count">违章次数</string>
     <string name="detail">详情</string>
-    <string name="book_search_type_1">标题</string>
-    <string name="book_search_type_2">作者</string>
-    <string name="book_search_type_3">主题词</string>
-    <string name="book_search_type_4">ISBN/ISSN</string>
-    <string name="book_search_type_5">订购号</string>
-    <string name="book_search_type_6">分类号</string>
-    <string name="book_search_type_7">索书号</string>
-    <string name="book_search_type_8">出版社</string>
-    <string name="book_search_type_9">从书名</string>
-    <string name="search_type">搜索类型</string>
-
-    <string name="search_match_type">匹配方式</string>
-    <string name="search_match_type_1">前方一致</string>
-    <string name="search_match_type_2">完全匹配</string>
-    <string name="search_match_type_3">任意匹配</string>
-
-    <string name="search_book_type">书籍类型</string>
-    <string name="search_book_type_1">所有书刊</string>
-    <string name="search_book_type_2">中文图书</string>
-    <string name="search_book_type_3">西文图书</string>
-    <string name="search_book_type_4">中文期刊</string>
-    <string name="search_book_type_5">西文期刊</string>
-
     <string name="fav_book">图书收藏</string>
     <string name="go_login">图书馆鼓舞需要先登录，点击去登录</string>
     <string name="cancel">取消</string>
@@ -87,4 +65,45 @@
     <string name="pref_title_library_user_info">图书馆用户</string>
     <string name="pref_log_out">登出</string>
     <string name="pref_login_library">登录图书馆</string>
+    <string name="pull_refresh">下拉刷新</string>
+
+    <string name="search_type">搜索类型</string>
+    <string-array name="search_type">
+        <item name="book_search_type_1">标题</item>
+        <item name="book_search_type_2">作者</item>
+        <item name="book_search_type_3">主题词</item>
+        <item name="book_search_type_4">ISBN/ISSN</item>
+        <item name="book_search_type_5">订购号</item>
+        <item name="book_search_type_6">分类号</item>
+        <item name="book_search_type_7">索书号</item>
+        <item name="book_search_type_8">出版社</item>
+        <item name="book_search_type_9">从书名</item>
+    </string-array>
+
+    <string name="search_match_type">匹配方式</string>
+    <string-array name="search_match_type">
+        <item>前方一致</item>
+        <item>完全匹配</item>
+        <item>任意匹配</item>
+    </string-array>
+
+    <string name="search_book_type">书籍类型</string>
+    <string name="thanks_and_nice_meet">谢谢你的使用。Nice to meet you!</string>
+    <string name="contact_me">为了更好，欢迎和我联系</string>
+    <string name="comment">评价</string>
+    <string name="referer">设计参考自 Github.com/Eajy/MaterialDesignDemo\nMade By Github.com/jiyangg</string>
+    <string-array name="search_book_type">
+        <item name="search_book_type_1">所有书刊</item>
+        <item name="search_book_type_2">中文图书</item>
+        <item name="search_book_type_3">西文图书</item>
+        <item name="search_book_type_4">中文期刊</item>
+        <item name="search_book_type_5">西文期刊</item>
+    </string-array>
+
+    <string name="source_code">源代码</string>
+    <string name="my_site">我的网站</string>
+    <string name="open_source">开源许可</string>
+    <string name="about_email_intent">反馈:CDUKits(成橙Kits)</string>
+    <string name="about_not_found_email">没找到 email app</string>
+    <string name="share_with">Share with</string>
 </resources>
