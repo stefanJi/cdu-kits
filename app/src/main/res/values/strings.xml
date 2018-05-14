@@ -106,4 +106,5 @@
     <string name="about_email_intent">反馈:CDUKits(成橙Kits)</string>
     <string name="about_not_found_email">没找到 email app</string>
     <string name="share_with">Share with</string>
+    <string name="wait">实现中…</string>
 </resources>

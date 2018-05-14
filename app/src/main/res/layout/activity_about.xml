@@ -47,7 +47,7 @@
                             android:contentDescription="@string/about"
                             android:paddingBottom="20dp"
                             android:paddingTop="20dp"
-                            android:src="@mipmap/icon"
+                            android:src="@mipmap/ic_launcher"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
