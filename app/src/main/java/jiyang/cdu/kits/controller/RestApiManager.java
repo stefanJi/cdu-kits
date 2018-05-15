@@ -20,6 +20,7 @@ import jiyang.cdu.kits.model.enty.BookHistory;
 import jiyang.cdu.kits.model.enty.Feed;
 import jiyang.cdu.kits.model.enty.LibrarySearchHistory;
 import jiyang.cdu.kits.model.enty.LibraryUserInfo;
+import jiyang.cdu.kits.model.enty.Version;
 import okhttp3.ResponseBody;
 
 /**
@@ -30,6 +31,7 @@ import okhttp3.ResponseBody;
 public class RestApiManager {
     private static final String CDU_FEED_HOST = "http://news.cdu.edu.cn/";
     private static final String CDU_HQC_HOST = "http://hqc.cdu.edu.cn/";
+    private static final String QI_NIU_HOST = "http://hejia.youcute.cn/";
     private static RestApiManager mInstance;
 
     private RestApiManager() {
@@ -293,6 +295,14 @@ public class RestApiManager {
                         return books;
                     }
                 })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void fetchVersion(Observer<Version> observer) {
+        RetrofitController.getRetrofitInstance(QI_NIU_HOST)
+                .getRestApis().fetchVersion()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);

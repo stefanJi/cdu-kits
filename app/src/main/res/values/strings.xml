@@ -114,4 +114,7 @@
     <string name="open_by_browser">浏览器打开</string>
     <string name="retry">重试</string>
     <string name="empty_data">无数据,下拉刷新</string>
+    <string name="update">更新</string>
+    <string name="new_version_update">新版本更新啦!</string>
+    <string name="get">获取</string>
 </resources>

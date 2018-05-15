@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,31 +17,42 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import jiyang.cdu.kits.BuildConfig;
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.ActivityMainBinding;
+import jiyang.cdu.kits.databinding.DialogVersionUpdateBinding;
+import jiyang.cdu.kits.model.enty.Version;
 import jiyang.cdu.kits.presenter.main.MainViewPresenterImpl;
+import jiyang.cdu.kits.presenter.version.VersionPresenter;
+import jiyang.cdu.kits.presenter.version.VersionPresenterImpl;
 import jiyang.cdu.kits.ui.common.BaseActivity;
 import jiyang.cdu.kits.ui.fragment.feeds.FeedsFragment;
 import jiyang.cdu.kits.ui.fragment.library.LibraryFragment;
 import jiyang.cdu.kits.ui.view.MainView;
+import jiyang.cdu.kits.ui.view.VersionView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
 
 
-public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> implements MainView, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> implements
+        MainView, NavigationView.OnNavigationItemSelectedListener, VersionView {
 
     public static final int REQUEST_CODE = 107;
     private FragmentManager mFragmentManager;
     private int checkNavId;
     private ActivityMainBinding binding;
+    private VersionPresenter versionPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +69,7 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
     }
 
     private void init() {
+        versionPresenter = new VersionPresenterImpl(this);
         mFragmentManager = getSupportFragmentManager();
 
         setSupportActionBar(binding.appbar.toolbar);
@@ -76,6 +89,7 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
         binding.drawerMenu.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         switchFragment(R.id.nav_feeds);
+        versionPresenter.fetchVersion();
     }
 
     private void initNav() {
@@ -234,5 +248,36 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
                 }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSuccess(final Version version) {
+        if (BuildConfig.VERSION_CODE < version.versionCode) {
+            DialogVersionUpdateBinding versionUpdateBinding = DataBindingUtil.inflate(getLayoutInflater(),
+                    R.layout.dialog_version_update, null, false);
+            versionUpdateBinding.description.setText(version.description);
+            versionUpdateBinding.versionName.setText(version.versionName);
+            versionUpdateBinding.getUpdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(version.url));
+                    startActivity(intent);
+                }
+            });
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setView(versionUpdateBinding.getRoot()).create();
+            dialog.show();
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setBackgroundDrawable(new ColorDrawable(0x00000000));
+            }
+        }
+    }
+
+    @Override
+    public void onError(String error) {
+        UiUtils.showErrorSnackbar(this, binding.getRoot(), "版本更新获取失败:" + error);
     }
 }

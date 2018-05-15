@@ -1,6 +1,7 @@
 package jiyang.cdu.kits.controller;
 
 import io.reactivex.Observable;
+import jiyang.cdu.kits.model.enty.Version;
 import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -11,7 +12,7 @@ import retrofit2.http.Query;
 
 interface RestApis {
 
-    //    登录图书馆
+    //登录图书馆
     @FormUrlEncoded
     @Headers({"user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36"})
     @POST("reader/redr_verify.php")
@@ -68,5 +69,7 @@ interface RestApis {
             @Query("strText") String strText
     );
 
-    //
+    //版本检查
+    @GET("cdu-kits/cdu-kits-version.json")
+    Observable<Version> fetchVersion();
 }
