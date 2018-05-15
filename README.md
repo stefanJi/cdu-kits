@@ -3,7 +3,7 @@
 
 > 一个为成大制作的简约的材料设计风格校园助手安卓应用 
 
-<a href="http://ovf9kxblp.bkt.clouddn.com/apk/cdu-kits-release.apk" style="font-size:24px; ">下载安装</a>
+<a href="http://ovf9kxblp.bkt.clouddn.com/apk/cdu-kits-release-2018-05-15.apk" style="font-size:24px; ">下载安装包</a>
 
 ---
 
