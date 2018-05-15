@@ -2,8 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/actionbar_title"
-    android:minHeight="100dp"
-    android:orientation="vertical">
+    android:background="@color/colorPrimary"
+    android:minHeight="120dp"
+    android:orientation="vertical"
+    android:padding="20dp">
 
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_business" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="23dp"
+        android:layout_marginStart="23dp"
+        android:text="@string/app_name"
+        android:textColor="@color/white" />
 </LinearLayout>

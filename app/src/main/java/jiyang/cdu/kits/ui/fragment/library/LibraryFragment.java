@@ -13,22 +13,20 @@ import android.view.ViewGroup;
 
 import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.R;
+import jiyang.cdu.kits.databinding.FragmentLibraryBinding;
 import jiyang.cdu.kits.model.enty.LibraryUserInfo;
-import jiyang.cdu.kits.presenter.library.LoginPresenter;
-import jiyang.cdu.kits.presenter.library.LoginPresenterImpl;
+import jiyang.cdu.kits.presenter.library.login.LoginPresenterImpl;
 import jiyang.cdu.kits.ui.activity.LoginLibraryActivity;
 import jiyang.cdu.kits.ui.common.BaseFragment;
 import jiyang.cdu.kits.ui.view.library.LoginLibraryView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
 import jiyang.cdu.kits.util.SpUtil;
-import jiyang.cdu.kits.databinding.FragmentLibraryBinding;
 
-public class LibraryFragment extends BaseFragment implements View.OnClickListener, LoginLibraryView {
+public class LibraryFragment extends BaseFragment<LoginLibraryView, LoginPresenterImpl> implements View.OnClickListener, LoginLibraryView {
 
     public static final String TAG = "LIBRARY_FRAGMENT";
 
     private FragmentLibraryBinding binding;
-    private LoginPresenter loginPresenter;
     private boolean hasLoadViewPage = false;
 
     public static LibraryFragment newInstance() {
@@ -40,7 +38,6 @@ public class LibraryFragment extends BaseFragment implements View.OnClickListene
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
         binding = DataBindingUtil.bind(view);
-        loginPresenter = new LoginPresenterImpl(this);
         return view;
     }
 
@@ -59,12 +56,16 @@ public class LibraryFragment extends BaseFragment implements View.OnClickListene
             binding.viewPager.setVisibility(View.VISIBLE);
             binding.tabLayout.setVisibility(View.VISIBLE);
             if (!hasLoadViewPage) {
-                String account = sp.getString(LoginLibraryActivity.LIBRARY_ACCOUNT);
-                String password = sp.getString(LoginLibraryActivity.LIBRARY_PASSWORD);
-                String loginType = sp.getString(LoginLibraryActivity.LIBRARY_ACCOUNT_TYPE);
-                loginPresenter.login(account, password, loginType);
+                fetchUserInfo(sp);
             }
         }
+    }
+
+    private void fetchUserInfo(SpUtil sp) {
+        String account = sp.getString(LoginLibraryActivity.LIBRARY_ACCOUNT);
+        String password = sp.getString(LoginLibraryActivity.LIBRARY_PASSWORD);
+        String loginType = sp.getString(LoginLibraryActivity.LIBRARY_ACCOUNT_TYPE);
+        presenter.login(account, password, loginType);
     }
 
     private void login() {
@@ -77,6 +78,11 @@ public class LibraryFragment extends BaseFragment implements View.OnClickListene
     @Override
     public String getTitle() {
         return "图书馆";
+    }
+
+    @Override
+    public LoginPresenterImpl initPresenter() {
+        return new LoginPresenterImpl();
     }
 
 
@@ -128,13 +134,29 @@ public class LibraryFragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void showLoginError(String error) {
+        if (!hasLoadViewPage) {
+            binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SpUtil sp = AppControl.getInstance().getSpUtil();
+                    fetchUserInfo(sp);
+                }
+            });
+        }
         hasLoadViewPage = false;
-        UiUtils.showErrorSnackbar(getContext(), binding.getRoot(), error);
+        UiUtils.showErrorSnackbar(getContext(), binding.getRoot(), error, "重试", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SpUtil sp = AppControl.getInstance().getSpUtil();
+                fetchUserInfo(sp);
+            }
+        });
     }
 
     @Override
     public void showLoginSuccess(LibraryUserInfo userInfo) {
         showLoginEdLayout(userInfo);
         hasLoadViewPage = true;
+        binding.getRoot().setOnClickListener(null);
     }
 }

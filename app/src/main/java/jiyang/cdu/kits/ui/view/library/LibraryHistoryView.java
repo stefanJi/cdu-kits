@@ -3,9 +3,10 @@ package jiyang.cdu.kits.ui.view.library;
 import java.util.List;
 
 import jiyang.cdu.kits.model.enty.BookHistory;
+import jiyang.cdu.kits.ui.view.BaseView;
 
 
-public interface LibraryHistoryView {
+public interface LibraryHistoryView extends BaseView{
     void showLoading();
 
     void hideLoading();

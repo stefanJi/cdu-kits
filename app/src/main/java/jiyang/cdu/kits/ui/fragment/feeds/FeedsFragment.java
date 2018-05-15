@@ -11,8 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import jiyang.cdu.kits.R;
-import jiyang.cdu.kits.ui.common.BaseFragment;
 import jiyang.cdu.kits.databinding.FragmentFeedsBinding;
+import jiyang.cdu.kits.presenter.BasePresenterImpl;
+import jiyang.cdu.kits.ui.common.BaseFragment;
 
 public class FeedsFragment extends BaseFragment {
     public static String TAG = "feeds_fragment";
@@ -57,12 +58,21 @@ public class FeedsFragment extends BaseFragment {
             }
         });
         feedsBinding.tabLayout.setupWithViewPager(feedsBinding.viewPager);
-        isFirstCome("下拉可刷新，点击可查看详情");
+        showFirstComeTip("下拉可刷新,点击可查看详情,设置里可关闭无感的Tab");
     }
 
 
     @Override
     public String getTitle() {
         return "发现";
+    }
+
+    @Override
+    public BasePresenterImpl initPresenter() {
+        return null;
+    }
+
+    public void reload() {
+        init();
     }
 }

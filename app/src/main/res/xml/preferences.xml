@@ -4,6 +4,9 @@
         android:key="general"
         android:title="@string/pref_category_general">
         <Preference
+            android:key="tabs_to_show"
+            android:title="@string/pref_tab_list" />
+        <Preference
             android:key="login_library"
             android:title="@string/pref_login_library" />
     </PreferenceCategory>

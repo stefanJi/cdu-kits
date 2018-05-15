@@ -5,7 +5,7 @@ import java.util.List;
 import jiyang.cdu.kits.model.enty.Feed;
 
 
-public interface FeedsView {
+public interface FeedsView extends BaseView{
     void showLoading();
 
     void hideLoading();

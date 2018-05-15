@@ -6,11 +6,14 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -21,12 +24,13 @@ import android.webkit.WebViewClient;
 
 import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.ActivityWebBinding;
+import jiyang.cdu.kits.presenter.BasePresenterImpl;
 import jiyang.cdu.kits.ui.common.BaseActivity;
 
 public class WebActivity extends BaseActivity {
 
     private ActivityWebBinding binding;
-
+    private String mUrl;
 
     public static void start(Context context, String url) {
         if (url == null) {
@@ -44,8 +48,14 @@ public class WebActivity extends BaseActivity {
         init();
     }
 
+    @Override
+    public BasePresenterImpl initPresenter() {
+        return null;
+    }
+
     private void init() {
         String url = getIntent().getStringExtra("url");
+        mUrl = url;
         Toolbar toolbar = findViewById(R.id.toolbarWebActivity);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -62,8 +72,13 @@ public class WebActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     view.loadUrl(request.getUrl().toString());
-                } else {
                 }
+                return true;
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
                 return true;
             }
 
@@ -92,6 +107,8 @@ public class WebActivity extends BaseActivity {
         binding.webView.setWebChromeClient(chromeClient);
         WebSettings webSettings = binding.webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAppCacheEnabled(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setSupportMultipleWindows(true);
@@ -101,10 +118,26 @@ public class WebActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_web_activity, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.menu_refresh:
+                binding.webView.reload();
+                break;
+            case R.id.menu_open_by_browser:
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(mUrl));
+                startActivity(intent);
                 break;
         }
         return true;

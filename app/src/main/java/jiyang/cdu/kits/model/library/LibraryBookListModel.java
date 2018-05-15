@@ -2,7 +2,7 @@ package jiyang.cdu.kits.model.library;
 
 
 import jiyang.cdu.kits.model.enty.Book;
-import jiyang.cdu.kits.presenter.library.OnBookListListener;
+import jiyang.cdu.kits.presenter.library.currentBook.OnBookListListener;
 
 public interface LibraryBookListModel {
     void fetchBookList(final OnBookListListener onBookListListener);

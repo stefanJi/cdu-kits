@@ -1,5 +1,8 @@
 package jiyang.cdu.kits.model.feeds;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.nio.channels.UnresolvedAddressException;
 import java.util.List;
 
 import io.reactivex.Observer;
@@ -15,7 +18,7 @@ public class FeedsModelImpl implements FeedsModel {
         RestApiManager.getInstance().getFeeds(new Observer<List<Feed>>() {
             @Override
             public void onSubscribe(Disposable d) {
-
+                onFeedsListener.onSubscribe(d);
             }
 
             @Override
@@ -25,7 +28,13 @@ public class FeedsModelImpl implements FeedsModel {
 
             @Override
             public void onError(Throwable e) {
-                onFeedsListener.onError(e.getMessage());
+                if (e instanceof UnknownHostException || e instanceof UnresolvedAddressException) {
+                    onFeedsListener.onError("网络不可用,请检查网络设置");
+                } else if (e instanceof SocketTimeoutException) {
+                    onFeedsListener.onError("连接超时,请重试");
+                } else {
+                    onFeedsListener.onError(e.getMessage());
+                }
             }
 
             @Override

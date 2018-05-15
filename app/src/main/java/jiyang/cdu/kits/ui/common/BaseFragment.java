@@ -3,6 +3,8 @@ package jiyang.cdu.kits.ui.common;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,12 +12,18 @@ import android.view.View;
 
 import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.R;
+import jiyang.cdu.kits.presenter.BasePresenterImpl;
+import jiyang.cdu.kits.ui.view.BaseView;
 import jiyang.cdu.kits.util.SpUtil;
 
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment<V extends BaseView, P extends BasePresenterImpl> extends Fragment {
 
     public abstract String getTitle();
+
+    public boolean isFirstStart() {
+        return AppControl.getInstance().getSpUtil().getBool(getClass().getName(), true);
+    }
 
     protected void setRefreshLayoutColor(SwipeRefreshLayout swipeRefreshLayout) {
         Context context = getContext();
@@ -28,7 +36,7 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    protected void isFirstCome(String tip) {
+    protected void showFirstComeTip(String tip) {
         final String tag = getClass().getName();
         final SpUtil sp = AppControl.getInstance().getSpUtil();
         boolean isFirstCome = sp.getBool(tag, true);
@@ -42,6 +50,28 @@ public abstract class BaseFragment extends Fragment {
                         }
                     })
                     .show();
+        }
+    }
+
+    public P presenter;
+
+    public abstract P initPresenter();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter = initPresenter();
+        if (presenter != null) {
+            presenter.attachView(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (presenter != null) {
+            presenter.detach();
+            presenter = null;
         }
     }
 }

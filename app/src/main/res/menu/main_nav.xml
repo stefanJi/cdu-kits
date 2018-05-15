@@ -34,9 +34,14 @@
             android:id="@+id/navPlatform"
             android:checkableBehavior="single">
             <item
-                android:id="@+id/nav_platform"
+                android:id="@+id/education_info"
                 android:icon="@drawable/ic_round_platform"
-                android:title="@string/platform"
+                android:title="@string/education_info"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/net_education_info"
+                android:icon="@drawable/ic_event_note"
+                android:title="@string/net_education_info"
                 app:showAsAction="ifRoom" />
         </group>
         <group

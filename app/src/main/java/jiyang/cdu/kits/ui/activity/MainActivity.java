@@ -11,10 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,22 +26,19 @@ import java.util.List;
 
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
-import jiyang.cdu.kits.presenter.MainViewPresenter;
-import jiyang.cdu.kits.presenter.MainViewPresenterImpl;
+import jiyang.cdu.kits.databinding.ActivityMainBinding;
+import jiyang.cdu.kits.presenter.main.MainViewPresenterImpl;
 import jiyang.cdu.kits.ui.common.BaseActivity;
 import jiyang.cdu.kits.ui.fragment.feeds.FeedsFragment;
 import jiyang.cdu.kits.ui.fragment.library.LibraryFragment;
-import jiyang.cdu.kits.ui.fragment.platform.PlatformFragment;
 import jiyang.cdu.kits.ui.view.MainView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
-import jiyang.cdu.kits.databinding.ActivityMainBinding;
 
 
-public class MainActivity extends BaseActivity implements MainView, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> implements MainView, NavigationView.OnNavigationItemSelectedListener {
 
     public static final int REQUEST_CODE = 107;
     private FragmentManager mFragmentManager;
-    private MainViewPresenter mainViewPresenter;
     private int checkNavId;
     private ActivityMainBinding binding;
 
@@ -52,9 +51,13 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
         init();
     }
 
+    @Override
+    public MainViewPresenterImpl initPresenter() {
+        return new MainViewPresenterImpl();
+    }
+
     private void init() {
         mFragmentManager = getSupportFragmentManager();
-        mainViewPresenter = new MainViewPresenterImpl();
 
         setSupportActionBar(binding.appbar.toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -78,6 +81,12 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
     private void initNav() {
         binding.navMenu.navigationView.setNavigationItemSelectedListener(this);
         checkNavId = R.id.nav_feeds;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        binding.navMenu.navigationView.setCheckedItem(checkNavId);
     }
 
     @Override
@@ -109,39 +118,35 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
         final int containerId = R.id.mainContainer;
         switch (menuId) {
             case R.id.nav_library:
+                hideFragments();
                 LibraryFragment libraryFragment = (LibraryFragment) mFragmentManager.findFragmentByTag(LibraryFragment.TAG);
                 if (libraryFragment == null) {
                     libraryFragment = LibraryFragment.newInstance();
                     mFragmentManager.beginTransaction().add(containerId, libraryFragment, LibraryFragment.TAG).commit();
                 } else {
-                    mFragmentManager.beginTransaction().replace(containerId, libraryFragment, LibraryFragment.TAG).commit();
+                    mFragmentManager.beginTransaction().show(libraryFragment).commit();
                 }
                 setTitle(libraryFragment.getTitle());
                 checkNavId = menuId;
                 break;
 
             case R.id.nav_feeds:
+                hideFragments();
                 FeedsFragment feedsFragment = (FeedsFragment) mFragmentManager.findFragmentByTag(FeedsFragment.TAG);
                 if (feedsFragment == null) {
                     feedsFragment = FeedsFragment.newInstance();
                     mFragmentManager.beginTransaction().add(containerId, feedsFragment, FeedsFragment.TAG).commit();
                 } else {
-                    mFragmentManager.beginTransaction().replace(containerId, feedsFragment, FeedsFragment.TAG).commit();
+                    mFragmentManager.beginTransaction().show(feedsFragment).commit();
                 }
                 setTitle(feedsFragment.getTitle());
                 checkNavId = menuId;
                 break;
-
-            case R.id.nav_platform:
-                PlatformFragment platformFragment = (PlatformFragment) mFragmentManager.findFragmentByTag(PlatformFragment.TAG);
-                if (platformFragment == null) {
-                    platformFragment = PlatformFragment.newInstance();
-                    mFragmentManager.beginTransaction().add(containerId, platformFragment, PlatformFragment.TAG).commit();
-                } else {
-                    mFragmentManager.beginTransaction().replace(containerId, platformFragment, PlatformFragment.TAG).commit();
-                }
-                setTitle(platformFragment.getTitle());
-                checkNavId = menuId;
+            case R.id.education_info:
+                WebActivity.start(this, "http://jw.cdu.edu.cn/Others/jwglxt.aspx");
+                break;
+            case R.id.net_education_info:
+                WebActivity.start(this, "http://kcxt.cdu.edu.cn/");
                 break;
             case R.id.nav_search:
                 LibrarySearchActivity.start(this);
@@ -171,6 +176,13 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
         }
     }
 
+    private void hideFragments() {
+        List<Fragment> fragments = mFragmentManager.getFragments();
+        for (Fragment f : fragments) {
+            mFragmentManager.beginTransaction().hide(f).commit();
+        }
+    }
+
     private void checkPermission() {
         String[] permissions = {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -189,21 +201,38 @@ public class MainActivity extends BaseActivity implements MainView, NavigationVi
         if (permissions.length > 0) {
             ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE);
         }
+        binding.navMenu.navigationView.setCheckedItem(checkNavId);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        binding.navMenu.navigationView.setCheckedItem(checkNavId);
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE:
-
                 break;
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Constant.SETTING_ACTIVITY_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    FeedsFragment feedsFragment = (FeedsFragment) mFragmentManager.findFragmentByTag(FeedsFragment.TAG);
+                    if (feedsFragment != null) {
+                        feedsFragment.reload();
+                    }
+                    return;
+                }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

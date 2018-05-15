@@ -26,16 +26,19 @@ import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.ActivityFavBookBinding;
 import jiyang.cdu.kits.databinding.ItemSearchBinding;
 import jiyang.cdu.kits.model.enty.FavBook;
-import jiyang.cdu.kits.presenter.library.FavBookPresenterImpl;
-import jiyang.cdu.kits.presenter.library.FavBookPresenters;
+import jiyang.cdu.kits.presenter.library.favBook.FavBookPresenterImpl;
 import jiyang.cdu.kits.ui.common.AdapterItem;
 import jiyang.cdu.kits.ui.common.BaseActivity;
 import jiyang.cdu.kits.ui.common.CommAdapter;
 import jiyang.cdu.kits.ui.view.library.FavBookView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
+import jiyang.cdu.kits.util.CommUtil;
 
 
-public class FavBookActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, FavBookView, CommAdapter.OnItemClickListener {
+public class FavBookActivity extends BaseActivity<FavBookView, FavBookPresenterImpl>
+        implements SwipeRefreshLayout.OnRefreshListener,
+        FavBookView,
+        CommAdapter.OnItemClickListener {
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, FavBookActivity.class));
@@ -43,7 +46,6 @@ public class FavBookActivity extends BaseActivity implements SwipeRefreshLayout.
 
     ActivityFavBookBinding binding;
     List<FavBook> favBooks;
-    FavBookPresenters.FavBookPresenter presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +75,17 @@ public class FavBookActivity extends BaseActivity implements SwipeRefreshLayout.
                         searchBinding.tvSearchCode.setText(book.bookCode);
                         searchBinding.favBookImageButton.setVisibility(View.GONE);
                         searchBinding.tvSearchCount.setVisibility(View.GONE);
+                        searchBinding.shareButton.setTag(position);
+                        searchBinding.shareButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int itemPosition = (int) v.getTag();
+                                FavBook fb = favBooks.get(itemPosition);
+                                CommUtil.shareContent(FavBookActivity.this, fb.bookName + "\n"
+                                        + fb.bookUrl
+                                        + "\n" + getString(R.string.app_name));
+                            }
+                        });
                     }
 
                     @Override
@@ -104,8 +117,12 @@ public class FavBookActivity extends BaseActivity implements SwipeRefreshLayout.
         };
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(binding.recycleView);
-        presenter = new FavBookPresenterImpl(this);
         presenter.fetchFevBooks();
+    }
+
+    @Override
+    public FavBookPresenterImpl initPresenter() {
+        return new FavBookPresenterImpl();
     }
 
     @Override

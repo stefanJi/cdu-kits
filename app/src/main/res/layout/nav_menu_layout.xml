@@ -10,6 +10,7 @@
         android:fitsSystemWindows="true"
         android:focusable="true"
         android:orientation="vertical"
+        app:headerLayout="@layout/nav_header"
         app:menu="@menu/main_nav">
 
     </android.support.design.widget.NavigationView>

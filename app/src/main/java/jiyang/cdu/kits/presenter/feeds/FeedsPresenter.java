@@ -1,6 +1,6 @@
 package jiyang.cdu.kits.presenter.feeds;
 
-public interface FeedsPresenter {
+public interface FeedsPresenter{
     int ANNOUNCE = 1;
     int NEWS = 2;
     int NEWS2 = 3;

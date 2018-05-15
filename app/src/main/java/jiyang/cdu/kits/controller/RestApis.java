@@ -54,7 +54,6 @@ interface RestApis {
             @Field("topage") int toPage
     );
 
-
     //图书馆搜索历史
     @GET("reader/search_hist.php")
     Observable<ResponseBody> librarySearchHistory();
@@ -69,4 +68,5 @@ interface RestApis {
             @Query("strText") String strText
     );
 
+    //
 }

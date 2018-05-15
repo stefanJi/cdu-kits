@@ -26,18 +26,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.common.BaseActivity" />
+
         <activity android:name=".ui.activity.WebActivity" />
         <activity
             android:name=".ui.activity.LibrarySearchActivity"
-            android:label="@string/search" />
-        <activity android:name=".ui.activity.FavBookActivity" />
-        <activity android:name=".ui.activity.LoginLibraryActivity" />
+            android:label="@string/search"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.FavBookActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LoginLibraryActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.SettingActivity"
             android:label="@string/setting"
+            android:screenOrientation="portrait"
             android:theme="@style/ActionBarActivity" />
-        <activity android:name=".ui.activity.AboutActivity" />
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

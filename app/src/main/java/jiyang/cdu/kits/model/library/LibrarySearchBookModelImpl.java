@@ -1,12 +1,15 @@
 package jiyang.cdu.kits.model.library;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.nio.channels.UnresolvedAddressException;
 import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import jiyang.cdu.kits.controller.RestApiManager;
 import jiyang.cdu.kits.model.enty.Book;
-import jiyang.cdu.kits.presenter.library.OnSearchBookListener;
+import jiyang.cdu.kits.presenter.library.search.OnSearchBookListener;
 
 public class LibrarySearchBookModelImpl implements LibrarySearchBookModel {
 
@@ -25,7 +28,13 @@ public class LibrarySearchBookModelImpl implements LibrarySearchBookModel {
 
             @Override
             public void onError(Throwable e) {
-                searchBookListener.onError(e.getMessage());
+                if (e instanceof UnknownHostException || e instanceof UnresolvedAddressException) {
+                    searchBookListener.onError("网络不可用,请检查网络设置");
+                } else if (e instanceof SocketTimeoutException) {
+                    searchBookListener.onError("连接超时,请重试");
+                } else {
+                    searchBookListener.onError(e.getMessage());
+                }
             }
 
             @Override

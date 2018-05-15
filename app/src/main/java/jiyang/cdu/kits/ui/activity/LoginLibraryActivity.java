@@ -13,17 +13,17 @@ import android.widget.Toast;
 
 import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.R;
+import jiyang.cdu.kits.databinding.ActivityLoginLibraryBinding;
 import jiyang.cdu.kits.model.enty.LibraryUserInfo;
-import jiyang.cdu.kits.presenter.library.LoginPresenter;
-import jiyang.cdu.kits.presenter.library.LoginPresenterImpl;
+import jiyang.cdu.kits.presenter.library.login.LoginPresenter;
+import jiyang.cdu.kits.presenter.library.login.LoginPresenterImpl;
 import jiyang.cdu.kits.ui.common.BaseActivity;
 import jiyang.cdu.kits.ui.view.library.LoginLibraryView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
 import jiyang.cdu.kits.util.SpUtil;
-import jiyang.cdu.kits.databinding.ActivityLoginLibraryBinding;
 
 
-public class LoginLibraryActivity extends BaseActivity implements LoginLibraryView, View.OnClickListener {
+public class LoginLibraryActivity extends BaseActivity<LoginLibraryView, LoginPresenterImpl> implements LoginLibraryView, View.OnClickListener {
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, LoginLibraryActivity.class));
@@ -37,13 +37,11 @@ public class LoginLibraryActivity extends BaseActivity implements LoginLibraryVi
 
     private ActivityLoginLibraryBinding loginLibraryBinding;
     private String account, password, loginType;
-    private LoginPresenter presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loginLibraryBinding = DataBindingUtil.setContentView(this, R.layout.activity_login_library);
-        presenter = new LoginPresenterImpl(this);
         SpUtil spUtil = AppControl.getInstance().getSpUtil();
         account = spUtil.getString(LIBRARY_ACCOUNT);
         password = spUtil.getString(LIBRARY_PASSWORD);
@@ -74,6 +72,11 @@ public class LoginLibraryActivity extends BaseActivity implements LoginLibraryVi
                 }
             }
         });
+    }
+
+    @Override
+    public LoginPresenterImpl initPresenter() {
+        return new LoginPresenterImpl();
     }
 
     private void login() {

@@ -14,23 +14,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jiyang.cdu.kits.R;
+import jiyang.cdu.kits.databinding.CommRecycleListBinding;
+import jiyang.cdu.kits.databinding.ItemBookhistoryBinding;
 import jiyang.cdu.kits.model.enty.BookHistory;
-import jiyang.cdu.kits.presenter.library.BookHistoryImpl;
-import jiyang.cdu.kits.presenter.library.BookHistoryPresenter;
+import jiyang.cdu.kits.presenter.library.history.BookHistoryImpl;
 import jiyang.cdu.kits.ui.activity.WebActivity;
 import jiyang.cdu.kits.ui.common.AdapterItem;
 import jiyang.cdu.kits.ui.common.BaseFragment;
 import jiyang.cdu.kits.ui.common.CommAdapter;
 import jiyang.cdu.kits.ui.view.library.LibraryHistoryView;
-import jiyang.cdu.kits.databinding.CommRecycleListBinding;
-import jiyang.cdu.kits.databinding.ItemBookhistoryBinding;
 import jiyang.cdu.kits.ui.widget.UiUtils;
+import jiyang.cdu.kits.util.CommUtil;
 
 
-public class BookHistoryFragment extends BaseFragment implements LibraryHistoryView, CommAdapter.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class BookHistoryFragment extends BaseFragment<LibraryHistoryView, BookHistoryImpl>
+        implements LibraryHistoryView, CommAdapter.OnItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
     @Override
     public String getTitle() {
         return "历史借阅";
+    }
+
+    @Override
+    public BookHistoryImpl initPresenter() {
+        return new BookHistoryImpl();
     }
 
 
@@ -41,8 +48,6 @@ public class BookHistoryFragment extends BaseFragment implements LibraryHistoryV
 
     private CommRecycleListBinding binding;
     private List<BookHistory> bookHistoryList;
-
-    private BookHistoryPresenter bookHistoryPresenter;
 
     @Nullable
     @Override
@@ -67,6 +72,21 @@ public class BookHistoryFragment extends BaseFragment implements LibraryHistoryV
                         itemBookhistoryBinding.tvHistoryBookName.setText(history.name);
                         itemBookhistoryBinding.tvGetData.setText(history.getData);
                         itemBookhistoryBinding.tvEndData.setText(history.endData);
+                        itemBookhistoryBinding.shareButton.setTag(position);
+                        itemBookhistoryBinding.shareButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int itemPosition = (int) v.getTag();
+                                BookHistory bookHistory = bookHistoryList.get(itemPosition);
+                                String shareContent = String.format("我在%s至%s,读了这本书<<%s>>。推荐给你。\n%s"
+                                        , bookHistory.getData,
+                                        bookHistory.endData,
+                                        bookHistory.name,
+                                        bookHistory.url);
+                                assert getContext() != null;
+                                CommUtil.shareContent(getContext(), shareContent);
+                            }
+                        });
                     }
 
                     @Override
@@ -85,17 +105,9 @@ public class BookHistoryFragment extends BaseFragment implements LibraryHistoryV
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.recycleView.setLayoutManager(linearLayoutManager);
         bookHistoryAdapter.setItemClickListener(this);
-
         binding.refreshLayout.setOnRefreshListener(this);
         setRefreshLayoutColor(binding.refreshLayout);
-
-        bookHistoryPresenter = new BookHistoryImpl(this);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        bookHistoryPresenter.fetchHistory();
+        presenter.fetchHistory();
     }
 
     @Override
@@ -110,6 +122,9 @@ public class BookHistoryFragment extends BaseFragment implements LibraryHistoryV
 
     @Override
     public void success(List<BookHistory> bookHistories) {
+        if (bookHistories == null || bookHistories.size() == 0) {
+            return;
+        }
         bookHistoryList.clear();
         bookHistoryList.addAll(bookHistories);
         binding.recycleView.getAdapter().notifyDataSetChanged();
@@ -128,6 +143,6 @@ public class BookHistoryFragment extends BaseFragment implements LibraryHistoryV
 
     @Override
     public void onRefresh() {
-        this.bookHistoryPresenter.fetchHistory();
+        presenter.fetchHistory();
     }
 }

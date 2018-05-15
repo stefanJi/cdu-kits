@@ -4,8 +4,10 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,21 +18,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jiyang.cdu.kits.R;
-import jiyang.cdu.kits.databinding.FragmentLibraryProfileBinding;
+import jiyang.cdu.kits.databinding.FragmentLibraryUserProfileBinding;
 import jiyang.cdu.kits.model.enty.Book;
 import jiyang.cdu.kits.model.enty.LibraryUserInfo;
-import jiyang.cdu.kits.presenter.library.LibraryBookListImpl;
-import jiyang.cdu.kits.presenter.library.LibraryBookListPresenter;
+import jiyang.cdu.kits.presenter.library.currentBook.LibraryBookListImpl;
+import jiyang.cdu.kits.presenter.library.currentBook.LibraryBookListPresenter;
+import jiyang.cdu.kits.presenter.library.login.LoginPresenterImpl;
 import jiyang.cdu.kits.ui.common.AdapterItem;
 import jiyang.cdu.kits.ui.common.BaseFragment;
 import jiyang.cdu.kits.ui.common.CommAdapter;
 import jiyang.cdu.kits.ui.view.library.LibraryBookListView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
 
-public class UserProfileFragment extends BaseFragment implements LibraryBookListView, SwipeRefreshLayout.OnRefreshListener {
+public class UserProfileFragment extends BaseFragment<LibraryBookListView, LoginPresenterImpl>
+        implements LibraryBookListView, SwipeRefreshLayout.OnRefreshListener {
     @Override
     public String getTitle() {
         return "个人";
+    }
+
+    @Override
+    public LoginPresenterImpl initPresenter() {
+        return new LoginPresenterImpl();
     }
 
     public static UserProfileFragment instance(LibraryUserInfo userInfo) {
@@ -41,7 +50,7 @@ public class UserProfileFragment extends BaseFragment implements LibraryBookList
         return userProfileFragment;
     }
 
-    private FragmentLibraryProfileBinding binding;
+    private FragmentLibraryUserProfileBinding binding;
     private List<Book> books;
     private LibraryBookListPresenter libraryBookListPresenter;
 
@@ -49,7 +58,7 @@ public class UserProfileFragment extends BaseFragment implements LibraryBookList
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_library_profile, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_library_user_profile, container, false);
         LibraryUserInfo userInfo = (LibraryUserInfo) getArguments().getSerializable("userInfo");
         if (userInfo != null) {
             init(userInfo);
@@ -58,6 +67,7 @@ public class UserProfileFragment extends BaseFragment implements LibraryBookList
     }
 
     private void init(LibraryUserInfo userInfo) {
+        libraryBookListPresenter = new LibraryBookListImpl(this);
         binding.userName.setText(userInfo.name);
         binding.userClass.setText(userInfo.learnType);
         binding.sNo.setText(userInfo.account);
@@ -65,6 +75,10 @@ public class UserProfileFragment extends BaseFragment implements LibraryBookList
         binding.illegalCount.setText(userInfo.wrongCount);
         binding.maxBookCount.setText(userInfo.maxBooks);
         binding.maxOrderCount.setText(userInfo.maxPlanBooks);
+        binding.userLogo.setContent(userInfo.name);
+        if (getContext() != null) {
+            binding.userLogo.setBackColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        }
         books = new ArrayList<>();
         CommAdapter<Book> bookCommAdapter = new CommAdapter<Book>(books) {
 
@@ -107,34 +121,43 @@ public class UserProfileFragment extends BaseFragment implements LibraryBookList
                 };
             }
         };
-        binding.refreshLayout.setOnRefreshListener(this);
-        setRefreshLayoutColor(binding.refreshLayout);
-        binding.recycleView.setAdapter(bookCommAdapter);
-        binding.recycleView.setLayoutManager(new LinearLayoutManager(getContext()));
-        libraryBookListPresenter = new LibraryBookListImpl(this);
+        setRefreshLayoutColor(binding.includeRecycler.refreshLayout);
+        binding.includeRecycler.recycleView.setAdapter(bookCommAdapter);
+        binding.includeRecycler.recycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.includeRecycler.recycleView.getAdapter().registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (binding.includeRecycler.recycleView.getAdapter().getItemCount() == 0) {
+                    binding.includeRecycler.emptyView.setVisibility(View.VISIBLE);
+                } else {
+                    binding.includeRecycler.emptyView.setVisibility(View.GONE);
+                }
+            }
+        });
+        binding.includeRecycler.emptyViewTitle.setText("无当前无借阅记录,下拉可刷新");
+        binding.includeRecycler.refreshLayout.setOnRefreshListener(this);
         libraryBookListPresenter.fetchBookList();
-        isFirstCome("下拉可刷新，点击续借快速续借");
+        showFirstComeTip("下拉可刷新，点击续借快速续借");
     }
-
 
     @Override
     public void onSuccess(List<Book> bookList) {
-        if (bookList == null || bookList.size() == 0) {
-            return;
+        if (bookList != null && bookList.size() > 0) {
+            this.books.clear();
+            this.books.addAll(bookList);
         }
-        this.books.clear();
-        this.books.addAll(bookList);
-        binding.recycleView.getAdapter().notifyDataSetChanged();
+        binding.includeRecycler.recycleView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void showLoading() {
-        binding.refreshLayout.setRefreshing(true);
+        binding.includeRecycler.refreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
-        binding.refreshLayout.setRefreshing(false);
+        binding.includeRecycler.refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -145,7 +168,7 @@ public class UserProfileFragment extends BaseFragment implements LibraryBookList
     @Override
     public void onReBookSuccess(int position) {
         this.books.get(position).getCount += 1;
-        binding.recycleView.getAdapter().notifyItemChanged(position);
+        binding.includeRecycler.recycleView.getAdapter().notifyItemChanged(position);
     }
 
     @Override

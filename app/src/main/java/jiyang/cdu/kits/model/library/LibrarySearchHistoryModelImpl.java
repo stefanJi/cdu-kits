@@ -1,12 +1,15 @@
 package jiyang.cdu.kits.model.library;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.nio.channels.UnresolvedAddressException;
 import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import jiyang.cdu.kits.controller.RestApiManager;
 import jiyang.cdu.kits.model.enty.LibrarySearchHistory;
-import jiyang.cdu.kits.presenter.library.OnSearchHistoryListener;
+import jiyang.cdu.kits.presenter.library.searchHistory.OnSearchHistoryListener;
 
 public class LibrarySearchHistoryModelImpl implements LibrarySearchHistoryModel {
 
@@ -25,7 +28,13 @@ public class LibrarySearchHistoryModelImpl implements LibrarySearchHistoryModel 
 
             @Override
             public void onError(Throwable e) {
-                onSearchHistoryListener.onError(e.getMessage());
+                if (e instanceof UnknownHostException || e instanceof UnresolvedAddressException) {
+                    onSearchHistoryListener.onError("网络不可用,请检查网络设置");
+                } else if (e instanceof SocketTimeoutException) {
+                    onSearchHistoryListener.onError("连接超时,请重试");
+                } else {
+                    onSearchHistoryListener.onError(e.getMessage());
+                }
             }
 
             @Override

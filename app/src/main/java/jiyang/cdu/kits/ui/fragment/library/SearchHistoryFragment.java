@@ -17,18 +17,23 @@ import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.CommRecycleListBinding;
 import jiyang.cdu.kits.databinding.ItemLibrarySearchHistoryListBinding;
 import jiyang.cdu.kits.model.enty.LibrarySearchHistory;
-import jiyang.cdu.kits.presenter.library.LibrarySearchHistoryHistoryImpl;
-import jiyang.cdu.kits.presenter.library.LibrarySearchHistoryPresenter;
+import jiyang.cdu.kits.presenter.library.searchHistory.LibrarySearchHistoryImpl;
 import jiyang.cdu.kits.ui.common.AdapterItem;
 import jiyang.cdu.kits.ui.common.BaseFragment;
 import jiyang.cdu.kits.ui.common.CommAdapter;
 import jiyang.cdu.kits.ui.view.library.LibrarySearchHistoryView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
 
-public class SearchHistoryFragment extends BaseFragment implements LibrarySearchHistoryView, SwipeRefreshLayout.OnRefreshListener {
+public class SearchHistoryFragment extends BaseFragment<LibrarySearchHistoryView, LibrarySearchHistoryImpl>
+        implements LibrarySearchHistoryView, SwipeRefreshLayout.OnRefreshListener {
     @Override
     public String getTitle() {
         return "搜索历史";
+    }
+
+    @Override
+    public LibrarySearchHistoryImpl initPresenter() {
+        return new LibrarySearchHistoryImpl();
     }
 
 
@@ -38,7 +43,6 @@ public class SearchHistoryFragment extends BaseFragment implements LibrarySearch
 
     private List<LibrarySearchHistory> searchHistories;
     private CommRecycleListBinding binding;
-    private LibrarySearchHistoryPresenter presenter;
 
     @Nullable
     @Override
@@ -80,12 +84,6 @@ public class SearchHistoryFragment extends BaseFragment implements LibrarySearch
         binding.recycleView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.refreshLayout.setOnRefreshListener(this);
         setRefreshLayoutColor(binding.refreshLayout);
-        presenter = new LibrarySearchHistoryHistoryImpl(this);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         presenter.fetchSearchList();
     }
 

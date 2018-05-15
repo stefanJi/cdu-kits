@@ -35,7 +35,6 @@ public abstract class CommAdapter<T> extends RecyclerView.Adapter<CommHolder> im
         return new CommHolder<>(parent.getContext(), parent, createItem());
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull CommHolder holder, int position) {
         holder.itemView.setTag(position);
@@ -59,5 +58,4 @@ public abstract class CommAdapter<T> extends RecyclerView.Adapter<CommHolder> im
     public interface OnItemClickListener {
         void OnItemClick(int position);
     }
-
 }

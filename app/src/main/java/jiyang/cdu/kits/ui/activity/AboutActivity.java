@@ -14,6 +14,7 @@ import android.view.View;
 import jiyang.cdu.kits.BuildConfig;
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
+import jiyang.cdu.kits.presenter.BasePresenterImpl;
 import jiyang.cdu.kits.ui.common.BaseActivity;
 import jiyang.cdu.kits.ui.widget.UiUtils;
 import jiyang.cdu.kits.databinding.ActivityAboutBinding;
@@ -46,6 +47,11 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         binding.sourceCode.setOnClickListener(this);
         binding.openSource.setOnClickListener(this);
         binding.share.setOnClickListener(this);
+    }
+
+    @Override
+    public BasePresenterImpl initPresenter() {
+        return null;
     }
 
     @Override

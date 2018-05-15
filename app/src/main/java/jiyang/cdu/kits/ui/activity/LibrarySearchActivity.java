@@ -27,25 +27,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jiyang.cdu.kits.AppControl;
+import jiyang.cdu.kits.BuildConfig;
 import jiyang.cdu.kits.R;
+import jiyang.cdu.kits.databinding.ActivitySearchLibraryBinding;
+import jiyang.cdu.kits.databinding.ItemSearchBinding;
 import jiyang.cdu.kits.model.enty.Book;
 import jiyang.cdu.kits.model.enty.FavBook;
-import jiyang.cdu.kits.presenter.library.LibrarySearchImpl;
-import jiyang.cdu.kits.presenter.library.LibrarySearchPresenter;
+import jiyang.cdu.kits.presenter.library.search.LibrarySearchImpl;
 import jiyang.cdu.kits.ui.common.AdapterItem;
 import jiyang.cdu.kits.ui.common.BaseActivity;
 import jiyang.cdu.kits.ui.common.CommAdapter;
 import jiyang.cdu.kits.ui.view.library.LibrarySearchView;
 import jiyang.cdu.kits.ui.widget.EndlessRecyclerOnScrollListener;
 import jiyang.cdu.kits.ui.widget.UiUtils;
-import jiyang.cdu.kits.databinding.ActivitySearchLibraryBinding;
-import jiyang.cdu.kits.databinding.ItemSearchBinding;
+import jiyang.cdu.kits.util.CommUtil;
 
-public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, LibrarySearchView, CommAdapter.OnItemClickListener {
+public class LibrarySearchActivity extends BaseActivity<LibrarySearchView, LibrarySearchImpl>
+        implements SwipeRefreshLayout.OnRefreshListener,
+        LibrarySearchView, CommAdapter.OnItemClickListener {
     ActivitySearchLibraryBinding binding;
     private List<Book> bookList;
-    private LibrarySearchPresenter presenter;
-    private int page = 1;
+    private int page;
 
 
     @Override
@@ -83,10 +85,10 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search_library);
-
+        page = 1;
         searchType = SEARCH_CONST.STR_SEARCH_TYPE_TITLE;
         matchType = SEARCH_CONST.MATCH_TYPE_FORWARD;
         docType = SEARCH_CONST.DOC_TYPE_ALL;
@@ -115,7 +117,6 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
             }
         });
         bookList = new ArrayList<>();
-        presenter = new LibrarySearchImpl(this);
 
         CommAdapter<Book> adapter = new CommAdapter<Book>(bookList) {
             @Override
@@ -141,6 +142,16 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
                                     searchBinding.favBookImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_round_favorite));
                                 }
                                 Snackbar.make(binding.getRoot(), "已收藏", Snackbar.LENGTH_SHORT).show();
+                            }
+                        });
+                        searchBinding.shareButton.setTag(position);
+                        searchBinding.shareButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int itemPosition = (int) v.getTag();
+                                Book b = bookList.get(itemPosition);
+                                String shareContent = b.name + "\n" + b.code + "\n" + b.url + "\n(来自" + getString(R.string.app_name) + ")";
+                                CommUtil.shareContent(LibrarySearchActivity.this, shareContent);
                             }
                         });
                     }
@@ -174,6 +185,11 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
         binding.spinnerSearchBookType.setOnItemSelectedListener(spinnerSelectedListener);
         binding.spinnerSearchMatchType.setOnItemSelectedListener(spinnerSelectedListener);
         binding.refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
+    }
+
+    @Override
+    public LibrarySearchImpl initPresenter() {
+        return new LibrarySearchImpl();
     }
 
     private AdapterView.OnItemSelectedListener spinnerSelectedListener = new AdapterView.OnItemSelectedListener() {
@@ -216,13 +232,13 @@ public class LibrarySearchActivity extends BaseActivity implements SwipeRefreshL
                 case R.id.spinnerSearchMatchType:
                     switch (position) {
                         case 0:
-                            matchType = SEARCH_CONST.MATCH_TYPE_ANY;
+                            matchType = SEARCH_CONST.MATCH_TYPE_FORWARD;
                             break;
                         case 1:
                             matchType = SEARCH_CONST.MATCH_TYPE_FULL;
                             break;
                         case 2:
-                            matchType = SEARCH_CONST.MATCH_TYPE_FORWARD;
+                            matchType = SEARCH_CONST.MATCH_TYPE_ANY;
                             break;
                     }
                     break;

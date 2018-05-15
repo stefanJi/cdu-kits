@@ -2,37 +2,43 @@ package jiyang.cdu.kits.presenter.feeds;
 
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
 import jiyang.cdu.kits.model.enty.Feed;
 import jiyang.cdu.kits.model.feeds.FeedsModel;
 import jiyang.cdu.kits.model.feeds.FeedsModelImpl;
+import jiyang.cdu.kits.presenter.BasePresenterImpl;
 import jiyang.cdu.kits.ui.view.FeedsView;
 
 
-public class FeedsPresenterImpl implements OnFeedsListener, FeedsPresenter {
-    private FeedsView feedsView;
+public class FeedsPresenterImpl extends BasePresenterImpl<FeedsView> implements OnFeedsListener, FeedsPresenter {
     private FeedsModel feedsModel;
 
-    public FeedsPresenterImpl(FeedsView feedsView) {
-        this.feedsView = feedsView;
+    public FeedsPresenterImpl() {
         this.feedsModel = new FeedsModelImpl();
     }
 
 
     @Override
     public void onSuccess(List<Feed> feeds) {
-        feedsView.hideLoading();
-        feedsView.setAnnounceList(feeds);
+        if (getView() != null) {
+            getView().hideLoading();
+            getView().setAnnounceList(feeds);
+        }
     }
 
     @Override
     public void onError(String error) {
-        feedsView.hideLoading();
-        feedsView.showError(error);
+        if (getView() != null) {
+            getView().hideLoading();
+            getView().showError(error);
+        }
     }
 
     @Override
     public void fetchFeeds(int page, int category) {
-        feedsView.showLoading();
+        if (getView() != null) {
+            getView().showLoading();
+        }
         if (category == HQC_ANNOUNCE) {
             feedsModel.fetchHQCFeeds(page, this);
             return;
@@ -54,5 +60,10 @@ public class FeedsPresenterImpl implements OnFeedsListener, FeedsPresenter {
                 break;
         }
         feedsModel.fetchFeeds(newsType, page, category, this);
+    }
+
+    @Override
+    public void onSubscribe(Disposable disposable) {
+        addDisposable(disposable);
     }
 }
