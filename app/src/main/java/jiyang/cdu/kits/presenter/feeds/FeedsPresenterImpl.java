@@ -7,7 +7,7 @@ import jiyang.cdu.kits.model.enty.Feed;
 import jiyang.cdu.kits.model.feeds.FeedsModel;
 import jiyang.cdu.kits.model.feeds.FeedsModelImpl;
 import jiyang.cdu.kits.presenter.BasePresenterImpl;
-import jiyang.cdu.kits.ui.view.FeedsView;
+import jiyang.cdu.kits.ui.view.feeds.FeedsView;
 
 
 public class FeedsPresenterImpl extends BasePresenterImpl<FeedsView> implements OnFeedsListener, FeedsPresenter {
@@ -22,7 +22,7 @@ public class FeedsPresenterImpl extends BasePresenterImpl<FeedsView> implements 
     public void onSuccess(List<Feed> feeds) {
         if (getView() != null) {
             getView().hideLoading();
-            getView().setAnnounceList(feeds);
+            getView().setFeedsList(feeds);
         }
     }
 

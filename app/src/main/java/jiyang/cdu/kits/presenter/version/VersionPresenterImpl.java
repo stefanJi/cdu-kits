@@ -1,7 +1,7 @@
 package jiyang.cdu.kits.presenter.version;
 
 import io.reactivex.disposables.Disposable;
-import jiyang.cdu.kits.model.enty.Version;
+import jiyang.cdu.kits.model.enty.Release;
 import jiyang.cdu.kits.model.version.FetchVersionModel;
 import jiyang.cdu.kits.model.version.FetchVersionModelImpl;
 import jiyang.cdu.kits.presenter.BasePresenterImpl;
@@ -25,9 +25,9 @@ public class VersionPresenterImpl extends BasePresenterImpl<VersionView> impleme
     }
 
     @Override
-    public void onSuccess(Version version) {
+    public void onSuccess(Release release) {
         if (getView() != null) {
-            getView().onSuccess(version);
+            getView().onSuccess(release);
         }
     }
 

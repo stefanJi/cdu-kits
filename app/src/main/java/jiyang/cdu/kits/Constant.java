@@ -1,11 +1,11 @@
 package jiyang.cdu.kits;
 
 public class Constant {
-    public static final String APP_STORE_URL = "https://jiyangg.github.io/cdu-kits";
+    public static final String APP_WEB_SITE = "https://jiyangg.github.io/cdu-kits";
     public static final String CONTACT_EMAIL = "mailto:408776303@qq.com";
     public static final String GIT_HUB_REPO = "https://github.com/jiyangg/cdu-kits";
     public static final String MY_SITE = "https://jiyangg.github.io";
-    public static final String SHARE_CONTENT = "一个为成大制作的简约的材料设计风格校园助手安卓应用:\n" + APP_STORE_URL;
+    public static final String SHARE_CONTENT = "一个为成大制作的简约的材料设计风格校园助手安卓应用(CDU KIT):\n" + APP_WEB_SITE;
 
     public static final String FEEDS_TAB_ANNOUNCE = "通知公告";
     public static final String FEEDS_TAB_NEWS = "成大要文";
@@ -26,4 +26,18 @@ public class Constant {
     };
 
     public static final int SETTING_ACTIVITY_REQUEST_CODE = 0x1;
+    public static final String FIRST_START_FEEDS = "first_start_feeds";
+    public static final String NOT_CONFIG_FEEDS_TAB = "not_config_feeds_tab";
+    public static final String HAD_LOGIN = "had_login";
+    public static final String LIBRARY_ACCOUNT = "lb_ac";
+    public static final String LIBRARY_PASSWORD = "lb_ps";
+    public static final String LIBRARY_ACCOUNT_TYPE = "lb_ac_type";
+    public static final String LIBRARY_USER_NAME = "lb_user_name";
+
+    public static final String PREF_KEY_LIBRARY_USER_INFO = "library_user_info";
+    public static final String PREF_KEY_LIBRARY_LOGOUT = "logout";
+    public static final String PREF_KEY_LIBRARY_LOGIN = "login_library";
+    public static final String PREF_KEY_CATEGORY_LIBRARY = "library";
+    public static final String PREF_KEY_CATEGORY_GENERAL = "general";
+    public static final String PREF_KEY_TAB_SHOW = "tabs_to_show";
 }

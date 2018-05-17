@@ -5,8 +5,7 @@ import android.content.Context;
 
 import com.litesuits.orm.LiteOrm;
 
-import jiyang.cdu.kits.util.BitmapCache;
-import jiyang.cdu.kits.util.NetRequest;
+import cn.jiguang.analytics.android.api.JAnalyticsInterface;
 import jiyang.cdu.kits.util.SpUtil;
 
 
@@ -16,10 +15,7 @@ import jiyang.cdu.kits.util.SpUtil;
  */
 public class AppControl extends Application {
     private static AppControl appControl;
-    private static NetRequest netRequest;
     private static SpUtil spUtil;
-    private BitmapCache bitmapCache;
-    public String sessionLibrary;
     private static LiteOrm liteOrm;
 
     @Override
@@ -31,6 +27,9 @@ public class AppControl extends Application {
     public void onCreate() {
         super.onCreate();
         appControl = this;
+        JAnalyticsInterface.init(this);
+        JAnalyticsInterface.setDebugMode(true);
+        JAnalyticsInterface.initCrashHandler(this);
     }
 
     /**
@@ -40,18 +39,6 @@ public class AppControl extends Application {
      */
     public static synchronized AppControl getInstance() {
         return appControl;
-    }
-
-    /**
-     * 返回网络请求
-     *
-     * @return NetRequest工具类
-     */
-    public NetRequest getNetRequest() {
-        if (netRequest == null) {
-            netRequest = new NetRequest();
-        }
-        return netRequest;
     }
 
     /**
@@ -66,19 +53,6 @@ public class AppControl extends Application {
         return spUtil;
     }
 
-
-    /**
-     * 获取图片缓存空间
-     *
-     * @return 缓存空间
-     */
-    public BitmapCache getBitmapCache() {
-        if (bitmapCache == null) {
-            bitmapCache = new BitmapCache();
-        }
-        return bitmapCache;
-    }
-
     public LiteOrm getLiteOrm() {
         if (liteOrm == null) {
             liteOrm = this.newSingleInstance();
@@ -89,5 +63,17 @@ public class AppControl extends Application {
 
     private LiteOrm newSingleInstance() {
         return LiteOrm.newSingleInstance(this, "cdu_kits.db");
+    }
+
+    @Override
+    public void onLowMemory() {
+        JAnalyticsInterface.stopCrashHandler(this);
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onTerminate() {
+        JAnalyticsInterface.stopCrashHandler(this);
+        super.onTerminate();
     }
 }

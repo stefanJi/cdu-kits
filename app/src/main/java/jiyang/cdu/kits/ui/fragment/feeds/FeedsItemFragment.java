@@ -28,7 +28,7 @@ import jiyang.cdu.kits.ui.activity.WebActivity;
 import jiyang.cdu.kits.ui.common.AdapterItem;
 import jiyang.cdu.kits.ui.common.BaseFragment;
 import jiyang.cdu.kits.ui.common.CommAdapter;
-import jiyang.cdu.kits.ui.view.FeedsView;
+import jiyang.cdu.kits.ui.view.feeds.FeedsView;
 import jiyang.cdu.kits.ui.widget.EndlessRecyclerOnScrollListener;
 import jiyang.cdu.kits.ui.widget.UiUtils;
 import jiyang.cdu.kits.util.CommUtil;
@@ -37,6 +37,7 @@ public class FeedsItemFragment extends BaseFragment<FeedsView, FeedsPresenterImp
         implements FeedsView,
         SwipeRefreshLayout.OnRefreshListener,
         CommAdapter.OnItemClickListener {
+    private static final String BUNDLE_KEY_TYPE = "type";
     public static Map<String, Integer> TAB_TYPE_MAP;
 
     static {
@@ -52,7 +53,10 @@ public class FeedsItemFragment extends BaseFragment<FeedsView, FeedsPresenterImp
 
     public static FeedsItemFragment newInstance(String feedsType) {
         FeedsItemFragment feedsItemFragment = new FeedsItemFragment();
-        feedsItemFragment.setFeedsType(feedsType);
+        Bundle bundle = new Bundle();
+        bundle.putString(BUNDLE_KEY_TYPE, feedsType);
+        feedsItemFragment.setArguments(bundle);
+        feedsItemFragment.setTitle(feedsType);
         return feedsItemFragment;
     }
 
@@ -62,10 +66,6 @@ public class FeedsItemFragment extends BaseFragment<FeedsView, FeedsPresenterImp
     private int feedsPage;
 
     private String feedsType;
-
-    public void setFeedsType(String feedsType) {
-        this.feedsType = feedsType;
-    }
 
     @Nullable
     @Override
@@ -77,6 +77,7 @@ public class FeedsItemFragment extends BaseFragment<FeedsView, FeedsPresenterImp
     }
 
     private void init() {
+        feedsType = getArguments().getString(BUNDLE_KEY_TYPE);
         feedsPage = 1;
         feeds = new ArrayList<>();
 
@@ -92,8 +93,8 @@ public class FeedsItemFragment extends BaseFragment<FeedsView, FeedsPresenterImp
                     @Override
                     public void handleData(int position) {
                         Feed data = feeds.get(position);
-                        itemBinding.feedTitle.setText(data.title);
-                        itemBinding.feedDate.setText(data.date);
+                        itemBinding.title.setText(data.title);
+                        itemBinding.subTitle.setText(data.date);
                         itemBinding.shareButton.setTag(data);
                         itemBinding.shareButton.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -130,14 +131,9 @@ public class FeedsItemFragment extends BaseFragment<FeedsView, FeedsPresenterImp
                 presenter.fetchFeeds(current_page, TAB_TYPE_MAP.get(feedsType));
             }
         });
+
         binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         presenter.fetchFeeds(feedsPage, TAB_TYPE_MAP.get(feedsType));
-    }
-
-
-    @Override
-    public String getTitle() {
-        return feedsType;
     }
 
     @Override
@@ -166,7 +162,7 @@ public class FeedsItemFragment extends BaseFragment<FeedsView, FeedsPresenterImp
     }
 
     @Override
-    public void setAnnounceList(List<Feed> feeds) {
+    public void setFeedsList(List<Feed> feeds) {
         if (feeds == null || feeds.size() == 0) {
             Snackbar.make(binding.getRoot(), "无更多", Snackbar.LENGTH_SHORT).show();
             return;

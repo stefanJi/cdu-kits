@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +23,18 @@ import jiyang.cdu.kits.ui.view.library.LoginLibraryView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
 import jiyang.cdu.kits.util.SpUtil;
 
+import static jiyang.cdu.kits.Constant.HAD_LOGIN;
+import static jiyang.cdu.kits.Constant.LIBRARY_ACCOUNT;
+import static jiyang.cdu.kits.Constant.LIBRARY_ACCOUNT_TYPE;
+import static jiyang.cdu.kits.Constant.LIBRARY_PASSWORD;
+
 public class LibraryFragment extends BaseFragment<LoginLibraryView, LoginPresenterImpl> implements View.OnClickListener, LoginLibraryView {
 
     public static final String TAG = "LIBRARY_FRAGMENT";
 
     private FragmentLibraryBinding binding;
     private boolean hasLoadViewPage = false;
+    private BaseFragment[] baseFragments;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -45,7 +52,7 @@ public class LibraryFragment extends BaseFragment<LoginLibraryView, LoginPresent
     public void onResume() {
         super.onResume();
         SpUtil sp = AppControl.getInstance().getSpUtil();
-        boolean loginEd = sp.getBool(LoginLibraryActivity.HAD_LOGIN, false);
+        boolean loginEd = sp.getBool(HAD_LOGIN, false);
         if (!loginEd) {
             binding.loginTip.setVisibility(View.VISIBLE);
             binding.loginTip.setOnClickListener(this);
@@ -62,9 +69,9 @@ public class LibraryFragment extends BaseFragment<LoginLibraryView, LoginPresent
     }
 
     private void fetchUserInfo(SpUtil sp) {
-        String account = sp.getString(LoginLibraryActivity.LIBRARY_ACCOUNT);
-        String password = sp.getString(LoginLibraryActivity.LIBRARY_PASSWORD);
-        String loginType = sp.getString(LoginLibraryActivity.LIBRARY_ACCOUNT_TYPE);
+        String account = sp.getString(LIBRARY_ACCOUNT);
+        String password = sp.getString(LIBRARY_PASSWORD);
+        String loginType = sp.getString(LIBRARY_ACCOUNT_TYPE);
         presenter.login(account, password, loginType);
     }
 
@@ -87,7 +94,7 @@ public class LibraryFragment extends BaseFragment<LoginLibraryView, LoginPresent
 
 
     public void showLoginEdLayout(LibraryUserInfo userInfo) {
-        final BaseFragment[] baseFragments = new BaseFragment[]{
+        baseFragments = new BaseFragment[]{
                 UserProfileFragment.instance(userInfo),
                 BookHistoryFragment.instance(),
                 SearchHistoryFragment.instance()
@@ -158,5 +165,12 @@ public class LibraryFragment extends BaseFragment<LoginLibraryView, LoginPresent
         showLoginEdLayout(userInfo);
         hasLoadViewPage = true;
         binding.getRoot().setOnClickListener(null);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        FragmentManager fragmentManager = getChildFragmentManager();
+        destoryChildFragment(baseFragments);
     }
 }

@@ -1,14 +1,19 @@
 package jiyang.cdu.kits.controller;
 
 import io.reactivex.Observable;
-import jiyang.cdu.kits.model.enty.Version;
+import jiyang.cdu.kits.model.enty.Release;
+import jiyang.cdu.kits.model.enty.zhihu.DailyThemes;
+import jiyang.cdu.kits.model.enty.zhihu.Stories;
+import jiyang.cdu.kits.model.enty.zhihu.StoryContent;
 import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 interface RestApis {
 
@@ -69,7 +74,20 @@ interface RestApis {
             @Query("strText") String strText
     );
 
+    //Zhihu Daily
+    @GET("themes")
+    Observable<DailyThemes> fetchThemes();
+
+    @GET("theme/{themeId}")
+    Observable<Stories> fetchStories(@Path("themeId") long themeId);
+
+    @GET("news/{newsId}")
+    Observable<StoryContent> fetchStory(@Path("newsId") long newsId);
+
+    @GET
+    Observable<ResponseBody> fetchCDULinks(@Url String emptyString);
+
     //版本检查
-    @GET("cdu-kits/cdu-kits-version.json")
-    Observable<Version> fetchVersion();
+    @GET("repos/jiyangg/cdu-kits/releases/latest")
+    Observable<Release> fetchReleasesVersion();
 }

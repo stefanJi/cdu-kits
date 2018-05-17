@@ -109,7 +109,12 @@ public class SearchHistoryFragment extends BaseFragment<LibrarySearchHistoryView
 
     @Override
     public void error(String error) {
-        UiUtils.showErrorSnackbar(this.getContext(), binding.getRoot(), error);
+        UiUtils.showErrorSnackbar(this.getContext(), binding.getRoot(), error, "重试", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.fetchSearchList();
+            }
+        });
     }
 
     @Override

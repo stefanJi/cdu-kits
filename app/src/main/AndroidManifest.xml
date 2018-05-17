@@ -8,6 +8,13 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <meta-data
+        android:name="JPUSH_APPKEY"
+        android:value="7ba3eecb3f5478281743a2c8" />
+    <meta-data
+        android:name="JPUSH_CHANNEL"
+        android:value="Your Channel" />
+
     <application
         android:name=".AppControl"
         android:allowBackup="true"

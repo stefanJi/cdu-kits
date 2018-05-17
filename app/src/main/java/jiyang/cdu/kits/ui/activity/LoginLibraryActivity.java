@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import cn.jiguang.analytics.android.api.JAnalyticsInterface;
 import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.ActivityLoginLibraryBinding;
@@ -22,18 +23,18 @@ import jiyang.cdu.kits.ui.view.library.LoginLibraryView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
 import jiyang.cdu.kits.util.SpUtil;
 
+import static jiyang.cdu.kits.Constant.HAD_LOGIN;
+import static jiyang.cdu.kits.Constant.LIBRARY_ACCOUNT;
+import static jiyang.cdu.kits.Constant.LIBRARY_ACCOUNT_TYPE;
+import static jiyang.cdu.kits.Constant.LIBRARY_PASSWORD;
+import static jiyang.cdu.kits.Constant.LIBRARY_USER_NAME;
+
 
 public class LoginLibraryActivity extends BaseActivity<LoginLibraryView, LoginPresenterImpl> implements LoginLibraryView, View.OnClickListener {
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, LoginLibraryActivity.class));
     }
-
-    public static final String HAD_LOGIN = "had_login";
-    public static final String LIBRARY_ACCOUNT = "lb_ac";
-    public static final String LIBRARY_PASSWORD = "lb_ps";
-    public static final String LIBRARY_ACCOUNT_TYPE = "lb_ac_type";
-    public static final String LIBRARY_USER_NAME = "lb_user_name";
 
     private ActivityLoginLibraryBinding loginLibraryBinding;
     private String account, password, loginType;
@@ -72,6 +73,12 @@ public class LoginLibraryActivity extends BaseActivity<LoginLibraryView, LoginPr
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        JAnalyticsInterface.onPageStart(this, "LoginLibraryActivityStart");
     }
 
     @Override
@@ -125,6 +132,12 @@ public class LoginLibraryActivity extends BaseActivity<LoginLibraryView, LoginPr
         } else {
             UiUtils.showErrorSnackbar(this, loginLibraryBinding.getRoot(), "登录失败");
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        JAnalyticsInterface.onPageEnd(this, "LoginLibraryActivityStop");
     }
 
     @Override

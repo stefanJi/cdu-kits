@@ -26,6 +26,7 @@ import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.ActivityWebBinding;
 import jiyang.cdu.kits.presenter.BasePresenterImpl;
 import jiyang.cdu.kits.ui.common.BaseActivity;
+import jiyang.cdu.kits.util.CommUtil;
 
 public class WebActivity extends BaseActivity {
 
@@ -138,6 +139,10 @@ public class WebActivity extends BaseActivity {
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(mUrl));
                 startActivity(intent);
+                break;
+            case R.id.menu_share:
+                CommUtil.shareContent(this, binding.webView.getTitle() +
+                        "\n" + binding.webView.getUrl());
                 break;
         }
         return true;

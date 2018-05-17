@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+
+import java.util.List;
 
 import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.R;
@@ -18,11 +22,14 @@ import jiyang.cdu.kits.util.SpUtil;
 
 
 public abstract class BaseFragment<V extends BaseView, P extends BasePresenterImpl> extends Fragment {
+    public String title;
 
-    public abstract String getTitle();
+    public String getTitle() {
+        return title;
+    }
 
-    public boolean isFirstStart() {
-        return AppControl.getInstance().getSpUtil().getBool(getClass().getName(), true);
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     protected void setRefreshLayoutColor(SwipeRefreshLayout swipeRefreshLayout) {
@@ -72,6 +79,40 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenterIm
         if (presenter != null) {
             presenter.detach();
             presenter = null;
+        }
+    }
+
+    protected void destoryChildFragment(List<? extends BaseFragment> fragments) {
+        destoryChildFragment(null, fragments);
+    }
+
+    protected void destoryChildFragment(BaseFragment[] fragments) {
+        destoryChildFragment(fragments, null);
+    }
+
+
+    private void destoryChildFragment(BaseFragment[] fragments, List<? extends BaseFragment> baseFragmentList) {
+        FragmentManager fragmentManager = getChildFragmentManager();
+        if (fragments != null || baseFragmentList != null && !fragmentManager.isDestroyed()) {
+            if (fragments != null) {
+                for (BaseFragment baseFragment : fragments) {
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    if (transaction != null) {
+                        if (baseFragment != null) {
+                            transaction.remove(baseFragment).commitAllowingStateLoss();
+                        }
+                    }
+                }
+            } else {
+                for (BaseFragment baseFragment : baseFragmentList) {
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    if (transaction != null) {
+                        if (baseFragment != null) {
+                            transaction.remove(baseFragment).commitAllowingStateLoss();
+                        }
+                    }
+                }
+            }
         }
     }
 }

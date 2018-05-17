@@ -13,9 +13,9 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycleView"
+                style="@style/style_recycle_view_scrollbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp" />
+                android:layout_height="wrap_content" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/emptyView"
@@ -27,12 +27,13 @@
                     android:id="@+id/emptyViewLogo"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:contentDescription="@string/empty_data"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_rowing"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_rowing" />
 
                 <TextView
                     android:id="@+id/emptyViewTitle"

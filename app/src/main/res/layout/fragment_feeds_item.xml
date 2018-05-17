@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"
@@ -22,8 +23,8 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:contentDescription="@string/sign_library"
-                    android:src="@drawable/ic_touch" />
+                    android:contentDescription="@string/pull_refresh"
+                    app:srcCompat="@drawable/ic_touch" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -32,14 +33,13 @@
                     android:text="@string/pull_refresh"
                     android:textColor="@color/colorPrimary" />
             </LinearLayout>
-
+            
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbarSize="3dp"
-                android:scrollbarThumbVertical="@color/colorAccent"
-                android:scrollbars="vertical" />
+                style="@style/style_recycle_view_scrollbar" />
+
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </layout>

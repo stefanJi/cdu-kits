@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.view.MenuItem;
 import android.view.View;
 
+import cn.jiguang.analytics.android.api.JAnalyticsInterface;
 import jiyang.cdu.kits.BuildConfig;
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
@@ -50,6 +51,12 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        JAnalyticsInterface.onPageStart(this, "AboutActivityStart");
+    }
+
+    @Override
     public BasePresenterImpl initPresenter() {
         return null;
     }
@@ -59,7 +66,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.comment:
-                intent.setData(Uri.parse(Constant.APP_STORE_URL));
+                intent.setData(Uri.parse(Constant.APP_WEB_SITE));
                 intent.setAction(Intent.ACTION_VIEW);
                 startActivity(intent);
                 break;
@@ -102,5 +109,11 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        JAnalyticsInterface.onPageEnd(this, "AboutActivityStop");
     }
 }

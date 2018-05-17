@@ -33,13 +33,14 @@ import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.ActivityMainBinding;
 import jiyang.cdu.kits.databinding.DialogVersionUpdateBinding;
-import jiyang.cdu.kits.model.enty.Version;
+import jiyang.cdu.kits.model.enty.Release;
 import jiyang.cdu.kits.presenter.main.MainViewPresenterImpl;
 import jiyang.cdu.kits.presenter.version.VersionPresenter;
 import jiyang.cdu.kits.presenter.version.VersionPresenterImpl;
 import jiyang.cdu.kits.ui.common.BaseActivity;
 import jiyang.cdu.kits.ui.fragment.feeds.FeedsFragment;
 import jiyang.cdu.kits.ui.fragment.library.LibraryFragment;
+import jiyang.cdu.kits.ui.fragment.links.LinksFragment;
 import jiyang.cdu.kits.ui.view.MainView;
 import jiyang.cdu.kits.ui.view.VersionView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
@@ -52,7 +53,6 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
     private FragmentManager mFragmentManager;
     private int checkNavId;
     private ActivityMainBinding binding;
-    private VersionPresenter versionPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,7 +69,6 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
     }
 
     private void init() {
-        versionPresenter = new VersionPresenterImpl(this);
         mFragmentManager = getSupportFragmentManager();
 
         setSupportActionBar(binding.appbar.toolbar);
@@ -80,7 +79,8 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
             actionBar.setDisplayShowTitleEnabled(true);
         }
         initNav();
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, binding.drawerMenu, binding.appbar.toolbar, R.string.nav_open, R.string.nav_close);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
+                binding.drawerMenu, binding.appbar.toolbar, R.string.nav_open, R.string.nav_close);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             actionBarDrawerToggle.getDrawerArrowDrawable().setColor(getColor(R.color.white));
         } else {
@@ -88,7 +88,8 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
         }
         binding.drawerMenu.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        switchFragment(R.id.nav_feeds);
+        switchFragment(R.id.nav_library);
+        VersionPresenter versionPresenter = new VersionPresenterImpl(this);
         versionPresenter.fetchVersion();
     }
 
@@ -101,6 +102,21 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
     protected void onStart() {
         super.onStart();
         binding.navMenu.navigationView.setCheckedItem(checkNavId);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -143,7 +159,6 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
                 setTitle(libraryFragment.getTitle());
                 checkNavId = menuId;
                 break;
-
             case R.id.nav_feeds:
                 hideFragments();
                 FeedsFragment feedsFragment = (FeedsFragment) mFragmentManager.findFragmentByTag(FeedsFragment.TAG);
@@ -156,11 +171,17 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
                 setTitle(feedsFragment.getTitle());
                 checkNavId = menuId;
                 break;
-            case R.id.education_info:
-                WebActivity.start(this, "http://jw.cdu.edu.cn/Others/jwglxt.aspx");
-                break;
-            case R.id.net_education_info:
-                WebActivity.start(this, "http://kcxt.cdu.edu.cn/");
+            case R.id.navLinks:
+                hideFragments();
+                LinksFragment linksFragment = (LinksFragment) mFragmentManager.findFragmentByTag(LinksFragment.TAG);
+                if (linksFragment == null) {
+                    linksFragment = LinksFragment.newInstance();
+                    mFragmentManager.beginTransaction().add(containerId, linksFragment, LinksFragment.TAG).commit();
+                } else {
+                    mFragmentManager.beginTransaction().show(linksFragment).commit();
+                }
+                setTitle(linksFragment.getTitle());
+                checkNavId = menuId;
                 break;
             case R.id.nav_search:
                 LibrarySearchActivity.start(this);
@@ -221,7 +242,7 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            moveTaskToBack(true);
+            finish();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -239,30 +260,26 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case Constant.SETTING_ACTIVITY_REQUEST_CODE:
-                if (resultCode == RESULT_OK) {
-                    FeedsFragment feedsFragment = (FeedsFragment) mFragmentManager.findFragmentByTag(FeedsFragment.TAG);
-                    if (feedsFragment != null) {
-                        feedsFragment.reload();
-                    }
-                    return;
-                }
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
-    public void onSuccess(final Version version) {
-        if (BuildConfig.VERSION_CODE < version.versionCode) {
+    public void onSuccess(final Release release) {
+        float versionNameNum = Float.parseFloat(BuildConfig.VERSION_NAME);
+        float releaseVersion = Float.parseFloat(release.tagName);
+        if (versionNameNum < releaseVersion) {
             DialogVersionUpdateBinding versionUpdateBinding = DataBindingUtil.inflate(getLayoutInflater(),
                     R.layout.dialog_version_update, null, false);
-            versionUpdateBinding.description.setText(version.description);
-            versionUpdateBinding.versionName.setText(version.versionName);
+            versionUpdateBinding.description.setText(release.name);
+            versionUpdateBinding.versionName.setText(release.name);
             versionUpdateBinding.getUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(version.url));
+                    intent.setData(Uri.parse(Constant.APP_WEB_SITE));
                     startActivity(intent);
                 }
             });

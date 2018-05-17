@@ -162,7 +162,12 @@ public class UserProfileFragment extends BaseFragment<LibraryBookListView, Login
 
     @Override
     public void showError(String error) {
-        UiUtils.showErrorSnackbar(getContext(), binding.getRoot(), error);
+        UiUtils.showErrorSnackbar(getContext(), binding.getRoot(), error, "重试", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                libraryBookListPresenter.fetchBookList();
+            }
+        });
     }
 
     @Override

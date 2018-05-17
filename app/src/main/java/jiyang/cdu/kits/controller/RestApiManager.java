@@ -1,5 +1,7 @@
 package jiyang.cdu.kits.controller;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 
 import org.jsoup.Jsoup;
@@ -17,21 +19,27 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import jiyang.cdu.kits.model.enty.Book;
 import jiyang.cdu.kits.model.enty.BookHistory;
+import jiyang.cdu.kits.model.enty.CDULinks;
 import jiyang.cdu.kits.model.enty.Feed;
 import jiyang.cdu.kits.model.enty.LibrarySearchHistory;
 import jiyang.cdu.kits.model.enty.LibraryUserInfo;
-import jiyang.cdu.kits.model.enty.Version;
+import jiyang.cdu.kits.model.enty.Release;
+import jiyang.cdu.kits.model.enty.zhihu.DailyThemes;
+import jiyang.cdu.kits.model.enty.zhihu.Stories;
+import jiyang.cdu.kits.model.enty.zhihu.StoryContent;
 import okhttp3.ResponseBody;
 
 /**
  * Created by JiYang on 17-9-4.
- * Email: jiyang@idealens.com
+ * Email: jidaoyang@gmail.com
  */
 
 public class RestApiManager {
     private static final String CDU_FEED_HOST = "http://news.cdu.edu.cn/";
     private static final String CDU_HQC_HOST = "http://hqc.cdu.edu.cn/";
-    private static final String QI_NIU_HOST = "http://hejia.youcute.cn/";
+    private static final String ZHIHU_DAILY_HOST = "https://news-at.zhihu.com/api/4/";
+    private static final String CDU_HOME = "http://www.cdu.edu.cn/";
+    private static final String GITHUB_API = "https://api.github.com/";
     private static RestApiManager mInstance;
 
     private RestApiManager() {
@@ -300,9 +308,72 @@ public class RestApiManager {
                 .subscribe(observer);
     }
 
-    public void fetchVersion(Observer<Version> observer) {
-        RetrofitController.getRetrofitInstance(QI_NIU_HOST)
-                .getRestApis().fetchVersion()
+    public void fetchZhihuDailyThemes(Observer<DailyThemes> observer) {
+        RetrofitController.getRetrofitInstance(ZHIHU_DAILY_HOST)
+                .getRestApis().fetchThemes()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void fetchZhihuDailyStories(Observer<Stories> observer, long themeId) {
+        RetrofitController.getRetrofitInstance(ZHIHU_DAILY_HOST)
+                .getRestApis().fetchStories(themeId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void fetchZhihuDailyStory(Observer<StoryContent> observer, long id) {
+        RetrofitController.getRetrofitInstance(ZHIHU_DAILY_HOST)
+                .getRestApis().fetchStory(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void fetchCDULinks(Observer<List<CDULinks>> observer) {
+        RetrofitController.getRetrofitInstance(CDU_HOME)
+                .getRestApis().fetchCDULinks("")
+                .map(new Function<ResponseBody, List<CDULinks>>() {
+                    @Override
+                    public List<CDULinks> apply(ResponseBody responseBody) throws Exception {
+                        List<CDULinks> links = new ArrayList<>();
+                        Document document = Jsoup.parse(responseBody.string());
+                        Elements elements = document.select("a");
+                        for (Element e : elements) {
+                            CDULinks link = new CDULinks();
+                            if (e.attr("href") == null) {
+                                continue;
+                            }
+                            String href = e.attr("href");
+                            if (TextUtils.isEmpty(href) || href.startsWith("#")) {
+                                continue;
+                            }
+                            if (!href.contains("http")) {
+                                href = CDU_HOME + href;
+                            }
+                            link.url = href;
+                            if (e.attr("title") == null) {
+                                continue;
+                            }
+                            String title = e.text();
+                            if (TextUtils.isEmpty(title)) {
+                                continue;
+                            }
+                            link.title = e.text();
+                            links.add(link);
+                        }
+                        return links;
+                    }
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void fetchReleasesVersion(Observer<Release> observer) {
+        RetrofitController.getRetrofitInstance(GITHUB_API)
+                .getRestApis().fetchReleasesVersion()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);

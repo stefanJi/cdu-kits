@@ -18,7 +18,7 @@ public class LibraryBookListImpl extends BasePresenterImpl<LibraryBookListView> 
     }
 
     public LibraryBookListImpl(LibraryBookListView view) {
-        this.libraryBookListModel = new LibraryBookListModelImpl();
+        this();
         attachView(view);
     }
 

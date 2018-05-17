@@ -132,7 +132,12 @@ public class BookHistoryFragment extends BaseFragment<LibraryHistoryView, BookHi
 
     @Override
     public void error(String error) {
-        UiUtils.showErrorSnackbar(this.getActivity(), binding.getRoot(), error);
+        UiUtils.showErrorSnackbar(this.getActivity(), binding.getRoot(), error, "重试", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.fetchHistory();
+            }
+        });
     }
 
     @Override
