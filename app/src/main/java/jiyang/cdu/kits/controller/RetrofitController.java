@@ -1,6 +1,7 @@
 package jiyang.cdu.kits.controller;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,6 +76,9 @@ class RetrofitController {
                         @Override
                         public Response intercept(Chain chain) throws IOException {
                             Request re = chain.request();
+                            if (re.body() != null)
+                                Log.i("TAG", re.body().toString());
+                            Log.i("TAG", re.headers().toString());
                             return chain.proceed(re);
                         }
                     }).cookieJar(new CookieJar() {

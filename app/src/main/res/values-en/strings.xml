@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CDU KITS</string>
+    <string name="about">About</string>
+    <string name="setting">Setting</string>
+    <string name="sign">Login</string>
+    <string name="search">Search</string>
+    <string name="search_library">Search Book</string>
+    <string name="feedback">FeedBack(E-mail)</string>
+    <string name="library">My Library</string>
+    <string name="feeds">Feeds</string>
+    <string name="sign_library">Login Library</string>
+    <string name="renew">Go On</string>
+    <string name="refresh">Refresh</string>
+    <string name="nav_close">nav_close</string>
+    <string name="nav_open">nav_open</string>
+    <string name="card_number">Card Number</string>
+    <string name="ser_number">Barcode</string>
+    <string name="email">Email</string>
+    <string name="book_date">Borrowed: %1$s</string>
+    <string name="book_end_date">Give back: %1$s</string>
+    <string name="book_out_of_date">Over due: %1$d days</string>
+    <string name="book_times">Renew: %1$s times</string>
+    <string name="input_account">Account</string>
+    <string name="input_password">Password  for library</string>
+    <string name="booked_count">Total book</string>
+    <string name="book_max_count">Max borrow</string>
+    <string name="max_book_order_count">Max order</string>
+    <string name="max_book_illegal_count">Violation Times</string>
+    <string name="fav_book">Fav Book</string>
+    <string name="go_login">You need to login library.</string>
+    <string name="pref_category_general">Basic</string>
+    <string name="pref_title_library_user_info">Library User</string>
+    <string name="pref_log_out">Logout</string>
+    <string name="pref_login_library">Login Library</string>
+    <string name="pull_refresh">Pull to refresh</string>
+
+    <string name="search_type">Source type</string>
+    <string-array name="search_type">
+        <item name="book_search_type_1">Title</item>
+        <item name="book_search_type_2">Author</item>
+        <item name="book_search_type_3">Topic</item>
+        <item name="book_search_type_4">ISBN/ISSN</item>
+        <item name="book_search_type_5">订购号</item>
+        <item name="book_search_type_6">分类号</item>
+        <item name="book_search_type_7">索书号</item>
+        <item name="book_search_type_8">出版社</item>
+        <item name="book_search_type_9">从书名</item>
+    </string-array>
+
+    <string name="search_match_type">Match Type</string>
+    <string-array name="search_match_type">
+        <item>Front</item>
+        <item>Full</item>
+        <item>Any</item>
+    </string-array>
+
+    <string name="search_book_type">Book Typr</string>
+    <string name="thanks_and_nice_meet">谢谢你的使用。Nice to meet you!</string>
+    <string name="contact_me">For better. Do Feedback.</string>
+    <string name="comment">Comment</string>
+    <string name="referer">Design refer to Github.com/Eajy/MaterialDesignDemo\nMade By Github.com/jiyangg</string>
+    <string-array name="search_book_type">
+        <item name="search_book_type_1">All</item>
+        <item name="search_book_type_2">Chinese book</item>
+        <item name="search_book_type_3">Western language book</item>
+        <item name="search_book_type_4">Chinese periodical</item>
+        <item name="search_book_type_5">Western language  periodical</item>
+    </string-array>
+
+    <string name="source_code">Source Code</string>
+    <string name="my_site">My Web Site</string>
+    <string name="open_source">开源许可</string>
+    <string name="about_email_intent">FeedBack:CDUKits</string>
+    <string name="about_not_found_email">Not found mail app</string>
+    <string name="share_with">Share with</string>
+    <string name="wait">实现中…</string>
+    <string name="pref_tab_list">Check you want look.</string>
+    <string name="sure">Sure</string>
+    <string name="sure_log_out_library">Are you sure logout library?</string>
+    <string name="cancel">Cancel</string>
+    <string name="open_by_browser">Open in brower</string>
+    <string name="retry">Retry</string>
+    <string name="empty_data">Empty data, pull to refresh.</string>
+    <string name="update">Update</string>
+    <string name="new_version_update">New Version!</string>
+    <string name="get">Get</string>
+    <string name="links">Links</string>
+    <string name="net_connent_error">Can\'t connnect to network.</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="search_info">sourch book</string>
+</resources>

@@ -51,10 +51,23 @@
 
 ##混淆保护自己项目的部分代码以及引用的第三方jar包library（想混淆去掉"#"）
 
-###-------- Gson 相关的混淆配置--------
+##---------------Begin: proguard configuration for Gson  ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
 -keepattributes Signature
+
+# For using GSON @Expose annotation
 -keepattributes *Annotation*
+
+# Gson specific classes
 -keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class jiyang.cdu.kits.model.enty.** { *; }
+
+##---------------End: proguard configuration for Gson  ----------
+
 
 ###---------------retrifit----------
 
@@ -73,8 +86,9 @@
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 -dontwarn org.conscrypt.**
-# A resource is loaded with a relative path so the package of this class must be preserved.
--keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+
+# ----- 极光 -------------
 
 -keep public class cn.jiguang.analytics.android.api.** {
         *;

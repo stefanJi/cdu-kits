@@ -27,9 +27,6 @@ public class AppControl extends Application {
     public void onCreate() {
         super.onCreate();
         appControl = this;
-        JAnalyticsInterface.init(this);
-        JAnalyticsInterface.setDebugMode(true);
-        JAnalyticsInterface.initCrashHandler(this);
     }
 
     /**
@@ -63,17 +60,5 @@ public class AppControl extends Application {
 
     private LiteOrm newSingleInstance() {
         return LiteOrm.newSingleInstance(this, "cdu_kits.db");
-    }
-
-    @Override
-    public void onLowMemory() {
-        JAnalyticsInterface.stopCrashHandler(this);
-        super.onLowMemory();
-    }
-
-    @Override
-    public void onTerminate() {
-        JAnalyticsInterface.stopCrashHandler(this);
-        super.onTerminate();
     }
 }

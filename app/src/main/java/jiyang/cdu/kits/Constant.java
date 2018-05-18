@@ -26,6 +26,7 @@ public class Constant {
     };
 
     public static final int SETTING_ACTIVITY_REQUEST_CODE = 0x1;
+    public static final String FIRST_START_APP = "first_start_app";
     public static final String FIRST_START_FEEDS = "first_start_feeds";
     public static final String NOT_CONFIG_FEEDS_TAB = "not_config_feeds_tab";
     public static final String HAD_LOGIN = "had_login";

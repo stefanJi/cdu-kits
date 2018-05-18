@@ -3,7 +3,6 @@ package jiyang.cdu.kits.ui.widget;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,7 +24,6 @@ public class UiUtils {
     public static void showErrorSnackbar(Context context, View container, String error,
                                          String action, View.OnClickListener actionClickListener,
                                          Integer length) {
-        Log.e("TAG", error);
         if (length == null) {
             length = Snackbar.LENGTH_INDEFINITE;
         }

@@ -11,14 +11,13 @@ import android.support.annotation.Nullable;
 import android.view.MenuItem;
 import android.view.View;
 
-import cn.jiguang.analytics.android.api.JAnalyticsInterface;
 import jiyang.cdu.kits.BuildConfig;
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
+import jiyang.cdu.kits.databinding.ActivityAboutBinding;
 import jiyang.cdu.kits.presenter.BasePresenterImpl;
 import jiyang.cdu.kits.ui.common.BaseActivity;
 import jiyang.cdu.kits.ui.widget.UiUtils;
-import jiyang.cdu.kits.databinding.ActivityAboutBinding;
 
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
@@ -48,12 +47,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         binding.sourceCode.setOnClickListener(this);
         binding.openSource.setOnClickListener(this);
         binding.share.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        JAnalyticsInterface.onPageStart(this, "AboutActivityStart");
     }
 
     @Override
@@ -109,11 +102,5 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 break;
         }
         return true;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        JAnalyticsInterface.onPageEnd(this, "AboutActivityStop");
     }
 }

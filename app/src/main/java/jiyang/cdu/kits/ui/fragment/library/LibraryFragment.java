@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import jiyang.cdu.kits.AppControl;
+import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.FragmentLibraryBinding;
 import jiyang.cdu.kits.model.enty.LibraryUserInfo;
@@ -163,6 +164,7 @@ public class LibraryFragment extends BaseFragment<LoginLibraryView, LoginPresent
     @Override
     public void showLoginSuccess(LibraryUserInfo userInfo) {
         showLoginEdLayout(userInfo);
+        AppControl.getInstance().getSpUtil().setString(Constant.LIBRARY_USER_NAME, userInfo.name);
         hasLoadViewPage = true;
         binding.getRoot().setOnClickListener(null);
     }

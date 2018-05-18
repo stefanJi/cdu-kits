@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import jiyang.cdu.kits.R;
@@ -25,6 +27,9 @@ public class CharAvatarView extends android.support.v7.widget.AppCompatImageView
         backColor = typedArray.getColor(R.styleable.CharAvatarView_backColor, Color.BLUE);
         contentColor = typedArray.getColor(R.styleable.CharAvatarView_contentColor, Color.WHITE);
         content = typedArray.getString(R.styleable.CharAvatarView_avatarContent);
+        if (TextUtils.isEmpty(content)) {
+            drawbleRes = typedArray.getDrawable(android.support.v7.appcompat.R.styleable.AppCompatImageView_srcCompat);
+        }
         typedArray.recycle();
         init();
     }
@@ -34,22 +39,21 @@ public class CharAvatarView extends android.support.v7.widget.AppCompatImageView
     private Paint paintContent;
     private Rect mRect;
     private int backColor, contentColor;
+    private Drawable drawbleRes;
 
     private void init() {
         paintBackground = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintContent = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRect = new Rect();
-        if (content == null) {
-            content = " ";
+        if (!TextUtils.isEmpty(content)) {
+            content = content.substring(0, 1).toUpperCase();
         }
-        content = content.substring(0, 1).toUpperCase();
     }
 
     public void setContent(String content) {
-        if (content == null) {
-            content = " ";
+        if (!TextUtils.isEmpty(content)) {
+            this.content = content.substring(0, 1).toUpperCase();
         }
-        this.content = content.substring(0, 1).toUpperCase();
         invalidate();
     }
 
@@ -76,10 +80,12 @@ public class CharAvatarView extends android.support.v7.widget.AppCompatImageView
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (content == null) {
+        if (TextUtils.isEmpty(content)) {
+            if(drawbleRes!=null){
+                this.setBackgroundDrawable(drawbleRes);
+            }
             return;
         }
-
         paintBackground.setColor(this.backColor);
         canvas.drawCircle(getWidth() / 2, getWidth() / 2, getWidth() / 2, paintBackground);
 

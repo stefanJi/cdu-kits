@@ -9,7 +9,7 @@
 |图书馆|登录图书馆<br/>个人图书借阅超期等信息<br/>图书搜索收藏<br/>...|
 
 <center>
-<a href="https://fir.im/cdukits" style="font-size:24px; border: solid; backgroud: #b0c4de; display: block; text-align: center;">下载安装</a>
+<a href="https://fir.im/cdukits" style="font-size:24px; border: solid; backgroud: #b0c4de; display: block; text-align: center; margin: 20px;">下载安装</a>
 </center>
 
 <img src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-18/70443551.jpg" alt="alt text" width="300">

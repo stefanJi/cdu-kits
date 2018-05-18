@@ -28,6 +28,8 @@ import android.view.Window;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jiguang.analytics.android.api.JAnalyticsInterface;
+import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.BuildConfig;
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
@@ -43,7 +45,9 @@ import jiyang.cdu.kits.ui.fragment.library.LibraryFragment;
 import jiyang.cdu.kits.ui.fragment.links.LinksFragment;
 import jiyang.cdu.kits.ui.view.MainView;
 import jiyang.cdu.kits.ui.view.VersionView;
+import jiyang.cdu.kits.ui.widget.CharAvatarView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
+import jiyang.cdu.kits.util.SpUtil;
 
 
 public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> implements
@@ -61,6 +65,7 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         checkPermission();
         init();
+        JAnalyticsInterface.init(getApplicationContext());
     }
 
     @Override
@@ -91,6 +96,14 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
         switchFragment(R.id.nav_library);
         VersionPresenter versionPresenter = new VersionPresenterImpl(this);
         versionPresenter.fetchVersion();
+        CharAvatarView avatarView = binding.navMenu.navigationView.getHeaderView(0).findViewById(R.id.headerLogo);
+        SpUtil sp = AppControl.getInstance().getSpUtil();
+        if (sp.getBool(Constant.HAD_LOGIN, false)) {
+            String name = sp.getString(Constant.LIBRARY_USER_NAME);
+            if (name != null && avatarView != null) {
+                avatarView.setContent(name);
+            }
+        }
     }
 
     private void initNav() {
@@ -102,11 +115,6 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
     protected void onStart() {
         super.onStart();
         binding.navMenu.navigationView.setCheckedItem(checkNavId);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
     }
 
     @Override
@@ -221,7 +229,8 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
     private void checkPermission() {
         String[] permissions = {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.READ_PHONE_STATE
         };
         List<String> permissionList = new ArrayList<>();
         for (String permission : permissions) {

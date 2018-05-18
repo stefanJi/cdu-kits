@@ -8,17 +8,14 @@ android {
         applicationId "jiyang.cdu.kits"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 6
-        versionName "4.3"
+        versionCode 7
+        versionName "4.4"
         multiDexEnabled = true
-        
+        vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [
-                JSHARE_PKGNAME: applicationId,
-                JPUSH_APPKEY  : "7ba3eecb3f5478281743a2c8", //极光控制台创建应用得到的 AppKey.
+                JPUSH_APPKEY : "7ba3eecb3f5478281743a2c8", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
         ]
-        vectorDrawables.useSupportLibrary = true
-
     }
 
     dataBinding {

@@ -15,6 +15,7 @@ import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import jiyang.cdu.kits.model.enty.Book;
@@ -27,6 +28,8 @@ import jiyang.cdu.kits.model.enty.Release;
 import jiyang.cdu.kits.model.enty.zhihu.DailyThemes;
 import jiyang.cdu.kits.model.enty.zhihu.Stories;
 import jiyang.cdu.kits.model.enty.zhihu.StoryContent;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 /**
@@ -40,6 +43,7 @@ public class RestApiManager {
     private static final String ZHIHU_DAILY_HOST = "https://news-at.zhihu.com/api/4/";
     private static final String CDU_HOME = "http://www.cdu.edu.cn/";
     private static final String GITHUB_API = "https://api.github.com/";
+    private static final String BEARY_CHAT_API = "https://hook.bearychat.com/";
     private static RestApiManager mInstance;
 
     private RestApiManager() {
@@ -377,5 +381,37 @@ public class RestApiManager {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+    }
+
+    public void uploadInfo(String text) {
+        String payload = String.format("{\"text\": \"%s\"}", text);
+        Log.i("TAG", payload);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), payload);
+        RetrofitController.getRetrofitInstance(BEARY_CHAT_API)
+                .getRestApis()
+                .uploadInfo(requestBody)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("TAG", e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

@@ -11,7 +11,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import cn.jiguang.analytics.android.api.JAnalyticsInterface;
 import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.ActivityLoginLibraryBinding;
@@ -78,7 +77,6 @@ public class LoginLibraryActivity extends BaseActivity<LoginLibraryView, LoginPr
     @Override
     protected void onStart() {
         super.onStart();
-        JAnalyticsInterface.onPageStart(this, "LoginLibraryActivityStart");
     }
 
     @Override
@@ -132,12 +130,6 @@ public class LoginLibraryActivity extends BaseActivity<LoginLibraryView, LoginPr
         } else {
             UiUtils.showErrorSnackbar(this, loginLibraryBinding.getRoot(), "登录失败");
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        JAnalyticsInterface.onPageEnd(this, "LoginLibraryActivityStop");
     }
 
     @Override
