@@ -81,7 +81,7 @@
                         android:imeOptions="actionSearch"
                         android:inputType="text"
                         android:textColor="@color/white"
-                        android:textColorHint="@color/grey" />
+                        android:textColorHint="@color/primary_light" />
                 </android.support.v7.widget.Toolbar>
 
             </android.support.design.widget.CollapsingToolbarLayout>
@@ -95,6 +95,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycleView"
+                style="@style/style_recycle_view_scrollbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp" />

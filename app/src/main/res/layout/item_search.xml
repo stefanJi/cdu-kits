@@ -55,6 +55,7 @@
                     android:layout_margin="5dp"
                     android:background="?android:selectableItemBackground"
                     android:scaleType="center"
+                    android:tint="@color/colorPrimary"
                     app:srcCompat="@drawable/ic_round_favorite_border" />
 
                 <android.support.v7.widget.AppCompatImageButton

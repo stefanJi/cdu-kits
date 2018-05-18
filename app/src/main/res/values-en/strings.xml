@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CDU KITS</string>
+    <string name="app_name">OrangeLibrary</string>
     <string name="about">About</string>
     <string name="setting">Setting</string>
     <string name="sign">Login</string>
@@ -88,5 +88,6 @@
     <string name="links">Links</string>
     <string name="net_connent_error">Can\'t connnect to network.</string>
     <string name="send_feedback">Send Feedback</string>
-    <string name="search_info">sourch book</string>
+    <string name="search_info">search book</string>
+    <string name="share_to_friend">Share to friends</string>
 </resources>

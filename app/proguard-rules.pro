@@ -89,7 +89,7 @@
 
 
 # ----- 极光 -------------
+-keep public class cn.jiguang.analytics.android.api.** { *; }
 
--keep public class cn.jiguang.analytics.android.api.** {
-        *;
-}
+# lib
+-keep class com.litesuits.orm.** { *; }

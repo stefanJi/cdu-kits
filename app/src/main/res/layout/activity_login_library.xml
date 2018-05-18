@@ -9,7 +9,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="300dp"
             android:background="@color/colorPrimary" />
 
 
@@ -20,7 +20,7 @@
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20dp"
             android:layout_marginStart="20sp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="50dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:selectableItemBackground"
@@ -85,7 +85,7 @@
 
                     <Space
                         android:layout_width="wrap_content"
-                        android:layout_height="10dp" />
+                        android:layout_height="5dp" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"

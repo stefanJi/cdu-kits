@@ -31,8 +31,8 @@ public class UiUtils {
         if (action != null) {
             snackbar.setAction(action, actionClickListener);
         }
-        snackbar.setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent));
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.error_bg));
+        snackbar.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
         TextView tv = snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(ContextCompat.getColor(context, R.color.white));
         snackbar.show();

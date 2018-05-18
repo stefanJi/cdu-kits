@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -61,6 +62,7 @@ public class FavBookActivity extends BaseActivity<FavBookView, FavBookPresenterI
             navIcon.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         }
         binding.refreshLayout.setOnRefreshListener(this);
+        binding.refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimary));
         this.favBooks = new ArrayList<>();
         CommAdapter<FavBook> adapter = new CommAdapter<FavBook>(favBooks) {
             @Override

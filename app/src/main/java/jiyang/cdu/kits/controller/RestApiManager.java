@@ -38,12 +38,14 @@ import okhttp3.ResponseBody;
  */
 
 public class RestApiManager {
+    private static final String LIBRARY_HOST = "http://202.115.80.170:8080/";
     private static final String CDU_FEED_HOST = "http://news.cdu.edu.cn/";
     private static final String CDU_HQC_HOST = "http://hqc.cdu.edu.cn/";
     private static final String ZHIHU_DAILY_HOST = "https://news-at.zhihu.com/api/4/";
     private static final String CDU_HOME = "http://www.cdu.edu.cn/";
     private static final String GITHUB_API = "https://api.github.com/";
     private static final String BEARY_CHAT_API = "https://hook.bearychat.com/";
+    private static final String JW_HOST_1 = "http://202.115.80.211/";
     private static RestApiManager mInstance;
 
     private RestApiManager() {
@@ -362,10 +364,10 @@ public class RestApiManager {
                                 continue;
                             }
                             String title = e.text();
-                            if (TextUtils.isEmpty(title)) {
+                            if (TextUtils.isEmpty(title) || title.length() > 10) {
                                 continue;
                             }
-                            link.title = e.text();
+                            link.title = title;
                             links.add(link);
                         }
                         return links;

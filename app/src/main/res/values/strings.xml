@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">成橙助手</string>
+    <string name="app_name">成橙图书</string>
     <string name="about">关于</string>
     <string name="setting">设置</string>
     <string name="sign">登录</string>
@@ -71,7 +71,7 @@
     </string-array>
 
     <string name="source_code">源代码</string>
-    <string name="my_site">我的网站</string>
+    <string name="my_site">作者网站</string>
     <string name="open_source">开源许可</string>
     <string name="about_email_intent">反馈:CDUKits(成橙Kits)</string>
     <string name="about_not_found_email">没找到邮箱App</string>
@@ -88,4 +88,5 @@
     <string name="new_version_update">新版本更新啦!</string>
     <string name="get">获取</string>
     <string name="links">链接集</string>
+    <string name="share_to_friend">分享给朋友</string>
 </resources>

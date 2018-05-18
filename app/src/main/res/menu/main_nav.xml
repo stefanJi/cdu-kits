@@ -48,6 +48,11 @@
                 android:title="@string/setting"
                 app:showAsAction="ifRoom" />
             <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_share"
+                android:title="分享给同学"
+                app:showAsAction="ifRoom" />
+            <item
                 android:id="@+id/nav_feedBack"
                 android:icon="@drawable/ic_round_bug_report"
                 android:title="@string/feedback"

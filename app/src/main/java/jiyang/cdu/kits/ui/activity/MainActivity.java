@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.jiguang.analytics.android.api.JAnalyticsInterface;
-import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.BuildConfig;
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
@@ -45,9 +45,7 @@ import jiyang.cdu.kits.ui.fragment.library.LibraryFragment;
 import jiyang.cdu.kits.ui.fragment.links.LinksFragment;
 import jiyang.cdu.kits.ui.view.MainView;
 import jiyang.cdu.kits.ui.view.VersionView;
-import jiyang.cdu.kits.ui.widget.CharAvatarView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
-import jiyang.cdu.kits.util.SpUtil;
 
 
 public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> implements
@@ -96,14 +94,6 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
         switchFragment(R.id.nav_library);
         VersionPresenter versionPresenter = new VersionPresenterImpl(this);
         versionPresenter.fetchVersion();
-        CharAvatarView avatarView = binding.navMenu.navigationView.getHeaderView(0).findViewById(R.id.headerLogo);
-        SpUtil sp = AppControl.getInstance().getSpUtil();
-        if (sp.getBool(Constant.HAD_LOGIN, false)) {
-            String name = sp.getString(Constant.LIBRARY_USER_NAME);
-            if (name != null && avatarView != null) {
-                avatarView.setContent(name);
-            }
-        }
     }
 
     private void initNav() {
@@ -191,6 +181,14 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
                 setTitle(linksFragment.getTitle());
                 checkNavId = menuId;
                 break;
+            case R.id.nav_share:
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, Constant.SHARE_CONTENT);
+                intent.setType("text/plain");
+                startActivity(Intent.createChooser(intent, getString(R.string.share_with)));
+                binding.navMenu.navigationView.setCheckedItem(checkNavId);
+                break;
             case R.id.nav_search:
                 LibrarySearchActivity.start(this);
                 break;
@@ -204,15 +202,16 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
                 AboutActivity.start(this);
                 break;
             case R.id.nav_feedBack:
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse(Constant.CONTACT_EMAIL));
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.about_email_intent));
+                Intent feedbackIntent = new Intent();
+                feedbackIntent.setAction(Intent.ACTION_SENDTO);
+                feedbackIntent.setData(Uri.parse(Constant.CONTACT_EMAIL));
+                feedbackIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.about_email_intent));
                 try {
-                    startActivity(intent);
+                    startActivity(feedbackIntent);
                 } catch (Exception e) {
                     UiUtils.showErrorSnackbar(this, binding.getRoot(), getString(R.string.about_not_found_email));
                 }
+                binding.navMenu.navigationView.setCheckedItem(checkNavId);
                 break;
             default:
                 break;
@@ -276,8 +275,14 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
 
     @Override
     public void onSuccess(final Release release) {
-        float versionNameNum = Float.parseFloat(BuildConfig.VERSION_NAME);
-        float releaseVersion = Float.parseFloat(release.tagName);
+        float versionNameNum = 0;
+        float releaseVersion = 0;
+        try {
+            versionNameNum = Float.parseFloat(BuildConfig.VERSION_NAME);
+            releaseVersion = Float.parseFloat(release.tagName);
+        } catch (Exception e) {
+            Log.e("TAG", e.getMessage());
+        }
         if (versionNameNum < releaseVersion) {
             DialogVersionUpdateBinding versionUpdateBinding = DataBindingUtil.inflate(getLayoutInflater(),
                     R.layout.dialog_version_update, null, false);
@@ -304,6 +309,6 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
 
     @Override
     public void onError(String error) {
-        UiUtils.showErrorSnackbar(this, binding.getRoot(), "版本更新获取失败:" + error);
+        Log.e("TAG", error);
     }
 }

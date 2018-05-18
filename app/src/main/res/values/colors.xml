@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--ActionBar颜色-->
-    <color name="colorPrimary">#009688</color>
-    <!--状态栏颜色-->
-    <color name="colorPrimaryDark">#00897b</color>
-    <!--光标、点选按钮等颜色-->
-    <color name="colorAccent">#FFB74D</color>
-    <color name="colorAccentDark">#FDD835</color>
-    <!--透明transparent-->
-    <color name="transparent">#00000000</color>
-    <color name="actionbar_bg">#fff</color>
-    <color name="actionbar_title">#000</color>
-    <color name="window_bg">#eee</color>
+
     <color name="menu_text">#555555</color>
     <color name="white">#FFF</color>
-    <color name="grey">#BDBDBD</color>
+    <color name="grey">#eeeeee</color>
     <color name="error_bg">#EF5350</color>
+
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#E64A19</color>
+    <color name="primary_light">#FFCCBC</color>
+    <color name="colorAccent">#607D8B</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
 </resources>

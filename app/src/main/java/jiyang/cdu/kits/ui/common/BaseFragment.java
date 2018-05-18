@@ -36,9 +36,9 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenterIm
         Context context = getContext();
         if (context != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                swipeRefreshLayout.setColorSchemeColors(context.getColor(R.color.colorAccent));
+                swipeRefreshLayout.setColorSchemeColors(context.getColor(R.color.colorPrimary));
             } else {
-                swipeRefreshLayout.setColorSchemeColors(context.getResources().getColor(R.color.colorAccent));
+                swipeRefreshLayout.setColorSchemeColors(context.getResources().getColor(R.color.colorPrimary));
             }
         }
     }

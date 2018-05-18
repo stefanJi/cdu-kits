@@ -2,6 +2,7 @@ package jiyang.cdu.kits.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jiyang.cdu.kits.AppControl;
-import jiyang.cdu.kits.BuildConfig;
 import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.ActivitySearchLibraryBinding;
 import jiyang.cdu.kits.databinding.ItemSearchBinding;
@@ -184,7 +184,7 @@ public class LibrarySearchActivity extends BaseActivity<LibrarySearchView, Libra
         binding.spinnerSearchType.setOnItemSelectedListener(spinnerSelectedListener);
         binding.spinnerSearchBookType.setOnItemSelectedListener(spinnerSelectedListener);
         binding.spinnerSearchMatchType.setOnItemSelectedListener(spinnerSelectedListener);
-        binding.refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
+        binding.refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorPrimary));
     }
 
     @Override

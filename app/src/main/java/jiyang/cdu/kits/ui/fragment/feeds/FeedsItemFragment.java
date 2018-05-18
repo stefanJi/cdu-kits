@@ -158,7 +158,13 @@ public class FeedsItemFragment extends BaseFragment<FeedsView, FeedsPresenterImp
         } else {
             binding.emptyTip.setVisibility(View.VISIBLE);
         }
-        UiUtils.showErrorSnackbar(this.getActivity(), binding.recyclerView, error);
+        UiUtils.showErrorSnackbar(this.getActivity(), binding.recyclerView, error,
+                getString(R.string.retry), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        presenter.fetchFeeds(feedsPage, TAB_TYPE_MAP.get(feedsType));
+                    }
+                });
     }
 
     @Override

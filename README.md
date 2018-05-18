@@ -1,19 +1,44 @@
 
-> 一个为成都大学制作的简约的材料设计风格校园助手安卓应用 
+# 成橙图书
 
+*v 4.4*
 
-|功能|描述|
-|:---:|:---:|
-|发现|学校通知公告<br/>后勤处通知<br/>成大要文<br/>综合新闻<br/>媒体成大<br/>多彩校园<br/>学术文化<br/>...|
-|探索|知乎日报<br/>...|
-|图书馆|登录图书馆<br/>个人图书借阅超期等信息<br/>图书搜索收藏<br/>...|
+> 一个为成都大学制作的简约的材料设计风格图书馆安卓应用 
 
 <center>
-<a href="https://fir.im/cdukits" style="font-size:24px; border: solid; backgroud: #b0c4de; display: block; text-align: center; margin: 20px;">下载安装</a>
+<a href="https://fir.im/cdukits" style="font-size:24px; border: solid; background: #b0c4de; display: block; text-align: center; margin: 20px; text-decoration: none; color: white;">下载安装</a>
 </center>
 
-<img src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-18/70443551.jpg" alt="alt text" width="300">
+|功能|描述|
+|:--------:|:-------:|
+|发现|学校通知公告 后勤处通知 成大要文 综合新闻 媒体成大 多彩校园 学术文化|
+|探索|知乎日报|
+|图书馆|登录图书馆 个人图书借阅超期等信息 图书搜索收藏|
 
-<img alt="" src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-18/10569285.jpg" width="300">
+---
+### 图书服务
 
-<img alt="" src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-18/58146564.jpg" width="300">
+<center>
+<img  alt="cdu" src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-19/49200808.jpg" width="80%">
+</center>
+
+<center>
+<img alt="" src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-19/19814194.jpg" width="80%">
+</center>
+
+#### 图书搜索收藏
+
+<center>
+<img alt="" src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-19/65100211.jpg" width="80%">
+</center>
+
+
+### 校园通知新闻公告
+
+<center>
+<img alt="" src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-19/62099146.jpg" width="80%">
+</center>
+<center>
+<img alt="" src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-19/96358621.jpg" width="80%">
+</center>
+

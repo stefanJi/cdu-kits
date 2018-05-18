@@ -107,8 +107,8 @@ public class WebActivity extends BaseActivity {
         binding.webView.setWebViewClient(webViewClient);
         binding.webView.setWebChromeClient(chromeClient);
         WebSettings webSettings = binding.webView.getSettings();
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setAllowFileAccess(true);
         webSettings.setAppCacheEnabled(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);

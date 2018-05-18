@@ -25,9 +25,11 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             app:tabIndicatorColor="@color/colorAccent"
+            app:tabIndicatorHeight="5dp"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/grey" />
+            app:tabTextAppearance="@style/MTabLayoutStyle"
+            app:tabTextColor="@color/primary_light" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
