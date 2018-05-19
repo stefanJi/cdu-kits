@@ -1,12 +1,10 @@
 
 # 成橙图书
 
-*v 4.4*
-
 > 一个为成都大学制作的简约的材料设计风格图书馆安卓应用 
 
 <center>
-<a href="https://fir.im/cdukits" style="font-size:24px; border: solid; background: #b0c4de; display: block; text-align: center; margin: 20px; text-decoration: none; color: white;">下载安装</a>
+<a href="https://fir.im/cdukits" style="font-size:24px; border: solid; background: #b0c4de; display: block; text-align: center; margin: 20px; text-decoration: none; color: white;"> 最新版  v 4.4 下载安装</a>
 </center>
 
 |功能|描述|
@@ -41,4 +39,3 @@
 <center>
 <img alt="" src="http://7xu0oh.com2.z0.glb.qiniucdn.com/18-5-19/96358621.jpg" width="80%">
 </center>
-

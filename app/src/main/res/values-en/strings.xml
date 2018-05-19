@@ -69,7 +69,7 @@
     </string-array>
 
     <string name="source_code">Source Code</string>
-    <string name="my_site">My Web Site</string>
+    <string name="my_site">Author\'s Web Site</string>
     <string name="open_source">开源许可</string>
     <string name="about_email_intent">FeedBack:CDUKits</string>
     <string name="about_not_found_email">Not found mail app</string>
@@ -90,4 +90,6 @@
     <string name="send_feedback">Send Feedback</string>
     <string name="search_info">search book</string>
     <string name="share_to_friend">Share to friends</string>
+    <string name="permission_request_title">%1$s Will request some permissions for better application.</string>
+    <string name="understand">Understand</string>
 </resources>

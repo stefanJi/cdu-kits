@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary">
@@ -107,9 +108,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
-                            android:drawableLeft="@drawable/ic_comment"
+                            android:drawableLeft="@drawable/comment_drawable_left_selector"
                             android:drawablePadding="15dp"
-                            android:drawableStart="@drawable/ic_comment"
+                            android:drawableStart="@drawable/comment_drawable_left_selector"
                             android:gravity="center_vertical"
                             android:padding="10dp"
                             android:text="@string/comment" />
@@ -123,9 +124,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
-                            android:drawableLeft="@drawable/ic_round_bug_report"
+                            android:drawableLeft="@drawable/feed_back_drawable_left_selector"
                             android:drawablePadding="15dp"
-                            android:drawableStart="@drawable/ic_round_bug_report"
+                            android:drawableStart="@drawable/feed_back_drawable_left_selector"
                             android:gravity="center_vertical"
                             android:padding="10dp"
                             android:text="@string/feedback" />
@@ -139,9 +140,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
-                            android:drawableLeft="@drawable/ic_code"
+                            android:drawableLeft="@drawable/source_code_drawable_left_selector"
                             android:drawablePadding="15dp"
-                            android:drawableStart="@drawable/ic_code"
+                            android:drawableStart="@drawable/source_code_drawable_left_selector"
                             android:gravity="center_vertical"
                             android:padding="10dp"
                             android:text="@string/source_code" />
@@ -155,9 +156,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackground"
-                            android:drawableLeft="@drawable/ic_web"
+                            android:drawableLeft="@drawable/author_site_drawable_left_selector"
                             android:drawablePadding="15dp"
-                            android:drawableStart="@drawable/ic_web"
+                            android:drawableStart="@drawable/author_site_drawable_left_selector"
                             android:gravity="center_vertical"
                             android:padding="10dp"
                             android:text="@string/my_site" />
@@ -166,18 +167,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="5dp" />
 
-                        <TextView
-                            android:id="@+id/open_source"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:drawableLeft="@drawable/ic_copyright"
-                            android:drawablePadding="15dp"
-                            android:drawableStart="@drawable/ic_copyright"
-                            android:gravity="center_vertical"
-                            android:padding="10dp"
-                            android:text="@string/open_source"
-                            android:visibility="gone" />
                     </LinearLayout>
 
                 </android.support.v7.widget.CardView>
@@ -205,9 +194,9 @@
             android:layout_marginBottom="50dp"
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
-            android:src="@drawable/ic_share"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:rippleColor="@color/colorAccent" />
+            app:rippleColor="@color/colorAccent"
+            app:srcCompat="@drawable/ic_share" />
     </android.support.constraint.ConstraintLayout>
 </layout>

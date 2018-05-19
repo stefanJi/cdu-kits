@@ -72,7 +72,7 @@
     </string-array>
 
     <string name="source_code">源代码</string>
-    <string name="my_site">我的网站</string>
+    <string name="my_site">作者网站</string>
     <string name="open_source">开源许可</string>
     <string name="about_email_intent">反馈:CDUKits(成橙Kits)</string>
     <string name="about_not_found_email">没找到邮箱App</string>
@@ -90,4 +90,6 @@
     <string name="get">获取</string>
     <string name="links">链接集</string>
     <string name="share_to_friend">分享给朋友</string>
+    <string name="permission_request_title">%1$s 将会请求一些权限用于优化更好的用户体验</string>
+    <string name="understand">了解</string>
 </resources>

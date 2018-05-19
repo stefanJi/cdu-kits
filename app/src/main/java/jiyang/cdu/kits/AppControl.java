@@ -5,13 +5,11 @@ import android.content.Context;
 
 import com.litesuits.orm.LiteOrm;
 
-import cn.jiguang.analytics.android.api.JAnalyticsInterface;
 import jiyang.cdu.kits.util.SpUtil;
 
 
 /**
  * Created by jy on 2016/11/6.
- * my application
  */
 public class AppControl extends Application {
     private static AppControl appControl;

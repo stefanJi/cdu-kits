@@ -23,7 +23,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by JiYang on 17-7-27.
- * Email: jidaoyang@gmail.com
  */
 class RetrofitController {
     private static final long DEF_TIME_OUT_DELAY = 20;   // seconds

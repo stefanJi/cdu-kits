@@ -34,7 +34,6 @@ import okhttp3.ResponseBody;
 
 /**
  * Created by JiYang on 17-9-4.
- * Email: jidaoyang@gmail.com
  */
 
 public class RestApiManager {

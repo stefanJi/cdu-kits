@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -21,6 +22,11 @@ import jiyang.cdu.kits.ui.widget.UiUtils;
 
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     public static void start(Context context) {
         context.startActivity(new Intent(context, AboutActivity.class));
     }
@@ -45,7 +51,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         binding.feedback.setOnClickListener(this);
         binding.mySite.setOnClickListener(this);
         binding.sourceCode.setOnClickListener(this);
-        binding.openSource.setOnClickListener(this);
         binding.share.setOnClickListener(this);
     }
 
@@ -82,8 +87,6 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
                 intent.setData(Uri.parse(Constant.GIT_HUB_REPO));
                 intent.setAction(Intent.ACTION_VIEW);
                 startActivity(intent);
-                break;
-            case R.id.open_source:
                 break;
             case R.id.share:
                 intent.setAction(Intent.ACTION_SEND);

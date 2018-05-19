@@ -1,10 +1,10 @@
 package jiyang.cdu.kits.ui.activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,12 +24,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.jiguang.analytics.android.api.JAnalyticsInterface;
+import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.BuildConfig;
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
@@ -46,6 +46,7 @@ import jiyang.cdu.kits.ui.fragment.links.LinksFragment;
 import jiyang.cdu.kits.ui.view.MainView;
 import jiyang.cdu.kits.ui.view.VersionView;
 import jiyang.cdu.kits.ui.widget.UiUtils;
+import jiyang.cdu.kits.util.SpUtil;
 
 
 public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> implements
@@ -61,9 +62,7 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        checkPermission();
         init();
-        JAnalyticsInterface.init(getApplicationContext());
     }
 
     @Override
@@ -73,7 +72,6 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
 
     private void init() {
         mFragmentManager = getSupportFragmentManager();
-
         setSupportActionBar(binding.appbar.toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -94,6 +92,23 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
         switchFragment(R.id.nav_library);
         VersionPresenter versionPresenter = new VersionPresenterImpl(this);
         versionPresenter.fetchVersion();
+        SpUtil sp = AppControl.getInstance().getSpUtil();
+        if (sp.getBool(Constant.FIRST_START_APP, true)) {
+            sp.setBool(Constant.FIRST_START_APP, false);
+            new AlertDialog.Builder(this)
+                    .setTitle(String.format(getString(R.string.permission_request_title), getString(R.string.app_name)))
+                    .setPositiveButton(R.string.understand, null)
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            checkPermission();
+                        }
+                    })
+                    .show();
+        } else {
+            checkPermission();
+        }
+        JAnalyticsInterface.init(getApplicationContext());
     }
 
     private void initNav() {
@@ -286,7 +301,7 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
         if (versionNameNum < releaseVersion) {
             DialogVersionUpdateBinding versionUpdateBinding = DataBindingUtil.inflate(getLayoutInflater(),
                     R.layout.dialog_version_update, null, false);
-            versionUpdateBinding.description.setText(release.name);
+            versionUpdateBinding.description.setText(release.body);
             versionUpdateBinding.versionName.setText(release.name);
             versionUpdateBinding.getUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -300,10 +315,6 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
             AlertDialog dialog = new AlertDialog.Builder(this)
                     .setView(versionUpdateBinding.getRoot()).create();
             dialog.show();
-            Window window = dialog.getWindow();
-            if (window != null) {
-                window.setBackgroundDrawable(new ColorDrawable(0x00000000));
-            }
         }
     }
 

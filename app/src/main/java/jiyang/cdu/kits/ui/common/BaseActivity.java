@@ -12,7 +12,8 @@ import jiyang.cdu.kits.ui.view.BaseView;
 import jiyang.cdu.kits.util.SpUtil;
 
 
-public abstract class BaseActivity<V extends BaseView, P extends BasePresenterImpl<V>> extends AppCompatActivity {
+public abstract class BaseActivity<V extends BaseView, P extends BasePresenterImpl<V>>
+        extends AppCompatActivity {
     protected void isFirstCome(View container, String tip) {
         final String tag = getClass().getName();
         final SpUtil sp = AppControl.getInstance().getSpUtil();
