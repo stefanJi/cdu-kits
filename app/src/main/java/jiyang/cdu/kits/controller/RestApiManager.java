@@ -25,9 +25,6 @@ import jiyang.cdu.kits.model.enty.Feed;
 import jiyang.cdu.kits.model.enty.LibrarySearchHistory;
 import jiyang.cdu.kits.model.enty.LibraryUserInfo;
 import jiyang.cdu.kits.model.enty.Release;
-import jiyang.cdu.kits.model.enty.zhihu.DailyThemes;
-import jiyang.cdu.kits.model.enty.zhihu.Stories;
-import jiyang.cdu.kits.model.enty.zhihu.StoryContent;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -40,11 +37,9 @@ public class RestApiManager {
     private static final String LIBRARY_HOST = "http://202.115.80.170:8080/";
     private static final String CDU_FEED_HOST = "http://news.cdu.edu.cn/";
     private static final String CDU_HQC_HOST = "http://hqc.cdu.edu.cn/";
-    private static final String ZHIHU_DAILY_HOST = "https://news-at.zhihu.com/api/4/";
     private static final String CDU_HOME = "http://www.cdu.edu.cn/";
     private static final String GITHUB_API = "https://api.github.com/";
     private static final String BEARY_CHAT_API = "https://hook.bearychat.com/";
-    private static final String JW_HOST_1 = "http://202.115.80.211/";
     private static RestApiManager mInstance;
 
     private RestApiManager() {
@@ -60,7 +55,7 @@ public class RestApiManager {
 
 
     public void loginLib(Observer<LibraryUserInfo> observer, final String account, String password, String type) {
-        RetrofitController.getRetrofitInstance()
+        RetrofitController.getRetrofitInstance(LIBRARY_HOST)
                 .getRestApis()
                 .loginLib(account, password, type, "")
                 .subscribeOn(Schedulers.io())
@@ -145,7 +140,7 @@ public class RestApiManager {
     }
 
     public void getBookList(Observer<List<Book>> observer) {
-        RetrofitController.getRetrofitInstance().getRestApis()
+        RetrofitController.getRetrofitInstance(LIBRARY_HOST).getRestApis()
                 .getBookList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -194,7 +189,7 @@ public class RestApiManager {
     }
 
     public void reBook(Observer<Boolean> observer, final Book book) {
-        RetrofitController.getRetrofitInstance()
+        RetrofitController.getRetrofitInstance(LIBRARY_HOST)
                 .getRestApis()
                 .reBook(book.code, book.check)
                 .map(new Function<ResponseBody, Boolean>() {
@@ -216,7 +211,7 @@ public class RestApiManager {
     public void libraryHistory(Observer<List<BookHistory>> observer) {
         final String para = "all";
         final int toPage = 1;
-        RetrofitController.getRetrofitInstance().getRestApis()
+        RetrofitController.getRetrofitInstance(LIBRARY_HOST).getRestApis()
                 .libraryHistory(para, toPage)
                 .map(new Function<ResponseBody, List<BookHistory>>() {
                     @Override
@@ -253,7 +248,7 @@ public class RestApiManager {
     }
 
     public void librarySearchHistory(Observer<List<LibrarySearchHistory>> observer) {
-        RetrofitController.getRetrofitInstance().getRestApis()
+        RetrofitController.getRetrofitInstance(LIBRARY_HOST).getRestApis()
                 .librarySearchHistory()
                 .map(new Function<ResponseBody, List<LibrarySearchHistory>>() {
                     @Override
@@ -280,7 +275,7 @@ public class RestApiManager {
 
     public void searchBook(Observer<List<Book>> observer, String key, String searchType,
                            String docType, String matchFlag, int page) {
-        RetrofitController.getRetrofitInstance()
+        RetrofitController.getRetrofitInstance(LIBRARY_HOST)
                 .getRestApis().searchBook(searchType, matchFlag, docType, page, key)
                 .map(new Function<ResponseBody, List<Book>>() {
                     @Override
@@ -308,30 +303,6 @@ public class RestApiManager {
                         return books;
                     }
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
-    }
-
-    public void fetchZhihuDailyThemes(Observer<DailyThemes> observer) {
-        RetrofitController.getRetrofitInstance(ZHIHU_DAILY_HOST)
-                .getRestApis().fetchThemes()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
-    }
-
-    public void fetchZhihuDailyStories(Observer<Stories> observer, long themeId) {
-        RetrofitController.getRetrofitInstance(ZHIHU_DAILY_HOST)
-                .getRestApis().fetchStories(themeId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
-    }
-
-    public void fetchZhihuDailyStory(Observer<StoryContent> observer, long id) {
-        RetrofitController.getRetrofitInstance(ZHIHU_DAILY_HOST)
-                .getRestApis().fetchStory(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);

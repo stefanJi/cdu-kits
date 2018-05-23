@@ -31,11 +31,6 @@ class RetrofitController {
     private OkHttpClient mClient;
     private static Map<String, RetrofitController> retrofitControllerMap = new HashMap<>();
 
-    static RetrofitController getRetrofitInstance() {
-        String baseUrl = "http://202.115.80.170:8080/";
-        return getRetrofitInstance(baseUrl);
-    }
-
     static RetrofitController getRetrofitInstance(String baseUrl) {
         if (TextUtils.isEmpty(baseUrl)) {
             try {

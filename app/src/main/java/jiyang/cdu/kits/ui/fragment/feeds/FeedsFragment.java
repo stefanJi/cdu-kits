@@ -18,21 +18,16 @@ import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
 import jiyang.cdu.kits.databinding.FragmentFeedsBinding;
-import jiyang.cdu.kits.model.enty.zhihu.DailyTheme;
-import jiyang.cdu.kits.model.enty.zhihu.DailyThemes;
-import jiyang.cdu.kits.presenter.feeds.ZhihuDailyPresernterImpl;
+import jiyang.cdu.kits.presenter.BasePresenterImpl;
 import jiyang.cdu.kits.ui.common.BaseFragment;
-import jiyang.cdu.kits.ui.view.feeds.ZhihuDailyView;
-import jiyang.cdu.kits.ui.widget.UiUtils;
 import jiyang.cdu.kits.util.SpUtil;
 
 
-public class FeedsFragment extends BaseFragment<ZhihuDailyView, ZhihuDailyPresernterImpl> implements ZhihuDailyView {
+public class FeedsFragment extends BaseFragment {
     public static final String TAG = "feeds_fragment";
     private FragmentFeedsBinding feedsBinding;
     private List<BaseFragment> baseFragments;
     private SpUtil sp;
-    private boolean isFirstStart;
 
     public static FeedsFragment newInstance() {
         return new FeedsFragment();
@@ -44,8 +39,8 @@ public class FeedsFragment extends BaseFragment<ZhihuDailyView, ZhihuDailyPreser
     }
 
     @Override
-    public ZhihuDailyPresernterImpl initPresenter() {
-        return new ZhihuDailyPresernterImpl();
+    public BasePresenterImpl initPresenter() {
+        return null;
     }
 
     @Nullable
@@ -61,7 +56,7 @@ public class FeedsFragment extends BaseFragment<ZhihuDailyView, ZhihuDailyPreser
     }
 
     private void init() {
-        isFirstStart = sp.getBool(Constant.FIRST_START_FEEDS, true);
+        boolean isFirstStart = sp.getBool(Constant.FIRST_START_FEEDS, true);
         if (isFirstStart) {
             for (int i = 0; i < Constant.FEEDS_TABS.length; i++) {
                 sp.setBool(Constant.FEEDS_TABS[i], true);
@@ -75,7 +70,6 @@ public class FeedsFragment extends BaseFragment<ZhihuDailyView, ZhihuDailyPreser
         if (feedsBinding.viewPager.getAdapter() != null) {
             feedsBinding.viewPager.getAdapter().notifyDataSetChanged();
         }
-        presenter.fetch();
         feedsBinding.viewPager.setOffscreenPageLimit(5);
         feedsBinding.viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
@@ -117,41 +111,5 @@ public class FeedsFragment extends BaseFragment<ZhihuDailyView, ZhihuDailyPreser
         super.onDestroyView();
         sp.setBool(Constant.FIRST_START_FEEDS, false);
         destoryChildFragment(baseFragments);
-    }
-
-    @Override
-    public void showLoading() {
-        feedsBinding.progress.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoading() {
-        feedsBinding.progress.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void setFetchResult(DailyThemes dailyThemes) {
-        if (dailyThemes == null || dailyThemes.getDailyThemes() == null) {
-            return;
-        }
-        if (isFirstStart) {
-            for (DailyTheme dailyTheme : dailyThemes.getDailyThemes()) {
-                sp.setBool(dailyTheme.getName(), true);
-            }
-        }
-        for (DailyTheme dailyTheme : dailyThemes.getDailyThemes()) {
-            if (sp.getBool(dailyTheme.getName(), false)) {
-                ZhihuDailyItemThemeFragment itemThemeFragment = ZhihuDailyItemThemeFragment.newInstance(dailyTheme);
-                baseFragments.add(itemThemeFragment);
-            }
-        }
-        if (feedsBinding.viewPager.getAdapter() != null) {
-            feedsBinding.viewPager.getAdapter().notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void showError(String error) {
-        UiUtils.showErrorSnackbar(getContext(), feedsBinding.getRoot(), error);
     }
 }

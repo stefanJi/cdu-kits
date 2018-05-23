@@ -2,7 +2,6 @@ package jiyang.cdu.kits.ui.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,12 +21,8 @@ import java.util.List;
 import jiyang.cdu.kits.AppControl;
 import jiyang.cdu.kits.Constant;
 import jiyang.cdu.kits.R;
-import jiyang.cdu.kits.model.enty.zhihu.DailyTheme;
-import jiyang.cdu.kits.model.enty.zhihu.DailyThemes;
 import jiyang.cdu.kits.presenter.BasePresenterImpl;
-import jiyang.cdu.kits.presenter.feeds.ZhihuDailyPresernterImpl;
 import jiyang.cdu.kits.ui.common.BaseActivity;
-import jiyang.cdu.kits.ui.view.feeds.ZhihuDailyView;
 import jiyang.cdu.kits.util.SpUtil;
 
 import static jiyang.cdu.kits.Constant.HAD_LOGIN;
@@ -89,12 +84,11 @@ public class SettingActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public static class PrefsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, ZhihuDailyView {
+    public static class PrefsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
         private boolean isLogin = false;
         private PreferenceScreen preferenceScreen;
         private SpUtil sp;
-        private ZhihuDailyPresernterImpl zhihuDailyPresernter;
         private Preference tabPref;
         private PreferenceCategory general;
 
@@ -105,7 +99,6 @@ public class SettingActivity extends BaseActivity {
             getPreferenceManager().setSharedPreferencesName("cdu_kits_setting");
             preferenceScreen = getPreferenceScreen();
             sp = AppControl.getInstance().getSpUtil();
-            zhihuDailyPresernter = new ZhihuDailyPresernterImpl(this);
             initGeneral();
             initUser();
         }
@@ -161,36 +154,14 @@ public class SettingActivity extends BaseActivity {
                     LoginLibraryActivity.start(getActivity());
                     break;
                 case PREF_KEY_TAB_SHOW:
-                    zhihuDailyPresernter.fetch();
+                    showTabConfig();
                     break;
             }
             return false;
         }
 
-
-        private ProgressDialog progressDialog;
-
-        @Override
-        public void showLoading() {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.show();
-        }
-
-        @Override
-        public void hideLoading() {
-            if (progressDialog != null && progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-        }
-
-        @Override
-        public void setFetchResult(DailyThemes dailyThemes) {
+        public void showTabConfig() {
             List<String> names = new ArrayList<>(Arrays.asList(Constant.FEEDS_TABS));
-            if (dailyThemes != null && dailyThemes.getDailyThemes() != null) {
-                for (DailyTheme dailyTheme : dailyThemes.getDailyThemes()) {
-                    names.add(dailyTheme.getName());
-                }
-            }
             boolean[] checkedItems = new boolean[names.size()];
             final String[] titles = new String[names.size()];
             for (int i = 0; i < names.size(); i++) {
@@ -215,11 +186,6 @@ public class SettingActivity extends BaseActivity {
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
-        }
-
-        @Override
-        public void showError(String error) {
-
         }
     }
 }
