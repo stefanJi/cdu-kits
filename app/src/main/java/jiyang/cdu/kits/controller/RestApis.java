@@ -5,9 +5,7 @@ import jiyang.cdu.kits.model.enty.Release;
 import jiyang.cdu.kits.model.enty.zhihu.DailyThemes;
 import jiyang.cdu.kits.model.enty.zhihu.Stories;
 import jiyang.cdu.kits.model.enty.zhihu.StoryContent;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -90,10 +88,6 @@ interface RestApis {
     Observable<ResponseBody> fetchCDULinks(@Url String emptyString);
 
     //版本检查
-    @GET("repos/jiyangg/cdu-kits/releases/latest")
+    @GET("repos/stefanji/cdu-kits/releases/latest")
     Observable<Release> fetchReleasesVersion();
-
-    //beary chart
-    @POST("=bwCH2/incoming/198078945625447cd9bb2b76abd3525c")
-    Observable<ResponseBody> uploadInfo(@Body RequestBody requestBody);
 }

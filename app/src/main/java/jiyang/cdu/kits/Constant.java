@@ -1,10 +1,10 @@
 package jiyang.cdu.kits;
 
 public class Constant {
-    public static final String APP_WEB_SITE = "https://jiyangg.github.io/cdu-kits";
+    public static final String APP_WEB_SITE = "https://stefanji.github.io/cdu-kits";
     public static final String CONTACT_EMAIL = "mailto:408776303@qq.com";
-    public static final String GIT_HUB_REPO = "https://github.com/jiyangg/cdu-kits";
-    public static final String MY_SITE = "https://jiyangg.github.io";
+    public static final String GIT_HUB_REPO = "https://github.com/stefanji/cdu-kits";
+    public static final String MY_SITE = "https://stefanji.github.io";
     public static final String SHARE_CONTENT = "一个为成大制作的简约的材料设计风格图书馆安卓应用:\n" + APP_WEB_SITE;
 
     public static final String FEEDS_TAB_ANNOUNCE = "通知公告";

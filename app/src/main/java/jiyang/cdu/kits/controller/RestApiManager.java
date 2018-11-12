@@ -1,7 +1,6 @@
 package jiyang.cdu.kits.controller;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 
 import org.jsoup.Jsoup;
@@ -15,7 +14,6 @@ import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import jiyang.cdu.kits.model.enty.Book;
@@ -25,8 +23,6 @@ import jiyang.cdu.kits.model.enty.Feed;
 import jiyang.cdu.kits.model.enty.LibrarySearchHistory;
 import jiyang.cdu.kits.model.enty.LibraryUserInfo;
 import jiyang.cdu.kits.model.enty.Release;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 /**
@@ -353,37 +349,5 @@ public class RestApiManager {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
-    }
-
-    public void uploadInfo(String text) {
-        String payload = String.format("{\"text\": \"%s\"}", text);
-        Log.i("TAG", payload);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), payload);
-        RetrofitController.getRetrofitInstance(BEARY_CHAT_API)
-                .getRestApis()
-                .uploadInfo(requestBody)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe(new Observer<ResponseBody>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResponseBody responseBody) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("TAG", e.toString());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 }
