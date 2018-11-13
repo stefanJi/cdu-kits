@@ -27,7 +27,7 @@ public class VersionPresenterImpl extends BasePresenterImpl<VersionView> impleme
     @Override
     public void onSuccess(Release release) {
         if (getView() != null) {
-            getView().onSuccess(release);
+            getView().onGotVersion(release);
         }
     }
 

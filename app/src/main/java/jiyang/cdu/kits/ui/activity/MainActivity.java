@@ -288,7 +288,7 @@ public class MainActivity extends BaseActivity<MainView, MainViewPresenterImpl> 
     }
 
     @Override
-    public void onSuccess(final Release release) {
+    public void onGotVersion(final Release release) {
         float versionNameNum = 0;
         float releaseVersion = 0;
         try {
